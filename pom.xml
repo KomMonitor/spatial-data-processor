@@ -44,6 +44,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.3</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
             <version>1.6.11</version>
@@ -114,13 +120,15 @@
                                     <output>${project.basedir}</output>
                                     <apiPackage>org.n52.kommonitor.spatialdataprocessor.api</apiPackage>
                                     <modelPackage>org.n52.kommonitor.models</modelPackage>
-                                    <generateModels>false</generateModels>
+                                    <generateModels>true</generateModels>
                                     <generateApis>true</generateApis>
 
                                     <configHelp>false</configHelp>
                                     <generateSupportingFiles>false</generateSupportingFiles>
                                     <configOptions>
                                         <documentationProvider>springdoc</documentationProvider>
+                                        <skipDefaultInterface>true</skipDefaultInterface>
+                                        <interfaceOnly>true</interfaceOnly>
                                     </configOptions>
                                 </configuration>
                             </execution>

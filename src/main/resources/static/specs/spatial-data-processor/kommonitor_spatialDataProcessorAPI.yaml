@@ -1,0 +1,227 @@
+openapi: 3.0.3
+info:
+  title: KomMonitor Spatial Data Processor API
+  description: |-
+    API zur Verarbeitung von räumlichen Daten aus dem KomMonitor-Ökosystem.
+  contact:
+    email: j.speckamp@52north.org
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.0.1
+
+servers:
+  - url: https://localhost:8080/
+
+tags:
+  - name: processes
+    description: Processes that can be executed by this processor
+  - name: jobs
+    description: Jobs that are being processed
+
+paths:
+  /processes:
+    get:
+      tags:
+        - processes
+      description: Returns a list of all available Processes
+      summary: Returns a list of all available Processes
+      operationId: getAllProcessDescriptions
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Process'
+      security:
+        - kommonitor_auth:
+            - access:spatial-data-processor
+
+  /jobs:
+    get:
+      tags:
+        - jobs
+      description: Returns a list of all currently queued jobs
+      summary: Returns a list of all currently queued jobs
+      operationId: getAllJobs
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                $ref: '#/components/schemas/JobOverviewType'
+      security:
+        - kommonitor_auth:
+            - access:spatial-data-processor
+
+    post:
+      tags:
+        - jobs
+      summary: Submits a processing Job for execution
+      description: Submits a processing Job for execution
+      operationId: enqueueJob
+      requestBody:
+        description: Definition of Job to be executed
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobPOSTInputType'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: string
+                format: uuid
+                description: UUID of the Job created
+        '405':
+          description: Invalid input
+      security:
+        - kommonitor_auth:
+            - access:spatial-data-processor
+
+  /jobs/{jobId}:
+    get:
+      tags:
+        - jobs
+      summary: Gets the current status of a job
+      description: Gets the current status of a job
+      operationId: getJob
+      parameters:
+        - in: path
+          name: jobId
+          required: true
+          description: UUID of the job
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobOverviewType'
+      security:
+        - kommonitor_auth:
+            - access:spatial-data-processor
+
+components:
+  schemas:
+    Process:
+      description: Description of a Process that can be executed by the processor
+      type: object
+      required:
+        - id
+        - name
+        - description
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type: string
+        description:
+          type: string
+
+    JobOverviewType:
+      description: Description of a Job
+      type: object
+      required:
+        - id
+        - process
+        - timestamp
+        - status
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        process:
+          $ref: '#/components/schemas/uuid'
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [ queued, running, finished, failed ]
+        result:
+          type: object
+
+    JobPOSTInputType:
+      description: POST type for a new job to be executed by the processor
+      type: object
+      required:
+        - process
+        - parameters
+      properties:
+        process:
+          $ref: '#/components/schemas/uuid'
+        parameters:
+          description: Parameters for the process
+          oneOf:
+            - $ref: "#/components/schemas/IsochronePruneProcess"
+            - $ref: "#/components/schemas/TestProcess"
+
+    IsochronePruneProcess:
+      description: Process that calculates overlap of spatial-units with isochrones
+      type: object
+      required:
+        - isochron
+        - spatialUnit
+        - indicator
+        - configuration
+      properties:
+        isochron:
+          $ref: "#/components/schemas/FeatureCollection"
+        spatialUnit:
+          #$ref: "../data-management/kommonitor_dataAccessAPI.yaml/#/definitions/SpatialUnitOverviewType"
+          type: object
+        indicator:
+          #$ref: "../data-management/kommonitor_dataAccessAPI.yaml/#/definitions/IndicatorOverviewType"
+          type: object
+        configuration:
+          type: object
+          #TODO: expand on this
+          description: Additional configuration properties for this process
+
+    TestProcess:
+      description: Process for testing the API.
+      type: object
+      required:
+        - test
+      properties:
+        test:
+          type: string
+
+    FeatureCollection:
+      description: GeoJSON FeatureCollection
+      type: object
+      #TODO: expand
+
+    JobResult:
+      type: object
+      required:
+        - id
+        - result
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+
+    uuid:
+      type: string
+      format: uuid
+      description: Unique ID
+
+  securitySchemes:
+    kommonitor_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://keycloak/oauth/authorize
+          scopes:
+            access:spatial-data-processor: access to spatial data processor

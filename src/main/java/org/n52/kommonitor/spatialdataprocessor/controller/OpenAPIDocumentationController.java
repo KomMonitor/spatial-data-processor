@@ -1,4 +1,4 @@
-package org.n52.kommonitor.spatialdataprocessor.api;
+package org.n52.kommonitor.spatialdataprocessor.controller;
 
 import org.springdoc.core.SpringDocConfigProperties;
 import org.springdoc.core.SpringDocConfiguration;
@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OpenAPIController {
+public class OpenAPIDocumentationController {
 
     @Bean
     SpringDocConfiguration springDocConfiguration() {
