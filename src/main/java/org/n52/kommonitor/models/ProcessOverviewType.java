@@ -19,9 +19,9 @@ import javax.annotation.Generated;
  * Description of a Process that can be executed by the processor
  */
 
-@Schema(name = "Process", description = "Description of a Process that can be executed by the processor")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-26T20:33:13.177747+02:00[Europe/Budapest]")
-public class Process {
+@Schema(name = "ProcessOverviewType", description = "Description of a Process that can be executed by the processor")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-26T22:28:49.656311400+02:00[Europe/Budapest]")
+public class ProcessOverviewType {
 
   @JsonProperty("id")
   private UUID id;
@@ -32,7 +32,7 @@ public class Process {
   @JsonProperty("description")
   private String description;
 
-  public Process id(UUID id) {
+  public ProcessOverviewType id(UUID id) {
     this.id = id;
     return this;
   }
@@ -51,7 +51,7 @@ public class Process {
     this.id = id;
   }
 
-  public Process name(String name) {
+  public ProcessOverviewType name(String name) {
     this.name = name;
     return this;
   }
@@ -70,7 +70,7 @@ public class Process {
     this.name = name;
   }
 
-  public Process description(String description) {
+  public ProcessOverviewType description(String description) {
     this.description = description;
     return this;
   }
@@ -97,10 +97,10 @@ public class Process {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Process process = (Process) o;
-    return Objects.equals(this.id, process.id) &&
-        Objects.equals(this.name, process.name) &&
-        Objects.equals(this.description, process.description);
+    ProcessOverviewType processOverviewType = (ProcessOverviewType) o;
+    return Objects.equals(this.id, processOverviewType.id) &&
+        Objects.equals(this.name, processOverviewType.name) &&
+        Objects.equals(this.description, processOverviewType.description);
   }
 
   @Override
@@ -111,7 +111,7 @@ public class Process {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Process {\n");
+    sb.append("class ProcessOverviewType {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");

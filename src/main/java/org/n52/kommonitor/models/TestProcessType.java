@@ -4,7 +4,9 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import javax.validation.Valid;
@@ -19,14 +21,36 @@ import javax.annotation.Generated;
  * Process for testing the API.
  */
 
-@Schema(name = "TestProcess", description = "Process for testing the API.")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-26T20:33:13.177747+02:00[Europe/Budapest]")
-public class TestProcess implements JobPOSTInputTypeParameters {
+@Schema(name = "TestProcessType", description = "Process for testing the API.")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-26T22:28:49.656311400+02:00[Europe/Budapest]")
+public class TestProcessType implements JobInputType {
+
+  @JsonProperty("name")
+  private String name;
 
   @JsonProperty("test")
   private String test;
 
-  public TestProcess test(String test) {
+  public TestProcessType name(String name) {
+    this.name = name;
+    return this;
+  }
+
+  /**
+   * Get name
+   * @return name
+  */
+  @NotNull 
+  @Schema(name = "name", required = true)
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public TestProcessType test(String test) {
     this.test = test;
     return this;
   }
@@ -53,19 +77,21 @@ public class TestProcess implements JobPOSTInputTypeParameters {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    TestProcess testProcess = (TestProcess) o;
-    return Objects.equals(this.test, testProcess.test);
+    TestProcessType testProcessType = (TestProcessType) o;
+    return Objects.equals(this.name, testProcessType.name) &&
+        Objects.equals(this.test, testProcessType.test);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(test);
+    return Objects.hash(name, test);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class TestProcess {\n");
+    sb.append("class TestProcessType {\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    test: ").append(toIndentedString(test)).append("\n");
     sb.append("}");
     return sb.toString();

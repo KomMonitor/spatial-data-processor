@@ -16,16 +16,16 @@ import java.util.*;
 import javax.annotation.Generated;
 
 /**
- * JobResult
+ * JobResultType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-26T20:33:13.177747+02:00[Europe/Budapest]")
-public class JobResult {
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-26T22:28:49.656311400+02:00[Europe/Budapest]")
+public class JobResultType {
 
   @JsonProperty("id")
   private UUID id;
 
-  public JobResult id(UUID id) {
+  public JobResultType id(UUID id) {
     this.id = id;
     return this;
   }
@@ -52,8 +52,8 @@ public class JobResult {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    JobResult jobResult = (JobResult) o;
-    return Objects.equals(this.id, jobResult.id);
+    JobResultType jobResultType = (JobResultType) o;
+    return Objects.equals(this.id, jobResultType.id);
   }
 
   @Override
@@ -64,7 +64,7 @@ public class JobResult {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class JobResult {\n");
+    sb.append("class JobResultType {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("}");
     return sb.toString();

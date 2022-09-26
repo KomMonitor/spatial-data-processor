@@ -35,7 +35,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Process'
+                  $ref: '#/components/schemas/ProcessOverviewType'
       security:
         - kommonitor_auth:
             - access:spatial-data-processor
@@ -70,7 +70,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/JobPOSTInputType'
+              $ref: '#/components/schemas/JobInputType'
         required: true
       responses:
         '200':
@@ -115,7 +115,7 @@ paths:
 
 components:
   schemas:
-    Process:
+    ProcessOverviewType:
       description: Description of a Process that can be executed by the processor
       type: object
       required:
@@ -152,32 +152,32 @@ components:
         result:
           type: object
 
-    JobPOSTInputType:
+    JobInputType:
       description: POST type for a new job to be executed by the processor
       type: object
-      required:
-        - process
-        - parameters
-      properties:
-        process:
-          $ref: '#/components/schemas/uuid'
-        parameters:
-          description: Parameters for the process
-          oneOf:
-            - $ref: "#/components/schemas/IsochronePruneProcess"
-            - $ref: "#/components/schemas/TestProcess"
+      discriminator:
+        propertyName: name
+        mapping:
+          isochrone-prune: '#/components/schemas/IsochronePruneProcessType'
+          test: '#/components/schemas/TestProcessType'
+      oneOf:
+      - $ref: "#/components/schemas/IsochronePruneProcessType"
+      - $ref: "#/components/schemas/TestProcessType"
 
-    IsochronePruneProcess:
+    IsochronePruneProcessType:
       description: Process that calculates overlap of spatial-units with isochrones
       type: object
       required:
+        - name
         - isochron
         - spatialUnit
         - indicator
         - configuration
       properties:
+        name:
+          type: string
         isochron:
-          $ref: "#/components/schemas/FeatureCollection"
+          $ref: "#/components/schemas/FeatureCollectionType"
         spatialUnit:
           #$ref: "../data-management/kommonitor_dataAccessAPI.yaml/#/definitions/SpatialUnitOverviewType"
           type: object
@@ -189,21 +189,24 @@ components:
           #TODO: expand on this
           description: Additional configuration properties for this process
 
-    TestProcess:
+    TestProcessType:
       description: Process for testing the API.
       type: object
       required:
+        - name
         - test
       properties:
+        name:
+          type: string
         test:
           type: string
 
-    FeatureCollection:
+    FeatureCollectionType:
       description: GeoJSON FeatureCollection
       type: object
       #TODO: expand
 
-    JobResult:
+    JobResultType:
       type: object
       required:
         - id

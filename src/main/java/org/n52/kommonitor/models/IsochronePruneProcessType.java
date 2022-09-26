@@ -4,7 +4,9 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import javax.validation.Valid;
@@ -19,9 +21,12 @@ import javax.annotation.Generated;
  * Process that calculates overlap of spatial-units with isochrones
  */
 
-@Schema(name = "IsochronePruneProcess", description = "Process that calculates overlap of spatial-units with isochrones")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-26T20:33:13.177747+02:00[Europe/Budapest]")
-public class IsochronePruneProcess implements JobPOSTInputTypeParameters {
+@Schema(name = "IsochronePruneProcessType", description = "Process that calculates overlap of spatial-units with isochrones")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-26T22:28:49.656311400+02:00[Europe/Budapest]")
+public class IsochronePruneProcessType implements JobInputType {
+
+  @JsonProperty("name")
+  private String name;
 
   @JsonProperty("isochron")
   private Object isochron;
@@ -35,7 +40,26 @@ public class IsochronePruneProcess implements JobPOSTInputTypeParameters {
   @JsonProperty("configuration")
   private Object _configuration;
 
-  public IsochronePruneProcess isochron(Object isochron) {
+  public IsochronePruneProcessType name(String name) {
+    this.name = name;
+    return this;
+  }
+
+  /**
+   * Get name
+   * @return name
+  */
+  @NotNull 
+  @Schema(name = "name", required = true)
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public IsochronePruneProcessType isochron(Object isochron) {
     this.isochron = isochron;
     return this;
   }
@@ -54,7 +78,7 @@ public class IsochronePruneProcess implements JobPOSTInputTypeParameters {
     this.isochron = isochron;
   }
 
-  public IsochronePruneProcess spatialUnit(Object spatialUnit) {
+  public IsochronePruneProcessType spatialUnit(Object spatialUnit) {
     this.spatialUnit = spatialUnit;
     return this;
   }
@@ -73,7 +97,7 @@ public class IsochronePruneProcess implements JobPOSTInputTypeParameters {
     this.spatialUnit = spatialUnit;
   }
 
-  public IsochronePruneProcess indicator(Object indicator) {
+  public IsochronePruneProcessType indicator(Object indicator) {
     this.indicator = indicator;
     return this;
   }
@@ -92,7 +116,7 @@ public class IsochronePruneProcess implements JobPOSTInputTypeParameters {
     this.indicator = indicator;
   }
 
-  public IsochronePruneProcess _configuration(Object _configuration) {
+  public IsochronePruneProcessType _configuration(Object _configuration) {
     this._configuration = _configuration;
     return this;
   }
@@ -119,22 +143,24 @@ public class IsochronePruneProcess implements JobPOSTInputTypeParameters {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    IsochronePruneProcess isochronePruneProcess = (IsochronePruneProcess) o;
-    return Objects.equals(this.isochron, isochronePruneProcess.isochron) &&
-        Objects.equals(this.spatialUnit, isochronePruneProcess.spatialUnit) &&
-        Objects.equals(this.indicator, isochronePruneProcess.indicator) &&
-        Objects.equals(this._configuration, isochronePruneProcess._configuration);
+    IsochronePruneProcessType isochronePruneProcessType = (IsochronePruneProcessType) o;
+    return Objects.equals(this.name, isochronePruneProcessType.name) &&
+        Objects.equals(this.isochron, isochronePruneProcessType.isochron) &&
+        Objects.equals(this.spatialUnit, isochronePruneProcessType.spatialUnit) &&
+        Objects.equals(this.indicator, isochronePruneProcessType.indicator) &&
+        Objects.equals(this._configuration, isochronePruneProcessType._configuration);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(isochron, spatialUnit, indicator, _configuration);
+    return Objects.hash(name, isochron, spatialUnit, indicator, _configuration);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class IsochronePruneProcess {\n");
+    sb.append("class IsochronePruneProcessType {\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    isochron: ").append(toIndentedString(isochron)).append("\n");
     sb.append("    spatialUnit: ").append(toIndentedString(spatialUnit)).append("\n");
     sb.append("    indicator: ").append(toIndentedString(indicator)).append("\n");

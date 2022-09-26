@@ -5,7 +5,7 @@
  */
 package org.n52.kommonitor.spatialdataprocessor.api;
 
-import org.n52.kommonitor.models.Process;
+import org.n52.kommonitor.models.ProcessOverviewType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-26T20:33:13.177747+02:00[Europe/Budapest]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-26T22:28:49.656311400+02:00[Europe/Budapest]")
 @Validated
 @Tag(name = "processes", description = "Processes that can be executed by this processor")
 @RequestMapping("${openapi.komMonitorSpatialDataProcessor.base-path:}")
@@ -47,7 +47,7 @@ public interface ProcessesApi {
         tags = { "processes" },
         responses = {
             @ApiResponse(responseCode = "200", description = "success", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Process.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessOverviewType.class))
             })
         },
         security = {
@@ -59,7 +59,7 @@ public interface ProcessesApi {
         value = "/processes",
         produces = { "application/json" }
     )
-    ResponseEntity<List<Process>> getAllProcessDescriptions(
+    ResponseEntity<List<ProcessOverviewType>> getAllProcessDescriptions(
         
     );
 

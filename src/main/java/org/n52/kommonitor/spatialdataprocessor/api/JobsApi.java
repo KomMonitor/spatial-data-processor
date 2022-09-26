@@ -5,8 +5,8 @@
  */
 package org.n52.kommonitor.spatialdataprocessor.api;
 
+import org.n52.kommonitor.models.JobInputType;
 import org.n52.kommonitor.models.JobOverviewType;
-import org.n52.kommonitor.models.JobPOSTInputType;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-26T20:33:13.177747+02:00[Europe/Budapest]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-26T22:28:49.656311400+02:00[Europe/Budapest]")
 @Validated
 @Tag(name = "jobs", description = "Jobs that are being processed")
 @RequestMapping("${openapi.komMonitorSpatialDataProcessor.base-path:}")
@@ -41,7 +41,7 @@ public interface JobsApi {
      * POST /jobs : Submits a processing Job for execution
      * Submits a processing Job for execution
      *
-     * @param jobPOSTInputType Definition of Job to be executed (required)
+     * @param jobInputType Definition of Job to be executed (required)
      * @return Successful operation (status code 200)
      *         or Invalid input (status code 405)
      */
@@ -66,7 +66,7 @@ public interface JobsApi {
         consumes = { "application/json" }
     )
     ResponseEntity<UUID> enqueueJob(
-        @Parameter(name = "JobPOSTInputType", description = "Definition of Job to be executed", required = true) @Valid @RequestBody JobPOSTInputType jobPOSTInputType
+        @Parameter(name = "JobInputType", description = "Definition of Job to be executed", required = true) @Valid @RequestBody JobInputType jobInputType
     );
 
 
