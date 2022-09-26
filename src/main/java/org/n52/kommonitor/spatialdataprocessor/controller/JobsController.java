@@ -3,7 +3,7 @@ package org.n52.kommonitor.spatialdataprocessor.controller;
 import org.n52.kommonitor.models.JobInputType;
 import org.n52.kommonitor.models.JobOverviewType;
 import org.n52.kommonitor.spatialdataprocessor.api.JobsApi;
-import org.n52.kommonitor.spatialdataprocessor.process.IsochronePruneProcessor;
+import org.n52.kommonitor.spatialdataprocessor.process.IsochronePruneProcess;
 import org.n52.kommonitor.spatialdataprocessor.process.Job;
 import org.n52.kommonitor.spatialdataprocessor.process.Process;
 import org.springframework.http.HttpStatus;
@@ -33,7 +33,7 @@ public class JobsController implements JobsApi {
         this.availableProcesses = new HashMap<>();
 
         //TODO: make this dynamic instead of hardcoding
-        availableProcesses.put(IsochronePruneProcessor.name, IsochronePruneProcessor::new);
+        availableProcesses.put(IsochronePruneProcess.name, IsochronePruneProcess::new);
     }
 
     @Override

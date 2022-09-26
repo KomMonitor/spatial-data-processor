@@ -48,7 +48,6 @@
             <artifactId>jackson-databind-nullable</artifactId>
             <version>0.2.3</version>
         </dependency>
-
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>

@@ -1,6 +1,8 @@
 package org.n52.kommonitor.spatialdataprocessor.process;
 
 import org.n52.kommonitor.models.JobInputType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
 
@@ -9,10 +11,12 @@ import java.util.UUID;
  */
 public class Job implements Runnable {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(IsochronePruneProcess.class);
+
     protected UUID id = UUID.randomUUID();
     protected JobStatus status = JobStatus.queued;
-    private Process process;
-    private JobInputType jobConfiguration;
+    private final Process process;
+    private final JobInputType jobConfiguration;
 
     public Job(Process process, JobInputType jobConfiguration) {
         this.process = process;
@@ -21,12 +25,13 @@ public class Job implements Runnable {
 
     @Override
     public void run() {
+        LOGGER.info("Running Job#" + id);
         status = JobStatus.running;
-
         try {
             process.run(jobConfiguration);
             status = JobStatus.finished;
         } catch (Exception e) {
+            LOGGER.error("Failing Job#" + id + ": " + e.getMessage());
             status = JobStatus.failed;
         }
     }
