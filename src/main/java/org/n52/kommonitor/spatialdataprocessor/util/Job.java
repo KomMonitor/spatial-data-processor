@@ -1,8 +1,10 @@
-package org.n52.kommonitor.spatialdataprocessor.process;
+package org.n52.kommonitor.spatialdataprocessor.util;
 
 import javafx.print.PrinterJob;
 import org.n52.kommonitor.models.JobOverviewType;
 import org.n52.kommonitor.models.ProcessType;
+import org.n52.kommonitor.spatialdataprocessor.process.IsochronePruneProcess;
+import org.n52.kommonitor.spatialdataprocessor.process.Process;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

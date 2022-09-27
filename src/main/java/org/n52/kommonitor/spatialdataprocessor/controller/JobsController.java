@@ -1,10 +1,9 @@
 package org.n52.kommonitor.spatialdataprocessor.controller;
 
-import org.n52.kommonitor.models.JobInputType;
+import org.n52.kommonitor.models.ProcessType;
 import org.n52.kommonitor.models.JobOverviewType;
 import org.n52.kommonitor.spatialdataprocessor.api.JobsApi;
-import org.n52.kommonitor.spatialdataprocessor.process.IsochronePruneProcess;
-import org.n52.kommonitor.spatialdataprocessor.process.Job;
+import org.n52.kommonitor.spatialdataprocessor.util.Job;
 import org.n52.kommonitor.spatialdataprocessor.process.Process;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * Controller implementing JobsApi.
@@ -25,24 +25,23 @@ import java.util.function.Supplier;
 public class JobsController implements JobsApi {
 
     private final ExecutorService executor = Executors.newCachedThreadPool();
-    private final Map<String, Supplier<Process>> availableProcesses;
 
-    private Map<Job, Future<?>> jobs = new HashMap<>();
-
-    JobsController() {
-        this.availableProcesses = new HashMap<>();
-
-        //TODO: make this dynamic instead of hardcoding
-        availableProcesses.put(IsochronePruneProcess.name, IsochronePruneProcess::new);
-    }
+    /**
+     * Local storage of Jobs and their results.
+     * TODO: refactor this to use a different storage solution
+     */
+    private final Map<Job, Future<?>> jobs = new HashMap<>();
 
     @Override
-    public ResponseEntity<UUID> enqueueJob(JobInputType jobDefinition) {
-        // Get Process
-
-        Supplier<Process> process = availableProcesses.get(jobDefinition.getName());
-        if (process != null) {
-            Job job = new Job(process.get(), jobDefinition);
+    public ResponseEntity<UUID> enqueueJob(ProcessType jobDefinition) {
+        // Get Process by name
+        Optional<Supplier<Process>> process = ProcessRegistry.getProcesses()
+                                                   .stream()
+                                                   .filter(pd -> pd.getName().equals(jobDefinition.getName()))
+                                                   .map(ProcessRegistry.ProcessDescription::getSupplier)
+                                                   .findFirst();
+        if (process.isPresent()) {
+            Job job = new Job(process.get().get(), jobDefinition);
             jobs.put(job, executor.submit(job));
             return ResponseEntity.ok(job.getId());
         } else {
@@ -52,12 +51,40 @@ public class JobsController implements JobsApi {
     }
 
     @Override
-    public ResponseEntity<JobOverviewType> getAllJobs() {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    public ResponseEntity<List<JobOverviewType>> getAllJobs() {
+        List<JobOverviewType> response = jobs.entrySet()
+                                             .stream()
+                                             .map(e -> this.toOverviewType(e.getKey(), e.getValue()))
+                                             .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
     }
 
     @Override
     public ResponseEntity<JobOverviewType> getJob(UUID jobId) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        Optional<Map.Entry<Job, Future<?>>> job = jobs.entrySet()
+                                                        .stream()
+                                                        .filter(j -> j.getKey().getId() == jobId)
+                                                        .findFirst();
+
+        if (job.isPresent()) {
+            return ResponseEntity.ok(this.toOverviewType(job.get().getKey(), job.get().getValue()));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    private JobOverviewType toOverviewType(Job job, Future<?> resultFuture) {
+        Object result;
+        try {
+            result = resultFuture.isDone() ? resultFuture.get() : null;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return new JobOverviewType()
+                .id(job.getId())
+                .process(job.getProcess().toString())
+                .status(job.getStatus())
+                .timestamp(job.getTimestamp())
+                .result(result);
     }
 }

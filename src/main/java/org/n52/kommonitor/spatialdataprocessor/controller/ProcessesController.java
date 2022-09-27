@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Controller implementing ProcessesApi
@@ -17,22 +18,11 @@ import java.util.List;
 @Controller
 public class ProcessesController implements ProcessesApi {
 
-    private final List<ProcessOverviewType> availableProcesses;
-
-    public ProcessesController() {
-
-        this.availableProcesses = new ArrayList<>();
-
-        //TODO: make this dynamic instead of hardcoding
-        availableProcesses.add(new ProcessOverviewType()
-                .id(IsochronePruneProcess.id)
-                .name(IsochronePruneProcess.class.getName())
-                .description(""));
-    }
-
-
     @Override
     public ResponseEntity<List<ProcessOverviewType>> getAllProcessDescriptions() {
-        return ResponseEntity.ok(availableProcesses);
+        return ResponseEntity.ok(ProcessRegistry.getProcesses()
+                                                .stream()
+                                                .map(ProcessRegistry.ProcessDescription::getOverviewType)
+                                                .collect(Collectors.toList()));
     }
 }

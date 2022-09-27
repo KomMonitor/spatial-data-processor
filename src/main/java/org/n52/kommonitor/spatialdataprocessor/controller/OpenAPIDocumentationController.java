@@ -6,6 +6,9 @@ import org.springdoc.core.providers.ObjectMapperProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+/**
+ * Controller serving a Swagger UI with the OpenAPI Specification
+ */
 @Component
 public class OpenAPIDocumentationController {
 

@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-26T22:28:49.656311400+02:00[Europe/Budapest]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-27T14:10:31.537835801+02:00[Europe/Amsterdam]")
 @Validated
 @Tag(name = "processes", description = "Processes that can be executed by this processor")
 @RequestMapping("${openapi.komMonitorSpatialDataProcessor.base-path:}")
