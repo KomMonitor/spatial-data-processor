@@ -95,8 +95,10 @@
                                             <artifactId>kommonitor-api-specs</artifactId>
                                             <version>0.0.2-SNAPSHOT</version>
                                             <type>jar</type>
-                                            <includes>specs/spatial-data-processor/**</includes>
-                                            <outputDirectory>${project.basedir}/src/main/resources/static</outputDirectory>
+                                            <includes>specs/spatial-data-processor/**,specs/data-management/**
+                                            </includes>
+                                            <outputDirectory>${project.basedir}/src/main/resources/static
+                                            </outputDirectory>
                                         </artifactItem>
                                     </artifactItems>
                                 </configuration>
@@ -108,12 +110,16 @@
                         <artifactId>openapi-generator-maven-plugin</artifactId>
                         <version>${openapi-generator.version}</version>
                         <executions>
+                            <!-- Generate Models and API for spatial-data-api -->
                             <execution>
+                                <id>generateSpatialDataAPIandModels</id>
                                 <goals>
                                     <goal>generate</goal>
                                 </goals>
                                 <configuration>
-                                    <inputSpec>${project.basedir}/src/main/resources/static/specs/spatial-data-processor/kommonitor_spatialDataProcessorAPI.yaml</inputSpec>
+                                    <inputSpec>
+                                        ${project.basedir}/src/main/resources/static/specs/spatial-data-processor/kommonitor_spatialDataProcessorAPI.yaml
+                                    </inputSpec>
                                     <!-- target to generate java server code -->
                                     <generatorName>spring</generatorName>
                                     <output>${project.basedir}</output>
@@ -131,6 +137,57 @@
                                     </configOptions>
                                 </configuration>
                             </execution>
+                            <execution>
+                                <!-- Generate Models for data-management-api-client. Uses spring  -->
+                                <id>generateDataManagementModels</id>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                                <configuration>
+                                    <inputSpec>
+                                        ${project.basedir}/src/main/resources/static/specs/data-management/kommonitor_dataAccessAPI.yaml
+                                    </inputSpec>
+                                    <generatorName>spring</generatorName>
+                                    <output>${project.basedir}</output>
+                                    <modelPackage>org.n52.kommonitor.models</modelPackage>
+                                    <generateModels>true</generateModels>
+                                    <modelsToGenerate>
+                                        SpatialUnitOverviewType,CommonMetadataType,PeriodOfValidityType,IndicatorOverviewType
+                                    </modelsToGenerate>
+                                    <generateApis>false</generateApis>
+                                    <configHelp>false</configHelp>
+                                    <generateSupportingFiles>false</generateSupportingFiles>
+                                </configuration>
+                            </execution>
+                            <!--
+                        <execution>
+                                <id>genDataManagementClient</id>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                                <configuration>
+                                    <inputSpec>
+                                        ${project.basedir}/src/main/resources/static/specs/data-management/kommonitor_dataAccessAPI.yaml
+                                    </inputSpec>
+                                    <generatorName>java</generatorName>
+                                    <library>resttemplate</library>
+                                    <output>${project.basedir}</output>
+                                    <apiPackage>org.n52.kommonitor.datamanagement</apiPackage>
+                                    <modelPackage>org.n52.kommonitor.models</modelPackage>
+
+                                    <generateModels>false</generateModels>
+                                    <generateApis>true</generateApis>
+                                    <apisToGenerate>SpatialUnitsPublicController,IndicatorsPublicController</apisToGenerate>
+
+                                    <configHelp>false</configHelp>
+                                    <generateSupportingFiles>true</generateSupportingFiles>
+                                    <generateApiDocumentation>false</generateApiDocumentation>
+                                    <configOptions>
+                                        <dateLibrary>java8</dateLibrary>
+                                    </configOptions>
+                                </configuration>
+                            </execution>
+                        -->
                         </executions>
                     </plugin>
                 </plugins>

@@ -1,0 +1,15 @@
+.gitignore
+gradle.*
+*.gradle
+gradlew
+gradlew.*
+*.sh
+.travis.yml
+**/AndroidManifest.xml
+build.sbt
+**/gradle-wrapper.*
+gradle/
+gradle/wrapper
+pom.xml
+README.md
+.openapi-generator/**
