@@ -1,9 +1,12 @@
 package org.n52.kommonitor.spatialdataprocessor.process;
 
-import org.n52.kommonitor.models.JobInputType;
+import javafx.print.PrinterJob;
+import org.n52.kommonitor.models.JobOverviewType;
+import org.n52.kommonitor.models.ProcessType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 /**
@@ -14,25 +17,27 @@ public class Job implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(IsochronePruneProcess.class);
 
     protected UUID id = UUID.randomUUID();
-    protected JobStatus status = JobStatus.queued;
+    protected JobOverviewType.StatusEnum status = JobOverviewType.StatusEnum.QUEUED;
     private final Process process;
-    private final JobInputType jobConfiguration;
+    private final ProcessType jobConfiguration;
+    private final OffsetDateTime timestamp;
 
-    public Job(Process process, JobInputType jobConfiguration) {
+    public Job(Process process, ProcessType jobConfiguration) {
         this.process = process;
         this.jobConfiguration = jobConfiguration;
+        this.timestamp = OffsetDateTime.now();
     }
 
     @Override
     public void run() {
         LOGGER.info("Running Job#" + id);
-        status = JobStatus.running;
+        status = JobOverviewType.StatusEnum.RUNNING;
         try {
             process.run(jobConfiguration);
-            status = JobStatus.finished;
+            status = JobOverviewType.StatusEnum.FINISHED;
         } catch (Exception e) {
             LOGGER.error("Failing Job#" + id + ": " + e.getMessage());
-            status = JobStatus.failed;
+            status = JobOverviewType.StatusEnum.FAILED;
         }
     }
 
@@ -50,8 +55,15 @@ public class Job implements Runnable {
      *
      * @return current status of the Job
      */
-    public JobStatus getStatus() {
+    public JobOverviewType.StatusEnum getStatus() {
         return status;
     }
 
+    public Process getProcess() {
+        return process;
+    }
+
+    public OffsetDateTime getTimestamp() {
+        return timestamp;
+    }
 }

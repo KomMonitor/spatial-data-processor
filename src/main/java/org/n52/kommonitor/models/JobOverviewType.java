@@ -23,14 +23,14 @@ import javax.annotation.Generated;
  */
 
 @Schema(name = "JobOverviewType", description = "Description of a Job")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-26T22:28:49.656311400+02:00[Europe/Budapest]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-27T14:10:31.537835801+02:00[Europe/Amsterdam]")
 public class JobOverviewType {
 
   @JsonProperty("id")
   private UUID id;
 
   @JsonProperty("process")
-  private UUID process;
+  private String process;
 
   @JsonProperty("timestamp")
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -100,22 +100,22 @@ public class JobOverviewType {
     this.id = id;
   }
 
-  public JobOverviewType process(UUID process) {
+  public JobOverviewType process(String process) {
     this.process = process;
     return this;
   }
 
   /**
-   * Unique ID
+   * Get process
    * @return process
   */
-  @NotNull @Valid 
-  @Schema(name = "process", description = "Unique ID", required = true)
-  public UUID getProcess() {
+  @NotNull 
+  @Schema(name = "process", required = true)
+  public String getProcess() {
     return process;
   }
 
-  public void setProcess(UUID process) {
+  public void setProcess(String process) {
     this.process = process;
   }
 

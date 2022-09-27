@@ -22,11 +22,11 @@ import javax.annotation.Generated;
  */
 
 @Schema(name = "TestProcessType", description = "Process for testing the API.")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-26T22:28:49.656311400+02:00[Europe/Budapest]")
-public class TestProcessType implements JobInputType {
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-27T14:10:31.537835801+02:00[Europe/Amsterdam]")
+public class TestProcessType implements ProcessType {
 
   @JsonProperty("name")
-  private String name;
+  private String name = "test";
 
   @JsonProperty("test")
   private String test;
