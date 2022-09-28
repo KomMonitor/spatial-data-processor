@@ -152,7 +152,7 @@
                                     <modelPackage>org.n52.kommonitor.models</modelPackage>
                                     <generateModels>true</generateModels>
                                     <modelsToGenerate>
-                                        SpatialUnitOverviewType,CommonMetadataType,PeriodOfValidityType,IndicatorOverviewType
+                                        SpatialUnitOverviewType,CommonMetadataType,PeriodOfValidityType,IndicatorOverviewType,DefaultClassificationMappingType,DefaultClassificationMappingItemType,GeoresourceReferenceType,IndicatorReferenceType,IndicatorSpatialUnitJoinItem,OgcServicesType
                                     </modelsToGenerate>
                                     <generateApis>false</generateApis>
                                     <configHelp>false</configHelp>

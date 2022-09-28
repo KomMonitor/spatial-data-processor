@@ -21,7 +21,7 @@ import javax.annotation.Generated;
  */
 
 @Schema(name = "PeriodOfValidityType", description = "definition of the period of validity of a certain dataset")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-27T18:34:42.190931576+02:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-28T15:53:09.022020300+02:00[Europe/Budapest]")
 public class PeriodOfValidityType {
 
   @JsonProperty("endDate")
