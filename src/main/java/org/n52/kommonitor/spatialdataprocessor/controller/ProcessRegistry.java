@@ -45,29 +45,8 @@ public class ProcessRegistry {
         return availableProcesses;
     }
 
-    static class ProcessDescription {
-        private final String name;
-        private final ProcessOverviewType overviewType;
-        private final Supplier<Process> supplier;
-
-        private ProcessDescription(String name,
-                                   Supplier<Process> supplier,
-                                   ProcessOverviewType overviewType) {
-            this.name = name;
-            this.overviewType = overviewType;
-            this.supplier = supplier;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public ProcessOverviewType getOverviewType() {
-            return overviewType;
-        }
-
-        public Supplier<Process> getSupplier() {
-            return supplier;
-        }
+    record ProcessDescription(String name,
+                              Supplier<Process<?>> supplier,
+                              ProcessOverviewType overviewType) {
     }
 }

@@ -19,13 +19,15 @@ public class Job<T extends ProcessType> implements Runnable {
 
     protected UUID id = UUID.randomUUID();
     protected JobOverviewType.StatusEnum status = JobOverviewType.StatusEnum.QUEUED;
+    private final ProcessorUtils processorUtils;
     private final Process<T> process;
-    private final T jobConfiguration;
+    private final T processConfig;
     private final OffsetDateTime timestamp;
 
-    public Job(Process<T> process, T jobConfiguration) {
+    public Job(ProcessorUtils processorUtils, Process<T> process, T processConfig) {
+        this.processorUtils = processorUtils;
         this.process = process;
-        this.jobConfiguration = jobConfiguration;
+        this.processConfig = processConfig;
         this.timestamp = OffsetDateTime.now();
     }
 
@@ -34,7 +36,7 @@ public class Job<T extends ProcessType> implements Runnable {
         LOGGER.info("Running Job#" + id);
         status = JobOverviewType.StatusEnum.RUNNING;
         try {
-            process.execute(jobConfiguration);
+            process.execute(processorUtils, processConfig);
             status = JobOverviewType.StatusEnum.FINISHED;
         } catch (Exception e) {
             LOGGER.error("Failing Job#" + id + ": " + e.getMessage());

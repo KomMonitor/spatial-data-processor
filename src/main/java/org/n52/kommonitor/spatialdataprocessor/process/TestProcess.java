@@ -3,8 +3,12 @@ package org.n52.kommonitor.spatialdataprocessor.process;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-import org.n52.kommonitor.models.ProcessType;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.n52.kommonitor.models.IndicatorOverviewType;
+import org.n52.kommonitor.models.SpatialUnitOverviewType;
 import org.n52.kommonitor.models.TestProcessType;
+import org.n52.kommonitor.spatialdataprocessor.util.ProcessorUtils;
+import org.n52.kommonitor.spatialdataprocessor.util.datamanagement.DataManagementClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +20,21 @@ public class TestProcess implements Process<TestProcessType> {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestProcess.class);
 
     @Override
-    public void execute(TestProcessType parameters) throws Exception {
+    public void execute(ProcessorUtils util, TestProcessType parameters) throws Exception {
+        DataManagementClient dataManagementClient = util.dataMangementClient();
+
+        UUID indicatorId = UUID.fromString("baad078b-8e91-4999-aa94-0fee5a50cec6");
+        UUID spatialUnitId = UUID.fromString("4154115f-3fa8-4fb9-9d7a-593ed0885e6c");
+
+        SpatialUnitOverviewType spatialUnit = dataManagementClient.getSpatialUnitOverview(spatialUnitId);
+        LOGGER.info(spatialUnit.toString());
+
+        IndicatorOverviewType indicatorOverview = dataManagementClient.getIndicatorOverview(indicatorId);
+        LOGGER.info(indicatorOverview.toString());
+
+        ObjectNode spatialUnitGeoJSON = dataManagementClient.getSpatialUnitGeoJSON(indicatorId, spatialUnitId);
+        LOGGER.info(spatialUnitGeoJSON.toString());
+
         Thread.sleep(1000 * 30);
         throw new RuntimeException("not implemented yet!");
     }

@@ -1,7 +1,7 @@
 package org.n52.kommonitor.spatialdataprocessor.process;
 
-import org.n52.kommonitor.datamanagement.api.DataMangementClient;
 import org.n52.kommonitor.models.IsochronePruneProcessType;
+import org.n52.kommonitor.spatialdataprocessor.util.ProcessorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,12 +18,8 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
     public static final String name = "isochrone-prune";
     private static final Logger LOGGER = LoggerFactory.getLogger(IsochronePruneProcess.class);
 
-
-    public IsochronePruneProcess(DataMangementClient dataMangementClient) {
-    }
-
     @Override
-    public void execute(IsochronePruneProcessType definition) throws Exception {
+    public void execute(ProcessorUtils util, IsochronePruneProcessType definition) throws Exception {
 
         LOGGER.debug(definition.getIsochron().toString());
         LOGGER.debug(definition.getSpatialUnit().toString());
