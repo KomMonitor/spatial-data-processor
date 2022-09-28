@@ -18,7 +18,7 @@ import javax.annotation.Generated;
  * DefaultClassificationMappingItemType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-28T15:53:09.022020300+02:00[Europe/Budapest]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-28T19:26:11.785403500+02:00[Europe/Budapest]")
 public class DefaultClassificationMappingItemType {
 
   @JsonProperty("defaultColorAsHex")

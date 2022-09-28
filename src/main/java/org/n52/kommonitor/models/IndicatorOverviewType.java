@@ -28,7 +28,7 @@ import javax.annotation.Generated;
  * IndicatorOverviewType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-28T15:53:09.022020300+02:00[Europe/Budapest]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-28T19:26:11.785403500+02:00[Europe/Budapest]")
 public class IndicatorOverviewType {
 
   @JsonProperty("abbreviation")
@@ -186,6 +186,9 @@ public class IndicatorOverviewType {
 
   @JsonProperty("unit")
   private String unit;
+
+  @JsonProperty("userPermissions")
+  private String userPermissions;
 
   public IndicatorOverviewType abbreviation(String abbreviation) {
     this.abbreviation = abbreviation;
@@ -668,6 +671,25 @@ public class IndicatorOverviewType {
     this.unit = unit;
   }
 
+  public IndicatorOverviewType userPermissions(String userPermissions) {
+    this.userPermissions = userPermissions;
+    return this;
+  }
+
+  /**
+   * list of permissions that are effective on this dataset for the current user
+   * @return userPermissions
+  */
+  
+  @Schema(name = "userPermissions", description = "list of permissions that are effective on this dataset for the current user", required = false)
+  public String getUserPermissions() {
+    return userPermissions;
+  }
+
+  public void setUserPermissions(String userPermissions) {
+    this.userPermissions = userPermissions;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -699,12 +721,13 @@ public class IndicatorOverviewType {
         Objects.equals(this.referencedIndicators, indicatorOverviewType.referencedIndicators) &&
         Objects.equals(this.tags, indicatorOverviewType.tags) &&
         Objects.equals(this.topicReference, indicatorOverviewType.topicReference) &&
-        Objects.equals(this.unit, indicatorOverviewType.unit);
+        Objects.equals(this.unit, indicatorOverviewType.unit) &&
+        Objects.equals(this.userPermissions, indicatorOverviewType.userPermissions);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(abbreviation, allowedRoles, applicableDates, applicableSpatialUnits, characteristicValue, creationType, defaultClassificationMapping, indicatorId, indicatorName, indicatorType, interpretation, isHeadlineIndicator, lowestSpatialUnitForComputation, metadata, ogcServices, processDescription, referenceDateNote, displayOrder, referencedGeoresources, referencedIndicators, tags, topicReference, unit);
+    return Objects.hash(abbreviation, allowedRoles, applicableDates, applicableSpatialUnits, characteristicValue, creationType, defaultClassificationMapping, indicatorId, indicatorName, indicatorType, interpretation, isHeadlineIndicator, lowestSpatialUnitForComputation, metadata, ogcServices, processDescription, referenceDateNote, displayOrder, referencedGeoresources, referencedIndicators, tags, topicReference, unit, userPermissions);
   }
 
   @Override
@@ -734,6 +757,7 @@ public class IndicatorOverviewType {
     sb.append("    tags: ").append(toIndentedString(tags)).append("\n");
     sb.append("    topicReference: ").append(toIndentedString(topicReference)).append("\n");
     sb.append("    unit: ").append(toIndentedString(unit)).append("\n");
+    sb.append("    userPermissions: ").append(toIndentedString(userPermissions)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -22,7 +22,7 @@ import javax.annotation.Generated;
  * SpatialUnitOverviewType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-28T15:53:09.022020300+02:00[Europe/Budapest]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-28T19:26:11.785403500+02:00[Europe/Budapest]")
 public class SpatialUnitOverviewType {
 
   @JsonProperty("allowedRoles")
@@ -53,6 +53,9 @@ public class SpatialUnitOverviewType {
 
   @JsonProperty("wmsUrl")
   private String wmsUrl;
+
+  @JsonProperty("userPermissions")
+  private String userPermissions;
 
   public SpatialUnitOverviewType allowedRoles(List<String> allowedRoles) {
     this.allowedRoles = allowedRoles;
@@ -238,6 +241,25 @@ public class SpatialUnitOverviewType {
     this.wmsUrl = wmsUrl;
   }
 
+  public SpatialUnitOverviewType userPermissions(String userPermissions) {
+    this.userPermissions = userPermissions;
+    return this;
+  }
+
+  /**
+   * list of permissions that are effective on this dataset for the current user
+   * @return userPermissions
+  */
+  
+  @Schema(name = "userPermissions", description = "list of permissions that are effective on this dataset for the current user", required = false)
+  public String getUserPermissions() {
+    return userPermissions;
+  }
+
+  public void setUserPermissions(String userPermissions) {
+    this.userPermissions = userPermissions;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -255,12 +277,13 @@ public class SpatialUnitOverviewType {
         Objects.equals(this.spatialUnitId, spatialUnitOverviewType.spatialUnitId) &&
         Objects.equals(this.spatialUnitLevel, spatialUnitOverviewType.spatialUnitLevel) &&
         Objects.equals(this.wfsUrl, spatialUnitOverviewType.wfsUrl) &&
-        Objects.equals(this.wmsUrl, spatialUnitOverviewType.wmsUrl);
+        Objects.equals(this.wmsUrl, spatialUnitOverviewType.wmsUrl) &&
+        Objects.equals(this.userPermissions, spatialUnitOverviewType.userPermissions);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(allowedRoles, availablePeriodsOfValidity, metadata, nextLowerHierarchyLevel, nextUpperHierarchyLevel, spatialUnitId, spatialUnitLevel, wfsUrl, wmsUrl);
+    return Objects.hash(allowedRoles, availablePeriodsOfValidity, metadata, nextLowerHierarchyLevel, nextUpperHierarchyLevel, spatialUnitId, spatialUnitLevel, wfsUrl, wmsUrl, userPermissions);
   }
 
   @Override
@@ -276,6 +299,7 @@ public class SpatialUnitOverviewType {
     sb.append("    spatialUnitLevel: ").append(toIndentedString(spatialUnitLevel)).append("\n");
     sb.append("    wfsUrl: ").append(toIndentedString(wfsUrl)).append("\n");
     sb.append("    wmsUrl: ").append(toIndentedString(wmsUrl)).append("\n");
+    sb.append("    userPermissions: ").append(toIndentedString(userPermissions)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -20,7 +20,7 @@ import javax.annotation.Generated;
  * IndicatorSpatialUnitJoinItem
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-28T15:53:09.022020300+02:00[Europe/Budapest]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-28T19:26:11.785403500+02:00[Europe/Budapest]")
 public class IndicatorSpatialUnitJoinItem {
 
   @JsonProperty("allowedRoles")
@@ -32,6 +32,9 @@ public class IndicatorSpatialUnitJoinItem {
 
   @JsonProperty("spatialUnitName")
   private String spatialUnitName;
+
+  @JsonProperty("userPermissions")
+  private String userPermissions;
 
   public IndicatorSpatialUnitJoinItem allowedRoles(List<String> allowedRoles) {
     this.allowedRoles = allowedRoles;
@@ -98,6 +101,25 @@ public class IndicatorSpatialUnitJoinItem {
     this.spatialUnitName = spatialUnitName;
   }
 
+  public IndicatorSpatialUnitJoinItem userPermissions(String userPermissions) {
+    this.userPermissions = userPermissions;
+    return this;
+  }
+
+  /**
+   * list of permissions that are effective on this dataset for the current user
+   * @return userPermissions
+  */
+  
+  @Schema(name = "userPermissions", description = "list of permissions that are effective on this dataset for the current user", required = false)
+  public String getUserPermissions() {
+    return userPermissions;
+  }
+
+  public void setUserPermissions(String userPermissions) {
+    this.userPermissions = userPermissions;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -109,12 +131,13 @@ public class IndicatorSpatialUnitJoinItem {
     IndicatorSpatialUnitJoinItem indicatorSpatialUnitJoinItem = (IndicatorSpatialUnitJoinItem) o;
     return Objects.equals(this.allowedRoles, indicatorSpatialUnitJoinItem.allowedRoles) &&
         Objects.equals(this.spatialUnitId, indicatorSpatialUnitJoinItem.spatialUnitId) &&
-        Objects.equals(this.spatialUnitName, indicatorSpatialUnitJoinItem.spatialUnitName);
+        Objects.equals(this.spatialUnitName, indicatorSpatialUnitJoinItem.spatialUnitName) &&
+        Objects.equals(this.userPermissions, indicatorSpatialUnitJoinItem.userPermissions);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(allowedRoles, spatialUnitId, spatialUnitName);
+    return Objects.hash(allowedRoles, spatialUnitId, spatialUnitName, userPermissions);
   }
 
   @Override
@@ -124,6 +147,7 @@ public class IndicatorSpatialUnitJoinItem {
     sb.append("    allowedRoles: ").append(toIndentedString(allowedRoles)).append("\n");
     sb.append("    spatialUnitId: ").append(toIndentedString(spatialUnitId)).append("\n");
     sb.append("    spatialUnitName: ").append(toIndentedString(spatialUnitName)).append("\n");
+    sb.append("    userPermissions: ").append(toIndentedString(userPermissions)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -23,7 +23,7 @@ import javax.annotation.Generated;
  */
 
 @Schema(name = "JobOverviewType", description = "Description of a Job")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-28T15:53:08.183695100+02:00[Europe/Budapest]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-28T19:26:10.982405300+02:00[Europe/Budapest]")
 public class JobOverviewType {
 
   @JsonProperty("id")
