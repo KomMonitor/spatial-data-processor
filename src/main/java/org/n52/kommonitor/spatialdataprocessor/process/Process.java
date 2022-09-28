@@ -2,7 +2,7 @@ package org.n52.kommonitor.spatialdataprocessor.process;
 
 import org.n52.kommonitor.models.ProcessType;
 
-public interface Process {
+public interface Process<T extends ProcessType> {
 
-    void run(ProcessType parameters) throws Exception;
+    void execute(T parameters) throws Exception;
 }
