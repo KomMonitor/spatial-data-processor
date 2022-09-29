@@ -19,7 +19,7 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
     private static final Logger LOGGER = LoggerFactory.getLogger(IsochronePruneProcess.class);
 
     @Override
-    public void execute(ProcessorUtils util, IsochronePruneProcessType definition) throws Exception {
+    public Object execute(ProcessorUtils util, IsochronePruneProcessType definition) throws Exception {
 
         LOGGER.debug(definition.getIsochron().toString());
         LOGGER.debug(definition.getSpatialUnit().toString());

@@ -5,5 +5,5 @@ import org.n52.kommonitor.spatialdataprocessor.util.ProcessorUtils;
 
 public interface Process<T extends ProcessType> {
 
-    void execute(ProcessorUtils util, T parameters) throws Exception;
+    Object execute(ProcessorUtils util, T parameters) throws Exception;
 }

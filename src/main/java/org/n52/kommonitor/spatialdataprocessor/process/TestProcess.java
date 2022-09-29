@@ -22,7 +22,7 @@ public class TestProcess implements Process<TestProcessType> {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestProcess.class);
 
     @Override
-    public void execute(ProcessorUtils util, TestProcessType parameters) throws Exception {
+    public Object execute(ProcessorUtils util, TestProcessType parameters) throws Exception {
         DataManagementClient dataManagementClient = util.dataMangementClient();
 
         UUID indicatorId = UUID.fromString("baad078b-8e91-4999-aa94-0fee5a50cec6");
@@ -52,6 +52,7 @@ public class TestProcess implements Process<TestProcessType> {
         LOGGER.info(b.toString());
 
         Thread.sleep(1000 * 30);
-        throw new RuntimeException("not implemented yet!");
+
+        return "done";
     }
 }

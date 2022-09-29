@@ -9,11 +9,12 @@ import org.slf4j.LoggerFactory;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 
 /**
  * Job to be executed by the API
  */
-public class Job<T extends ProcessType> implements Runnable {
+public class Job<T extends ProcessType> implements Callable<Object> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IsochronePruneProcess.class);
 
@@ -32,15 +33,17 @@ public class Job<T extends ProcessType> implements Runnable {
     }
 
     @Override
-    public void run() {
+    public Object call() {
         LOGGER.info("Running Job#" + id);
         status = JobOverviewType.StatusEnum.RUNNING;
         try {
-            process.execute(processorUtils, processConfig);
+            Object result = process.execute(processorUtils, processConfig);
             status = JobOverviewType.StatusEnum.FINISHED;
+            return result;
         } catch (Exception e) {
             LOGGER.error("Failing Job#" + id + ": " + e.getMessage());
             status = JobOverviewType.StatusEnum.FAILED;
+            return null;
         }
     }
 
