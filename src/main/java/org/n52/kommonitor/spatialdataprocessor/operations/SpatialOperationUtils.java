@@ -1,28 +1,34 @@
 package org.n52.kommonitor.spatialdataprocessor.operations;
 
+import org.geotools.data.crs.ReprojectFeatureReader;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.MultiPolygon;
 import org.locationtech.jts.geom.Polygon;
 import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.springframework.stereotype.Component;
 
 @Component
 public class SpatialOperationUtils {
 
     /***
-     * * Calculates the polygonal intersection Geometry of the geometries from two SimpleFeatures
+     * Calculates the polygonal intersection Geometry of the geometries from two SimpleFeatures, assuming that both
+     * SimpleFeatures have the same CoordinateReferenceSystem
      *
-     * @param feature1 First SimpleFeature
-     * @param feature2 Second SimpleFeature
+     * @param sf1 First SimpleFeature
+     * @param sf2 Second SimpleFeature
      * @return Intersecting Geometry
-     * @throws OperationException if one of the two SimpleFeature geometries is not a Polygon or MultiPolygon
+     * @throws OperationException if one of the two SimpleFeature geometries is not a Polygon or MultiPolygon and
+     * CRS are different but transformCrs is false.
      */
-    public Geometry polygonalIntersection(SimpleFeature feature1, SimpleFeature feature2) throws OperationException{
-        //TODO Add check for same projection.
-        //TODO Add CRS transformation.
+    public Geometry polygonalIntersection(SimpleFeature sf1, SimpleFeature sf2) throws OperationException {
+        if (!checkCrs(sf1, sf2)) {
+            throw new OperationException("Can not calculate intersection for two SimpleFeatures that have different" +
+                    " CoordinateReferenceSystems.");
+        }
         return polygonalIntersection(
-                (Geometry)feature1.getDefaultGeometry(),
-                (Geometry)feature2.getDefaultGeometry()
+                (Geometry) sf1.getDefaultGeometry(),
+                (Geometry) sf2.getDefaultGeometry()
         );
     }
 
@@ -34,8 +40,7 @@ public class SpatialOperationUtils {
      * @return Intersecting Geometry
      * @throws OperationException if one of the two geometries is not a Polygon or MultiPolygon
      */
-    public Geometry polygonalIntersection(Geometry geom1, Geometry geom2) throws OperationException{
-        //TODO Handling of empty Geometry
+    public Geometry polygonalIntersection(Geometry geom1, Geometry geom2) throws OperationException {
         checkPolygonalType(geom1);
         checkPolygonalType(geom2);
         return geom1.intersection(geom2);
@@ -48,9 +53,16 @@ public class SpatialOperationUtils {
      * @param geom Geometry to check
      * @throws OperationException
      */
-    private void checkPolygonalType(Geometry geom) throws OperationException{
-        if (!(geom instanceof Polygon) && !(geom instanceof MultiPolygon)){
+    private void checkPolygonalType(Geometry geom) throws OperationException {
+        if (!(geom instanceof Polygon) && !(geom instanceof MultiPolygon)) {
             throw new OperationException("Geometry is not of one of the types:" + "[Polygon, MultiPolygon].");
         }
     }
+
+    private boolean checkCrs(SimpleFeature sf1, SimpleFeature sf2) {
+        CoordinateReferenceSystem crs1 = sf1.getFeatureType().getCoordinateReferenceSystem();
+        CoordinateReferenceSystem crs2 = sf2.getFeatureType().getCoordinateReferenceSystem();
+        return crs1.getName().equals(crs2.getName());
+    }
+
 }
