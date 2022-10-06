@@ -1,4 +1,4 @@
-package org.n52.kommonitor.spatialdataprocessor;
+package org.n52.kommonitor;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
