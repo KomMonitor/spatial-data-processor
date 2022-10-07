@@ -3,6 +3,7 @@ package org.n52.kommonitor.spatialdataprocessor.controller;
 import org.n52.kommonitor.models.ProcessType;
 import org.n52.kommonitor.models.JobOverviewType;
 import org.n52.kommonitor.spatialdataprocessor.api.JobsApi;
+import org.n52.kommonitor.spatialdataprocessor.config.JobStore;
 import org.n52.kommonitor.spatialdataprocessor.config.ProcessConfiguration;
 import org.n52.kommonitor.spatialdataprocessor.util.Job;
 import org.springframework.http.HttpStatus;
@@ -24,29 +25,25 @@ import java.util.stream.Collectors;
 public class JobsController implements JobsApi {
 
     private final ExecutorService executor = Executors.newCachedThreadPool();
+    private final Map<String, ProcessConfiguration.ProcessFactory<?>> processFactories;
+    private final JobStore jobStore;
 
-    /**
-     * Local storage of Jobs and their results.
-     * TODO: refactor this to use a different storage solution
-     */
-    private final Map<Job<?>, Future<?>> jobs = new HashMap<>();
-    private final Map<String, ProcessConfiguration.ProcessFactory<?>> processFactoryMap;
-
-    public JobsController(List<ProcessConfiguration.ProcessFactory<?>> processFactories) {
-        processFactoryMap = new HashMap<>();
-        for (ProcessConfiguration.ProcessFactory<?> processFactory : processFactories) {
-            processFactoryMap.put(processFactory.getProcessName(), processFactory);
+    public JobsController(List<ProcessConfiguration.ProcessFactory<?>> factories, JobStore jobStore) {
+        this.jobStore = jobStore;
+        processFactories = new HashMap<>();
+        for (ProcessConfiguration.ProcessFactory<?> processFactory : factories) {
+            processFactories.put(processFactory.getProcessName(), processFactory);
         }
     }
 
     @Override
     public ResponseEntity<UUID> enqueueJob(ProcessType jobDefinition) {
         // Get Process by name
-        ProcessConfiguration.ProcessFactory factory = processFactoryMap.get(jobDefinition.getName());
+        ProcessConfiguration.ProcessFactory factory = processFactories.get(jobDefinition.getName());
 
         if (factory != null) {
             Job<?> job = new Job(factory.createProcess(jobDefinition));
-            jobs.put(job, executor.submit(job));
+            jobStore.addJob(job, executor.submit(job));
             return ResponseEntity.ok(job.getId());
         } else {
             //TODO: return nice error that process does not exist
@@ -56,39 +53,17 @@ public class JobsController implements JobsApi {
 
     @Override
     public ResponseEntity<List<JobOverviewType>> getAllJobs() {
-        List<JobOverviewType> response = jobs.entrySet()
-                                             .stream()
-                                             .map(e -> this.toOverviewType(e.getKey(), e.getValue()))
-                                             .collect(Collectors.toList());
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(jobStore.getAllJobsOverview());
     }
 
     @Override
     public ResponseEntity<JobOverviewType> getJob(UUID jobId) {
-        Optional<Map.Entry<Job<?>, Future<?>>> job = jobs.entrySet()
-                                                        .stream()
-                                                        .filter(j -> j.getKey().getId().equals(jobId))
-                                                        .findFirst();
-
+        Optional<JobOverviewType> job = jobStore.getJobOverview(jobId);
         if (job.isPresent()) {
-            return ResponseEntity.ok(this.toOverviewType(job.get().getKey(), job.get().getValue()));
+            return ResponseEntity.ok(job.get());
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    private JobOverviewType toOverviewType(Job<?> job, Future<?> resultFuture) {
-        Object result;
-        try {
-            result = resultFuture.isDone() ? resultFuture.get() : null;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return new JobOverviewType()
-                .id(job.getId())
-                .process(job.getProcess().toString())
-                .status(job.getStatus())
-                .timestamp(job.getTimestamp())
-                .result(result);
-    }
 }
