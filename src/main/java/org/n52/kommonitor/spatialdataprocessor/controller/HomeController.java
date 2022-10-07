@@ -20,11 +20,11 @@ public class HomeController {
                 origWithoutTrailingSlash = origWithoutTrailingSlash.substring(0, origWithoutTrailingSlash.length() - 1);
             }
 
-            String target = String.format("redirect:%s/swagger-ui.html", origWithoutTrailingSlash);
+            String target = String.format("redirect:%s/swagger-ui/index.html", origWithoutTrailingSlash);
             LOG.info("Redirecting to swagger UI: {}", target);
             return target;
         }
 
-        return "redirect:swagger-ui.html";
+        return "redirect:swagger-ui/index.html";
     }
 }
