@@ -19,7 +19,7 @@ import javax.annotation.Generated;
  */
 
 @Schema(name = "GeoresourceReferenceType", description = "a reference to georesource, e.g. a resource that is used to compute the main indicator")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-28T19:26:11.785403500+02:00[Europe/Budapest]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-07T13:59:53.371920358+02:00[Europe/Amsterdam]")
 public class GeoresourceReferenceType {
 
   @JsonProperty("referencedGeoresourceDescription")

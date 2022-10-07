@@ -32,7 +32,7 @@ import javax.annotation.Generated;
   @JsonSubTypes.Type(value = TestProcessType.class, name = "test")
 })
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-28T19:26:10.982405300+02:00[Europe/Budapest]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-07T13:59:52.529732386+02:00[Europe/Amsterdam]")
 public interface ProcessType {
     public String getName();
 }

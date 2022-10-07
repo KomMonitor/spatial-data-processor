@@ -22,7 +22,7 @@ import javax.annotation.Generated;
  */
 
 @Schema(name = "IsochronePruneProcessType", description = "Process that calculates overlap of spatial-units with isochrones")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-28T19:26:10.982405300+02:00[Europe/Budapest]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-07T13:59:52.529732386+02:00[Europe/Amsterdam]")
 public class IsochronePruneProcessType implements ProcessType {
 
   @JsonProperty("name")

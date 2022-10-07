@@ -20,7 +20,7 @@ import javax.annotation.Generated;
  */
 
 @Schema(name = "ProcessOverviewType", description = "Description of a Process that can be executed by the processor")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-28T19:26:10.982405300+02:00[Europe/Budapest]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-07T13:59:52.529732386+02:00[Europe/Amsterdam]")
 public class ProcessOverviewType {
 
   @JsonProperty("id")

@@ -28,7 +28,7 @@ import javax.annotation.Generated;
  * IndicatorOverviewType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-28T19:26:11.785403500+02:00[Europe/Budapest]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-07T13:59:53.371920358+02:00[Europe/Amsterdam]")
 public class IndicatorOverviewType {
 
   @JsonProperty("abbreviation")

@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-09-27T14:10:31.537835801+02:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-07T13:59:52.529732386+02:00[Europe/Amsterdam]")
 @Validated
 @Tag(name = "jobs", description = "Jobs that are being processed")
 @RequestMapping("${openapi.komMonitorSpatialDataProcessor.base-path:}")
@@ -43,6 +43,7 @@ public interface JobsApi {
      *
      * @param processType Definition of Job to be executed (required)
      * @return Successful operation (status code 200)
+     *         or unauthorized (status code 401)
      *         or Invalid input (status code 405)
      */
     @Operation(
@@ -53,10 +54,11 @@ public interface JobsApi {
             @ApiResponse(responseCode = "200", description = "Successful operation", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = UUID.class))
             }),
+            @ApiResponse(responseCode = "401", description = "unauthorized"),
             @ApiResponse(responseCode = "405", description = "Invalid input")
         },
         security = {
-            @SecurityRequirement(name = "kommonitor_auth", scopes={ "access:spatial-data-processor" })
+            @SecurityRequirement(name = "kommonitor_auth", scopes={  })
         }
     )
     @RequestMapping(
@@ -75,6 +77,7 @@ public interface JobsApi {
      * Returns a list of all currently queued jobs
      *
      * @return success (status code 200)
+     *         or unauthorized (status code 401)
      */
     @Operation(
         operationId = "getAllJobs",
@@ -83,10 +86,11 @@ public interface JobsApi {
         responses = {
             @ApiResponse(responseCode = "200", description = "success", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = JobOverviewType.class))
-            })
+            }),
+            @ApiResponse(responseCode = "401", description = "unauthorized")
         },
         security = {
-            @SecurityRequirement(name = "kommonitor_auth", scopes={ "access:spatial-data-processor" })
+            @SecurityRequirement(name = "kommonitor_auth", scopes={  })
         }
     )
     @RequestMapping(
@@ -105,6 +109,8 @@ public interface JobsApi {
      *
      * @param jobId UUID of the job (required)
      * @return success (status code 200)
+     *         or unauthorized (status code 401)
+     *         or Job not found (status code 404)
      */
     @Operation(
         operationId = "getJob",
@@ -113,10 +119,12 @@ public interface JobsApi {
         responses = {
             @ApiResponse(responseCode = "200", description = "success", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = JobOverviewType.class))
-            })
+            }),
+            @ApiResponse(responseCode = "401", description = "unauthorized"),
+            @ApiResponse(responseCode = "404", description = "Job not found")
         },
         security = {
-            @SecurityRequirement(name = "kommonitor_auth", scopes={ "access:spatial-data-processor" })
+            @SecurityRequirement(name = "kommonitor_auth", scopes={  })
         }
     )
     @RequestMapping(
