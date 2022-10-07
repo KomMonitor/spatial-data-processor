@@ -1,7 +1,5 @@
 package org.n52.kommonitor.spatialdataprocessor.config;
 
-import java.util.function.Supplier;
-
 import org.n52.kommonitor.models.IsochronePruneProcessType;
 import org.n52.kommonitor.models.ProcessOverviewType;
 import org.n52.kommonitor.models.ProcessType;
@@ -17,7 +15,7 @@ import org.springframework.stereotype.Component;
  * Static Registry providing information about all currently available Processes
  */
 @Component
-public class ProcessRegistry {
+public class ProcessConfiguration {
 
     public interface ProcessFactory<T extends ProcessType> {
 
@@ -73,7 +71,7 @@ public class ProcessRegistry {
             @Override
             public ProcessOverviewType getProcessOverview() {
                 return new ProcessOverviewType()
-                        .id(IsochronePruneProcess.id)
+                        .id(TestProcess.id)
                         .name(name)
                         .description("Dummy Process for testing Job Queue System.");
             }

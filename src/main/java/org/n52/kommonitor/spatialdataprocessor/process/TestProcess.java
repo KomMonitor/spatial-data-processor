@@ -18,12 +18,15 @@ public class TestProcess implements Process<TestProcessType> {
 
     public static final UUID id =
             UUID.nameUUIDFromBytes(TestProcess.class.getName().getBytes(StandardCharsets.UTF_8));
-    public static final String name = "test";
     private static final Logger LOGGER = LoggerFactory.getLogger(TestProcess.class);
+    private final DataManagementClient dataManagementClient;
+
+    public TestProcess(DataManagementClient dmc) {
+        dataManagementClient = dmc;
+    }
 
     @Override
-    public Object execute(ProcessorUtils util, TestProcessType parameters) throws Exception {
-        DataManagementClient dataManagementClient = util.dataMangementClient();
+    public Object execute() throws Exception {
 
         UUID indicatorId = UUID.fromString("baad078b-8e91-4999-aa94-0fee5a50cec6");
         UUID spatialUnitId = UUID.fromString("4154115f-3fa8-4fb9-9d7a-593ed0885e6c");

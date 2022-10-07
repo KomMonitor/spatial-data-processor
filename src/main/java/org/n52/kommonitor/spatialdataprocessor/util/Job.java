@@ -20,15 +20,11 @@ public class Job<T extends ProcessType> implements Callable<Object> {
 
     protected UUID id = UUID.randomUUID();
     protected JobOverviewType.StatusEnum status = JobOverviewType.StatusEnum.QUEUED;
-    private final ProcessorUtils processorUtils;
     private final Process<T> process;
-    private final T processConfig;
     private final OffsetDateTime timestamp;
 
-    public Job(ProcessorUtils processorUtils, Process<T> process, T processConfig) {
-        this.processorUtils = processorUtils;
+    public Job(Process<T> process) {
         this.process = process;
-        this.processConfig = processConfig;
         this.timestamp = OffsetDateTime.now();
     }
 
@@ -37,7 +33,7 @@ public class Job<T extends ProcessType> implements Callable<Object> {
         LOGGER.info("Running Job#" + id);
         status = JobOverviewType.StatusEnum.RUNNING;
         try {
-            Object result = process.execute(processorUtils, processConfig);
+            Object result = process.execute();
             status = JobOverviewType.StatusEnum.FINISHED;
             return result;
         } catch (Exception e) {

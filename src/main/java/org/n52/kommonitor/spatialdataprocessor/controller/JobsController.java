@@ -3,9 +3,8 @@ package org.n52.kommonitor.spatialdataprocessor.controller;
 import org.n52.kommonitor.models.ProcessType;
 import org.n52.kommonitor.models.JobOverviewType;
 import org.n52.kommonitor.spatialdataprocessor.api.JobsApi;
+import org.n52.kommonitor.spatialdataprocessor.config.ProcessConfiguration;
 import org.n52.kommonitor.spatialdataprocessor.util.Job;
-import org.n52.kommonitor.spatialdataprocessor.process.Process;
-import org.n52.kommonitor.spatialdataprocessor.util.ProcessorUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,7 +13,6 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -32,22 +30,22 @@ public class JobsController implements JobsApi {
      * TODO: refactor this to use a different storage solution
      */
     private final Map<Job<?>, Future<?>> jobs = new HashMap<>();
-    private final ProcessorUtils processorUtils;
+    private final Map<String, ProcessConfiguration.ProcessFactory<?>> processFactoryMap;
 
-    public JobsController(ProcessorUtils processorUtils) {
-        this.processorUtils = processorUtils;
+    public JobsController(List<ProcessConfiguration.ProcessFactory<?>> processFactories) {
+        processFactoryMap = new HashMap<>();
+        for (ProcessConfiguration.ProcessFactory<?> processFactory : processFactories) {
+            processFactoryMap.put(processFactory.getProcessName(), processFactory);
+        }
     }
 
     @Override
     public ResponseEntity<UUID> enqueueJob(ProcessType jobDefinition) {
         // Get Process by name
-        Optional<Supplier<Process<?>>> process = ProcessRegistry.getProcesses()
-                                                   .stream()
-                                                   .filter(pd -> pd.name().equals(jobDefinition.getName()))
-                                                   .map(ProcessRegistry.ProcessDescription::supplier)
-                                                   .findFirst();
-        if (process.isPresent()) {
-            Job<?> job = new Job(processorUtils, process.get().get(), jobDefinition);
+        ProcessConfiguration.ProcessFactory factory = processFactoryMap.get(jobDefinition.getName());
+
+        if (factory != null) {
+            Job<?> job = new Job(factory.createProcess(jobDefinition));
             jobs.put(job, executor.submit(job));
             return ResponseEntity.ok(job.getId());
         } else {
@@ -69,7 +67,7 @@ public class JobsController implements JobsApi {
     public ResponseEntity<JobOverviewType> getJob(UUID jobId) {
         Optional<Map.Entry<Job<?>, Future<?>>> job = jobs.entrySet()
                                                         .stream()
-                                                        .filter(j -> j.getKey().getId() == jobId)
+                                                        .filter(j -> j.getKey().getId().equals(jobId))
                                                         .findFirst();
 
         if (job.isPresent()) {
