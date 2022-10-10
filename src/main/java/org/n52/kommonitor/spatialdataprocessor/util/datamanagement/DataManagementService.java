@@ -16,19 +16,19 @@ import java.util.UUID;
 public interface DataManagementService {
 
         @Headers({"Accept: application/json"})
-        @GET("public/spatial-units/{spatialUnitId}")
+        @GET("spatial-units/{spatialUnitId}")
         Call<SpatialUnitOverviewType> getSpatialUnitById(
                 @Path("spatialUnitId") UUID spatialUnitId
         );
 
         @Headers({"Accept: application/json"})
-        @GET("public/indicators/{indicatorId}")
+        @GET("indicators/{indicatorId}")
         Call<IndicatorOverviewType> getIndicatorById(
                 @Path("indicatorId") UUID indicatorId
         );
 
         @Headers({"Accept: */*"})
-        @GET("public/indicators/{indicatorId}/{spatialUnitId}")
+        @GET("indicators/{indicatorId}/{spatialUnitId}")
         Call<ObjectNode> getSpatialUnitGeoJSONForIndicator(
                 @Path("indicatorId") UUID indicatorId,
                 @Path("spatialUnitId") UUID spatialUnitId
