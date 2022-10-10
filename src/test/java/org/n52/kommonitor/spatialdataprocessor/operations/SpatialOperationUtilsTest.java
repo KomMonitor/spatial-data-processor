@@ -62,6 +62,21 @@ public class SpatialOperationUtilsTest {
         Assertions.assertThrows(OperationException.class, () ->utils.polygonalIntersection(sf1, sf2));
     }
 
+    @Test
+    public void polygonalIntersectionProportionTest() throws ParseException, OperationException, FactoryException {
+        SimpleFeature sf1 = mockSimpleFeature("POLYGON((0 0, 20 0, 20 20, 0 20, 0 0))", DEFAULT_EPSG);
+        SimpleFeature sf2 = mockSimpleFeature("POLYGON((10 10, 30 10, 30 30, 10 30, 10 10))", DEFAULT_EPSG);
+        SimpleFeature sf3 = mockSimpleFeature("POLYGON((30 30, 50 30, 50 50, 30 50, 30 30))", DEFAULT_EPSG);
+        SimpleFeature sf4 = mockSimpleFeature("POLYGON EMPTY", DEFAULT_EPSG);
+
+        Double res = utils.polygonalIntersectionProportion(sf1, sf2);
+
+        Assertions.assertEquals(0.25, utils.polygonalIntersectionProportion(sf1, sf2));
+        Assertions.assertEquals(0, utils.polygonalIntersectionProportion(sf1, sf3));
+        Assertions.assertEquals(1, utils.polygonalIntersectionProportion(sf1, sf1));
+        Assertions.assertEquals(0, utils.polygonalIntersectionProportion(sf4, sf1));
+    }
+
     private SimpleFeature mockSimpleFeature(String wkt, String epsg) throws ParseException, FactoryException {
         GeometryFactory geomFactory = JTSFactoryFinder.getGeometryFactory();
 
