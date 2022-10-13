@@ -46,6 +46,26 @@ public class SpatialOperationUtils {
         return geom1.intersection(geom2);
     }
 
+    /**
+     * Calculates the proportion of intersection for the geometries of two SimpleFeatures. The result gives the
+     * proportion of the intersecting geometry in relation to the geometry of the first SimpleFeature.
+     *
+     * @param sf1 First SimpleFeature for which the proportion of intersection will be calculated
+     * @param sf2 Second SimpleFeature
+     * @return Proportion of intersection from 0 (no intersection) to 1 (full overlap).
+     * @throws OperationException if one of the two geometries is not a Polygon or MultiPolygon
+     */
+    public double polygonalIntersectionProportion(SimpleFeature sf1, SimpleFeature sf2) throws OperationException {
+        Geometry geom = polygonalIntersection(sf1, sf2);
+        // This is fail-safe for an empty geometry of the first SimpleFeature, since it prevents dividing by zero area.
+        if (geom.isEmpty()) {
+            return 0;
+        }
+        else {
+            return geom.getArea() / ((Polygon)sf1.getDefaultGeometry()).getArea();
+        }
+    }
+
     /***
      * Checks a Geometry for types {@link Polygon} and {@link MultiPolygon}. If the Geometry is instance of another
      * type, this method throws an Exception.

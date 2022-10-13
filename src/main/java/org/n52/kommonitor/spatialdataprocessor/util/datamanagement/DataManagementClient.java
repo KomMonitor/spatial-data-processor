@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import org.n52.kommonitor.models.IndicatorOverviewType;
 import org.n52.kommonitor.models.SpatialUnitOverviewType;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +26,11 @@ public class DataManagementClient {
     private final DataManagementService service;
 
     public DataManagementClient(@Value("${config.data-management.baseUrl}") String baseUrl) {
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
+
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(loggingInterceptor);
 
         // Magically find and add JSR310 Module to deserialize java8 LocalDate
         ObjectMapper mapper = JsonMapper.builder()
