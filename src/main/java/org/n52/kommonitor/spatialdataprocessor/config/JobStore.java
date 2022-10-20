@@ -13,6 +13,7 @@ import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import org.n52.kommonitor.models.JobOverviewType;
+import org.n52.kommonitor.models.JobResultType;
 import org.n52.kommonitor.spatialdataprocessor.util.Job;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +43,7 @@ public class JobStore {
     public List<JobOverviewType> getAllJobsOverview() {
         return jobs.entrySet()
                    .stream()
-                   .map(e -> this.toOverviewType(e.getKey(), e.getValue()))
+                   .map(e -> this.toOverviewType(e.getKey()))
                    .collect(Collectors.toList());
     }
 
@@ -51,7 +52,16 @@ public class JobStore {
                                                          .stream()
                                                          .filter(j -> j.getKey().getId().equals(jobId))
                                                          .findFirst();
-        return job.map(jobFutureEntry -> toOverviewType(jobFutureEntry.getKey(), jobFutureEntry.getValue()));
+        return job.map(jobFutureEntry -> toOverviewType(jobFutureEntry.getKey()));
+    }
+
+    public Optional<JobResultType> getJobResult(UUID jobId) {
+        Optional<Map.Entry<Job<?>, Future<?>>> job = jobs.entrySet()
+                .stream()
+                .filter(j -> j.getKey().getId().equals(jobId))
+                .findFirst();
+
+        return job.map(jobFutureEntry -> toResultType(jobFutureEntry.getKey(), jobFutureEntry.getValue()));
     }
 
     @Scheduled(fixedDelay = 1000 * 60 * 2)
@@ -72,17 +82,23 @@ public class JobStore {
         LOGGER.debug("Finished cleaning of JobStore at: " + OffsetDateTime.now());
     }
 
-    private JobOverviewType toOverviewType(Job<?> job, Future<?> resultFuture) {
+    private JobOverviewType toOverviewType(Job<?> job) {
+        return new JobOverviewType()
+                .id(job.getId())
+                .process(job.getProcess().toString())
+                .status(job.getStatus())
+                .timestamp(job.getTimestamp());
+    }
+
+    private JobResultType toResultType(Job<?> job, Future<?> resultFuture) {
         Object result;
         try {
             result = resultFuture.isDone() ? resultFuture.get() : null;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return new JobOverviewType()
+        return new JobResultType()
                 .id(job.getId())
-                .process(job.getProcess().toString())
-                .status(job.getStatus())
-                .timestamp(job.getTimestamp());
+                .result(result);
     }
 }

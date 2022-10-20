@@ -69,12 +69,13 @@ public class JobsController implements JobsApi {
 
     @Override
     public ResponseEntity<JobResultType> getJobResult(UUID jobId) {
-        Optional<JobResultType> result = Optional.empty();
+        Optional<JobResultType> result = jobStore.getJobResult(jobId);
         if (result.isPresent()) {
-            return ResponseEntity.ok(result.get());
-        } else {
-            return ResponseEntity.notFound().build();
+            if (result.get().getResult() != null){
+                return ResponseEntity.ok(result.get());
+            }
         }
+        return ResponseEntity.notFound().build();
     }
 
 }
