@@ -4,6 +4,9 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -22,7 +25,7 @@ import javax.annotation.Generated;
  */
 
 @Schema(name = "IsochronePruneProcessType", description = "Process that calculates overlap of spatial-units with isochrones")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-07T13:59:52.529732386+02:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-20T10:40:58.862087900+02:00[Europe/Berlin]")
 public class IsochronePruneProcessType implements ProcessType {
 
   @JsonProperty("name")
@@ -32,10 +35,11 @@ public class IsochronePruneProcessType implements ProcessType {
   private Object isochron;
 
   @JsonProperty("spatialUnit")
-  private Object spatialUnit;
+  private UUID spatialUnit;
 
   @JsonProperty("indicator")
-  private Object indicator;
+  @Valid
+  private List<UUID> indicator = new ArrayList<>();
 
   @JsonProperty("configuration")
   private Object _configuration;
@@ -78,7 +82,7 @@ public class IsochronePruneProcessType implements ProcessType {
     this.isochron = isochron;
   }
 
-  public IsochronePruneProcessType spatialUnit(Object spatialUnit) {
+  public IsochronePruneProcessType spatialUnit(UUID spatialUnit) {
     this.spatialUnit = spatialUnit;
     return this;
   }
@@ -87,18 +91,23 @@ public class IsochronePruneProcessType implements ProcessType {
    * Get spatialUnit
    * @return spatialUnit
   */
-  @NotNull 
+  @NotNull @Valid 
   @Schema(name = "spatialUnit", required = true)
-  public Object getSpatialUnit() {
+  public UUID getSpatialUnit() {
     return spatialUnit;
   }
 
-  public void setSpatialUnit(Object spatialUnit) {
+  public void setSpatialUnit(UUID spatialUnit) {
     this.spatialUnit = spatialUnit;
   }
 
-  public IsochronePruneProcessType indicator(Object indicator) {
+  public IsochronePruneProcessType indicator(List<UUID> indicator) {
     this.indicator = indicator;
+    return this;
+  }
+
+  public IsochronePruneProcessType addIndicatorItem(UUID indicatorItem) {
+    this.indicator.add(indicatorItem);
     return this;
   }
 
@@ -106,13 +115,13 @@ public class IsochronePruneProcessType implements ProcessType {
    * Get indicator
    * @return indicator
   */
-  @NotNull 
+  @NotNull @Valid 
   @Schema(name = "indicator", required = true)
-  public Object getIndicator() {
+  public List<UUID> getIndicator() {
     return indicator;
   }
 
-  public void setIndicator(Object indicator) {
+  public void setIndicator(List<UUID> indicator) {
     this.indicator = indicator;
   }
 

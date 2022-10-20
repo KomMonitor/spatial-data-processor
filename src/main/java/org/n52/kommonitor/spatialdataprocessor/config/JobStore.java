@@ -83,7 +83,6 @@ public class JobStore {
                 .id(job.getId())
                 .process(job.getProcess().toString())
                 .status(job.getStatus())
-                .timestamp(job.getTimestamp())
-                .result(result);
+                .timestamp(job.getTimestamp());
     }
 }

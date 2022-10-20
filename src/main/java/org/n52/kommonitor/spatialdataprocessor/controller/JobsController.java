@@ -1,5 +1,6 @@
 package org.n52.kommonitor.spatialdataprocessor.controller;
 
+import org.n52.kommonitor.models.JobResultType;
 import org.n52.kommonitor.models.ProcessType;
 import org.n52.kommonitor.models.JobOverviewType;
 import org.n52.kommonitor.spatialdataprocessor.api.JobsApi;
@@ -61,6 +62,16 @@ public class JobsController implements JobsApi {
         Optional<JobOverviewType> job = jobStore.getJobOverview(jobId);
         if (job.isPresent()) {
             return ResponseEntity.ok(job.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Override
+    public ResponseEntity<JobResultType> getJobResult(UUID jobId) {
+        Optional<JobResultType> result = Optional.empty();
+        if (result.isPresent()) {
+            return ResponseEntity.ok(result.get());
         } else {
             return ResponseEntity.notFound().build();
         }

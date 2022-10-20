@@ -124,6 +124,36 @@ paths:
         - kommonitor_auth:
             - access:spatial-data-processor
 
+  /jobs/{jobId}/result:
+    get:
+      tags:
+        - jobs
+      summary: Gets the result of a job
+      description: Gets the result of a job
+      operationId: getJobResult
+      parameters:
+        - in: path
+          name: jobId
+          required: true
+          description: UUID of the job
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobResultType'
+        '401':
+          description: unauthorized
+        '404':
+          description: Job not found
+      security:
+        - kommonitor_auth:
+            - access:spatial-data-processor
+
 components:
   schemas:
     ProcessOverviewType:
@@ -170,10 +200,14 @@ components:
           $ref: "#/components/schemas/FeatureCollectionType"
         spatialUnit:
           #$ref: "../data-management/kommonitor_dataAccessAPI.yaml/#/definitions/SpatialUnitOverviewType"
-          type: object
+          type: string
+          format: uuid
         indicator:
           #$ref: "../data-management/kommonitor_dataAccessAPI.yaml/#/definitions/IndicatorOverviewType"
-          type: object
+          type: array
+          items:
+            type: string
+            format: uuid
         configuration:
           type: object
           #TODO: expand on this
@@ -216,8 +250,6 @@ components:
         status:
           type: string
           enum: [ queued, running, finished, failed ]
-        result:
-          type: object
 
     JobResultType:
       type: object
@@ -227,6 +259,11 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/uuid'
+        result:
+          type: object
+          description: |
+            The result is a JSON object whose schema depends on the underlying process. Each process has its own result
+            schema.
 
     uuid:
       type: string

@@ -19,11 +19,14 @@ import javax.annotation.Generated;
  * JobResultType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-07T13:59:52.529732386+02:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-20T10:40:58.862087900+02:00[Europe/Berlin]")
 public class JobResultType {
 
   @JsonProperty("id")
   private UUID id;
+
+  @JsonProperty("result")
+  private Object result;
 
   public JobResultType id(UUID id) {
     this.id = id;
@@ -44,6 +47,25 @@ public class JobResultType {
     this.id = id;
   }
 
+  public JobResultType result(Object result) {
+    this.result = result;
+    return this;
+  }
+
+  /**
+   * The result is a JSON object whose schema depends on the underlying process. Each process has its own result schema. 
+   * @return result
+  */
+  @NotNull 
+  @Schema(name = "result", description = "The result is a JSON object whose schema depends on the underlying process. Each process has its own result schema. ", required = true)
+  public Object getResult() {
+    return result;
+  }
+
+  public void setResult(Object result) {
+    this.result = result;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -53,12 +75,13 @@ public class JobResultType {
       return false;
     }
     JobResultType jobResultType = (JobResultType) o;
-    return Objects.equals(this.id, jobResultType.id);
+    return Objects.equals(this.id, jobResultType.id) &&
+        Objects.equals(this.result, jobResultType.result);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id);
+    return Objects.hash(id, result);
   }
 
   @Override
@@ -66,6 +89,7 @@ public class JobResultType {
     StringBuilder sb = new StringBuilder();
     sb.append("class JobResultType {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    result: ").append(toIndentedString(result)).append("\n");
     sb.append("}");
     return sb.toString();
   }

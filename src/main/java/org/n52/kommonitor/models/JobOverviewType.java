@@ -23,7 +23,7 @@ import javax.annotation.Generated;
  */
 
 @Schema(name = "JobOverviewType", description = "Description of a Job")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-07T13:59:52.529732386+02:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-20T10:40:58.862087900+02:00[Europe/Berlin]")
 public class JobOverviewType {
 
   @JsonProperty("id")
@@ -77,9 +77,6 @@ public class JobOverviewType {
 
   @JsonProperty("status")
   private StatusEnum status;
-
-  @JsonProperty("result")
-  private Object result;
 
   public JobOverviewType id(UUID id) {
     this.id = id;
@@ -157,25 +154,6 @@ public class JobOverviewType {
     this.status = status;
   }
 
-  public JobOverviewType result(Object result) {
-    this.result = result;
-    return this;
-  }
-
-  /**
-   * Get result
-   * @return result
-  */
-  
-  @Schema(name = "result", required = false)
-  public Object getResult() {
-    return result;
-  }
-
-  public void setResult(Object result) {
-    this.result = result;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -188,13 +166,12 @@ public class JobOverviewType {
     return Objects.equals(this.id, jobOverviewType.id) &&
         Objects.equals(this.process, jobOverviewType.process) &&
         Objects.equals(this.timestamp, jobOverviewType.timestamp) &&
-        Objects.equals(this.status, jobOverviewType.status) &&
-        Objects.equals(this.result, jobOverviewType.result);
+        Objects.equals(this.status, jobOverviewType.status);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, process, timestamp, status, result);
+    return Objects.hash(id, process, timestamp, status);
   }
 
   @Override
@@ -205,7 +182,6 @@ public class JobOverviewType {
     sb.append("    process: ").append(toIndentedString(process)).append("\n");
     sb.append("    timestamp: ").append(toIndentedString(timestamp)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
-    sb.append("    result: ").append(toIndentedString(result)).append("\n");
     sb.append("}");
     return sb.toString();
   }

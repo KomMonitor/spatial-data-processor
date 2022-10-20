@@ -180,7 +180,7 @@
                                         <artifactItem>
                                             <groupId>org.n52.kommonitor</groupId>
                                             <artifactId>kommonitor-api-specs</artifactId>
-                                            <version>0.0.2-SNAPSHOT</version>
+                                            <version>0.0.3-SNAPSHOT</version>
                                             <type>jar</type>
                                             <includes>specs/spatial-data-processor/**,specs/data-management/**
                                             </includes>
