@@ -1,8 +1,11 @@
 package org.n52.kommonitor.spatialdataprocessor.util.datamanagement;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.n52.kommonitor.models.IndicatorOverviewType;
+import org.n52.kommonitor.models.ProcessType;
 import org.n52.kommonitor.models.SpatialUnitOverviewType;
+import org.n52.kommonitor.spatialdataprocessor.process.Process;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
@@ -22,6 +25,12 @@ public interface DataManagementService {
         );
 
         @Headers({"Accept: application/json"})
+        @GET("spatial-units/{spatialUnitId}/allFeatures")
+        Call<ObjectNode> getSpatialUnitGeoJSON(
+                @Path("spatialUnitId") UUID spatialUnitId
+        );
+
+        @Headers({"Accept: application/json"})
         @GET("indicators/{indicatorId}")
         Call<IndicatorOverviewType> getIndicatorById(
                 @Path("indicatorId") UUID indicatorId
@@ -32,6 +41,23 @@ public interface DataManagementService {
         Call<ObjectNode> getSpatialUnitGeoJSONForIndicator(
                 @Path("indicatorId") UUID indicatorId,
                 @Path("spatialUnitId") UUID spatialUnitId
+        );
+
+        @Headers({"Accept: */*"})
+        @GET("indicators/{indicatorId}/{spatialUnitId}/without-geometry")
+        Call<ArrayNode> getIndicatorTimeseries(
+                @Path("indicatorId") UUID indicatorId,
+                @Path("spatialUnitId") UUID spatialUnitId
+        );
+
+        @Headers({"Accept: */*"})
+        @GET("indicators/{indicatorId}/{spatialUnitId}/{year}/{month}/{day}")
+        Call<ObjectNode> getSpatialUnitGeoJSONForIndicatorAndDate(
+                @Path("indicatorId") UUID indicatorId,
+                @Path("spatialUnitId") UUID spatialUnitId,
+                @Path("year") int year,
+                @Path("month") int month,
+                @Path("day") int day
         );
 
 }

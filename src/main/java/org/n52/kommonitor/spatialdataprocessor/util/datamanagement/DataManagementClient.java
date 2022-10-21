@@ -3,6 +3,7 @@ package org.n52.kommonitor.spatialdataprocessor.util.datamanagement;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -51,8 +52,22 @@ public class DataManagementClient {
         return bodyOrError(service.getSpatialUnitById(id).execute());
     }
 
-    public ObjectNode getSpatialUnitGeoJSON(UUID indicatorId, UUID spatialUnitId) throws IOException {
+    public ObjectNode getSpatialUnitGeoJSON(UUID spatialUnitId) throws IOException {
+        return bodyOrError(service.getSpatialUnitGeoJSON(spatialUnitId).execute());
+    }
+
+    public ObjectNode getSpatialUnitGeoJSONForIndicator(UUID indicatorId, UUID spatialUnitId) throws IOException {
         return bodyOrError(service.getSpatialUnitGeoJSONForIndicator(indicatorId, spatialUnitId).execute());
+    }
+
+    public ArrayNode getIndicatorTimeseries(UUID indicatorId, UUID spatialUnitId) throws IOException {
+        return bodyOrError(service.getIndicatorTimeseries(indicatorId, spatialUnitId).execute());
+    }
+
+    public ObjectNode getSpatialUnitGeoJSONForIndicatorAndDate(UUID indicatorId, UUID spatialUnitId,
+                                                               int year, int month, int day) throws Exception{
+        return bodyOrError(service.getSpatialUnitGeoJSONForIndicatorAndDate(indicatorId, spatialUnitId, year, month, day)
+                .execute());
     }
 
     public IndicatorOverviewType getIndicatorOverview(UUID id) throws IOException {
