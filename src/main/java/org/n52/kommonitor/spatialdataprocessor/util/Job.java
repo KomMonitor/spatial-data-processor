@@ -16,7 +16,7 @@ import java.util.concurrent.Callable;
  */
 public class Job<T extends ProcessType> implements Callable<Object> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(IsochronePruneProcess.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Job.class);
 
     protected UUID id = UUID.randomUUID();
     protected JobOverviewType.StatusEnum status = JobOverviewType.StatusEnum.QUEUED;
@@ -35,6 +35,7 @@ public class Job<T extends ProcessType> implements Callable<Object> {
         try {
             Object result = process.execute();
             status = JobOverviewType.StatusEnum.FINISHED;
+            LOGGER.info("Finished Job#" + id);
             return result;
         } catch (Exception e) {
             LOGGER.error("Failing Job#" + id + ": " + e.getMessage());
