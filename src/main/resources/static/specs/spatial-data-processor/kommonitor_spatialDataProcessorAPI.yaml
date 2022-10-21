@@ -208,6 +208,9 @@ components:
           items:
             type: string
             format: uuid
+        date:
+          type: string
+          format: date
         configuration:
           type: object
           #TODO: expand on this
@@ -264,6 +267,48 @@ components:
           description: |
             The result is a JSON object whose schema depends on the underlying process. Each process has its own result
             schema.
+            
+    IsochronePruneProcessResultType:
+      type: object
+      properties:
+        indicatorId:
+          type: string
+          format: uuid
+        overallCoverage:
+          $ref: '#/components/schemas/IndicatorCoverageType'
+        poiCoverage:
+          type: array
+          items:
+            $ref: '#/components/schemas/IndicatorCoverageType'
+        spatialUnitCoverage:
+          type: array
+          items:
+            $ref: '#/components/schemas/IndicatorCoverageType'
+
+    IndicatorCoverageType:
+      type: object
+      properties:
+        poiFeatureId:
+          type: string
+        spatialUnitFeatureId:
+          type: string
+        coverage:
+          type: array
+          items:
+            $ref: '#/components/schemas/IndicatorCoverageValueType'
+
+    IndicatorCoverageValueType:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        absoluteCoverage:
+          type: number
+          format: float
+        relativeCoverage:
+          type: number
+          format: float
 
     uuid:
       type: string

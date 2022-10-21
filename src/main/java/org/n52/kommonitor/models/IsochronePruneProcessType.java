@@ -4,9 +4,11 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -25,7 +27,7 @@ import javax.annotation.Generated;
  */
 
 @Schema(name = "IsochronePruneProcessType", description = "Process that calculates overlap of spatial-units with isochrones")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-20T10:40:58.862087900+02:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-21T12:45:15.139999500+02:00[Europe/Berlin]")
 public class IsochronePruneProcessType implements ProcessType {
 
   @JsonProperty("name")
@@ -40,6 +42,10 @@ public class IsochronePruneProcessType implements ProcessType {
   @JsonProperty("indicator")
   @Valid
   private List<UUID> indicator = new ArrayList<>();
+
+  @JsonProperty("date")
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+  private LocalDate date;
 
   @JsonProperty("configuration")
   private Object _configuration;
@@ -125,6 +131,25 @@ public class IsochronePruneProcessType implements ProcessType {
     this.indicator = indicator;
   }
 
+  public IsochronePruneProcessType date(LocalDate date) {
+    this.date = date;
+    return this;
+  }
+
+  /**
+   * Get date
+   * @return date
+  */
+  @Valid 
+  @Schema(name = "date", required = false)
+  public LocalDate getDate() {
+    return date;
+  }
+
+  public void setDate(LocalDate date) {
+    this.date = date;
+  }
+
   public IsochronePruneProcessType _configuration(Object _configuration) {
     this._configuration = _configuration;
     return this;
@@ -157,12 +182,13 @@ public class IsochronePruneProcessType implements ProcessType {
         Objects.equals(this.isochron, isochronePruneProcessType.isochron) &&
         Objects.equals(this.spatialUnit, isochronePruneProcessType.spatialUnit) &&
         Objects.equals(this.indicator, isochronePruneProcessType.indicator) &&
+        Objects.equals(this.date, isochronePruneProcessType.date) &&
         Objects.equals(this._configuration, isochronePruneProcessType._configuration);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, isochron, spatialUnit, indicator, _configuration);
+    return Objects.hash(name, isochron, spatialUnit, indicator, date, _configuration);
   }
 
   @Override
@@ -173,6 +199,7 @@ public class IsochronePruneProcessType implements ProcessType {
     sb.append("    isochron: ").append(toIndentedString(isochron)).append("\n");
     sb.append("    spatialUnit: ").append(toIndentedString(spatialUnit)).append("\n");
     sb.append("    indicator: ").append(toIndentedString(indicator)).append("\n");
+    sb.append("    date: ").append(toIndentedString(date)).append("\n");
     sb.append("    _configuration: ").append(toIndentedString(_configuration)).append("\n");
     sb.append("}");
     return sb.toString();
