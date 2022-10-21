@@ -1,10 +1,16 @@
 package org.n52.kommonitor.spatialdataprocessor.operations;
 
 import org.geotools.data.crs.ReprojectFeatureReader;
+import org.geotools.data.simple.SimpleFeatureCollection;
+import org.geotools.factory.CommonFactoryFinder;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.MultiPolygon;
 import org.locationtech.jts.geom.Polygon;
 import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.feature.type.FeatureType;
+import org.opengis.filter.Filter;
+import org.opengis.filter.FilterFactory2;
+import org.opengis.geometry.BoundingBox;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.springframework.stereotype.Component;
 
@@ -60,10 +66,28 @@ public class SpatialOperationUtils {
         // This is fail-safe for an empty geometry of the first SimpleFeature, since it prevents dividing by zero area.
         if (geom.isEmpty()) {
             return 0;
+        } else {
+            return geom.getArea() / ((Polygon) sf1.getDefaultGeometry()).getArea();
         }
-        else {
-            return geom.getArea() / ((Polygon)sf1.getDefaultGeometry()).getArea();
+    }
+
+    public SimpleFeatureCollection selectIntersectingFeatures(SimpleFeatureCollection fc, SimpleFeature feature)
+            throws OperationException{
+        FeatureType schema = fc.getSchema();
+        if (!checkCrs(schema, feature)) {
+            throw new OperationException("Can not calculate intersection for two SimpleFeatures that have different" +
+                    " CoordinateReferenceSystems.");
         }
+
+        FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
+        String geomName = schema.getGeometryDescriptor().getLocalName();
+        BoundingBox bounds = feature.getBounds();
+
+        Filter filter1 = ff.bbox(ff.property(geomName), bounds);
+        Filter filter2 = ff.intersects(ff.property(geomName), ff.literal(feature.getDefaultGeometry()));
+        Filter filter = ff.and(filter1, filter2);
+
+        return fc.subCollection(filter);
     }
 
     /***
@@ -82,6 +106,12 @@ public class SpatialOperationUtils {
     private boolean checkCrs(SimpleFeature sf1, SimpleFeature sf2) {
         CoordinateReferenceSystem crs1 = sf1.getFeatureType().getCoordinateReferenceSystem();
         CoordinateReferenceSystem crs2 = sf2.getFeatureType().getCoordinateReferenceSystem();
+        return crs1.getName().equals(crs2.getName());
+    }
+
+    private boolean checkCrs(FeatureType schema, SimpleFeature sf) {
+        CoordinateReferenceSystem crs1 = schema.getCoordinateReferenceSystem();
+        CoordinateReferenceSystem crs2 = sf.getFeatureType().getCoordinateReferenceSystem();
         return crs1.getName().equals(crs2.getName());
     }
 
