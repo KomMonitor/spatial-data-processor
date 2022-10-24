@@ -18,14 +18,11 @@ import java.util.*;
 import javax.annotation.Generated;
 
 /**
- * IndicatorCoverageType
+ * SpatialUnitCoverageType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-21T12:45:15.139999500+02:00[Europe/Berlin]")
-public class IndicatorCoverageType {
-
-  @JsonProperty("poiFeatureId")
-  private String poiFeatureId;
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-24T10:19:31.501040600+02:00[Europe/Berlin]")
+public class SpatialUnitCoverageType {
 
   @JsonProperty("spatialUnitFeatureId")
   private String spatialUnitFeatureId;
@@ -34,26 +31,7 @@ public class IndicatorCoverageType {
   @Valid
   private List<IndicatorCoverageValueType> coverage = null;
 
-  public IndicatorCoverageType poiFeatureId(String poiFeatureId) {
-    this.poiFeatureId = poiFeatureId;
-    return this;
-  }
-
-  /**
-   * Get poiFeatureId
-   * @return poiFeatureId
-  */
-  
-  @Schema(name = "poiFeatureId", required = false)
-  public String getPoiFeatureId() {
-    return poiFeatureId;
-  }
-
-  public void setPoiFeatureId(String poiFeatureId) {
-    this.poiFeatureId = poiFeatureId;
-  }
-
-  public IndicatorCoverageType spatialUnitFeatureId(String spatialUnitFeatureId) {
+  public SpatialUnitCoverageType spatialUnitFeatureId(String spatialUnitFeatureId) {
     this.spatialUnitFeatureId = spatialUnitFeatureId;
     return this;
   }
@@ -62,8 +40,8 @@ public class IndicatorCoverageType {
    * Get spatialUnitFeatureId
    * @return spatialUnitFeatureId
   */
-  
-  @Schema(name = "spatialUnitFeatureId", required = false)
+  @NotNull 
+  @Schema(name = "spatialUnitFeatureId", required = true)
   public String getSpatialUnitFeatureId() {
     return spatialUnitFeatureId;
   }
@@ -72,12 +50,12 @@ public class IndicatorCoverageType {
     this.spatialUnitFeatureId = spatialUnitFeatureId;
   }
 
-  public IndicatorCoverageType coverage(List<IndicatorCoverageValueType> coverage) {
+  public SpatialUnitCoverageType coverage(List<IndicatorCoverageValueType> coverage) {
     this.coverage = coverage;
     return this;
   }
 
-  public IndicatorCoverageType addCoverageItem(IndicatorCoverageValueType coverageItem) {
+  public SpatialUnitCoverageType addCoverageItem(IndicatorCoverageValueType coverageItem) {
     if (this.coverage == null) {
       this.coverage = new ArrayList<>();
     }
@@ -107,22 +85,20 @@ public class IndicatorCoverageType {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    IndicatorCoverageType indicatorCoverageType = (IndicatorCoverageType) o;
-    return Objects.equals(this.poiFeatureId, indicatorCoverageType.poiFeatureId) &&
-        Objects.equals(this.spatialUnitFeatureId, indicatorCoverageType.spatialUnitFeatureId) &&
-        Objects.equals(this.coverage, indicatorCoverageType.coverage);
+    SpatialUnitCoverageType spatialUnitCoverageType = (SpatialUnitCoverageType) o;
+    return Objects.equals(this.spatialUnitFeatureId, spatialUnitCoverageType.spatialUnitFeatureId) &&
+        Objects.equals(this.coverage, spatialUnitCoverageType.coverage);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(poiFeatureId, spatialUnitFeatureId, coverage);
+    return Objects.hash(spatialUnitFeatureId, coverage);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class IndicatorCoverageType {\n");
-    sb.append("    poiFeatureId: ").append(toIndentedString(poiFeatureId)).append("\n");
+    sb.append("class SpatialUnitCoverageType {\n");
     sb.append("    spatialUnitFeatureId: ").append(toIndentedString(spatialUnitFeatureId)).append("\n");
     sb.append("    coverage: ").append(toIndentedString(coverage)).append("\n");
     sb.append("}");

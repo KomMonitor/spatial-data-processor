@@ -270,26 +270,40 @@ components:
             
     IsochronePruneProcessResultType:
       type: object
+      required:
+        - indicatorId
       properties:
         indicatorId:
           type: string
           format: uuid
         overallCoverage:
-          $ref: '#/components/schemas/IndicatorCoverageType'
+          $ref: '#/components/schemas/IndicatorCoverageValueType'
         poiCoverage:
           type: array
           items:
-            $ref: '#/components/schemas/IndicatorCoverageType'
-        spatialUnitCoverage:
-          type: array
-          items:
-            $ref: '#/components/schemas/IndicatorCoverageType'
+            $ref: '#/components/schemas/PoiCoverageType'
 
-    IndicatorCoverageType:
+    PoiCoverageType:
       type: object
+      required:
+        - poiFeatureId
       properties:
         poiFeatureId:
           type: string
+        overallCoverage:
+          type: array
+          items:
+            $ref: '#/components/schemas/IndicatorCoverageValueType'
+        spatialUnitCoverage:
+          type: array
+          items:
+            $ref: '#/components/schemas/SpatialUnitCoverageType'
+
+    SpatialUnitCoverageType:
+      type: object
+      required:
+        - spatialUnitFeatureId
+      properties:
         spatialUnitFeatureId:
           type: string
         coverage:

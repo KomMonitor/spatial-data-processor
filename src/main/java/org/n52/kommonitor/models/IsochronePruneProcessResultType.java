@@ -7,7 +7,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import org.n52.kommonitor.models.IndicatorCoverageType;
+import org.n52.kommonitor.models.IndicatorCoverageValueType;
+import org.n52.kommonitor.models.PoiCoverageType;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import javax.validation.Valid;
@@ -22,22 +23,18 @@ import javax.annotation.Generated;
  * IsochronePruneProcessResultType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-21T12:45:15.139999500+02:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-24T10:19:31.501040600+02:00[Europe/Berlin]")
 public class IsochronePruneProcessResultType {
 
   @JsonProperty("indicatorId")
   private UUID indicatorId;
 
   @JsonProperty("overallCoverage")
-  private IndicatorCoverageType overallCoverage;
+  private IndicatorCoverageValueType overallCoverage;
 
   @JsonProperty("poiCoverage")
   @Valid
-  private List<IndicatorCoverageType> poiCoverage = null;
-
-  @JsonProperty("spatialUnitCoverage")
-  @Valid
-  private List<IndicatorCoverageType> spatialUnitCoverage = null;
+  private List<PoiCoverageType> poiCoverage = null;
 
   public IsochronePruneProcessResultType indicatorId(UUID indicatorId) {
     this.indicatorId = indicatorId;
@@ -48,8 +45,8 @@ public class IsochronePruneProcessResultType {
    * Get indicatorId
    * @return indicatorId
   */
-  @Valid 
-  @Schema(name = "indicatorId", required = false)
+  @NotNull @Valid 
+  @Schema(name = "indicatorId", required = true)
   public UUID getIndicatorId() {
     return indicatorId;
   }
@@ -58,7 +55,7 @@ public class IsochronePruneProcessResultType {
     this.indicatorId = indicatorId;
   }
 
-  public IsochronePruneProcessResultType overallCoverage(IndicatorCoverageType overallCoverage) {
+  public IsochronePruneProcessResultType overallCoverage(IndicatorCoverageValueType overallCoverage) {
     this.overallCoverage = overallCoverage;
     return this;
   }
@@ -69,20 +66,20 @@ public class IsochronePruneProcessResultType {
   */
   @Valid 
   @Schema(name = "overallCoverage", required = false)
-  public IndicatorCoverageType getOverallCoverage() {
+  public IndicatorCoverageValueType getOverallCoverage() {
     return overallCoverage;
   }
 
-  public void setOverallCoverage(IndicatorCoverageType overallCoverage) {
+  public void setOverallCoverage(IndicatorCoverageValueType overallCoverage) {
     this.overallCoverage = overallCoverage;
   }
 
-  public IsochronePruneProcessResultType poiCoverage(List<IndicatorCoverageType> poiCoverage) {
+  public IsochronePruneProcessResultType poiCoverage(List<PoiCoverageType> poiCoverage) {
     this.poiCoverage = poiCoverage;
     return this;
   }
 
-  public IsochronePruneProcessResultType addPoiCoverageItem(IndicatorCoverageType poiCoverageItem) {
+  public IsochronePruneProcessResultType addPoiCoverageItem(PoiCoverageType poiCoverageItem) {
     if (this.poiCoverage == null) {
       this.poiCoverage = new ArrayList<>();
     }
@@ -96,39 +93,12 @@ public class IsochronePruneProcessResultType {
   */
   @Valid 
   @Schema(name = "poiCoverage", required = false)
-  public List<IndicatorCoverageType> getPoiCoverage() {
+  public List<PoiCoverageType> getPoiCoverage() {
     return poiCoverage;
   }
 
-  public void setPoiCoverage(List<IndicatorCoverageType> poiCoverage) {
+  public void setPoiCoverage(List<PoiCoverageType> poiCoverage) {
     this.poiCoverage = poiCoverage;
-  }
-
-  public IsochronePruneProcessResultType spatialUnitCoverage(List<IndicatorCoverageType> spatialUnitCoverage) {
-    this.spatialUnitCoverage = spatialUnitCoverage;
-    return this;
-  }
-
-  public IsochronePruneProcessResultType addSpatialUnitCoverageItem(IndicatorCoverageType spatialUnitCoverageItem) {
-    if (this.spatialUnitCoverage == null) {
-      this.spatialUnitCoverage = new ArrayList<>();
-    }
-    this.spatialUnitCoverage.add(spatialUnitCoverageItem);
-    return this;
-  }
-
-  /**
-   * Get spatialUnitCoverage
-   * @return spatialUnitCoverage
-  */
-  @Valid 
-  @Schema(name = "spatialUnitCoverage", required = false)
-  public List<IndicatorCoverageType> getSpatialUnitCoverage() {
-    return spatialUnitCoverage;
-  }
-
-  public void setSpatialUnitCoverage(List<IndicatorCoverageType> spatialUnitCoverage) {
-    this.spatialUnitCoverage = spatialUnitCoverage;
   }
 
   @Override
@@ -142,13 +112,12 @@ public class IsochronePruneProcessResultType {
     IsochronePruneProcessResultType isochronePruneProcessResultType = (IsochronePruneProcessResultType) o;
     return Objects.equals(this.indicatorId, isochronePruneProcessResultType.indicatorId) &&
         Objects.equals(this.overallCoverage, isochronePruneProcessResultType.overallCoverage) &&
-        Objects.equals(this.poiCoverage, isochronePruneProcessResultType.poiCoverage) &&
-        Objects.equals(this.spatialUnitCoverage, isochronePruneProcessResultType.spatialUnitCoverage);
+        Objects.equals(this.poiCoverage, isochronePruneProcessResultType.poiCoverage);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(indicatorId, overallCoverage, poiCoverage, spatialUnitCoverage);
+    return Objects.hash(indicatorId, overallCoverage, poiCoverage);
   }
 
   @Override
@@ -158,7 +127,6 @@ public class IsochronePruneProcessResultType {
     sb.append("    indicatorId: ").append(toIndentedString(indicatorId)).append("\n");
     sb.append("    overallCoverage: ").append(toIndentedString(overallCoverage)).append("\n");
     sb.append("    poiCoverage: ").append(toIndentedString(poiCoverage)).append("\n");
-    sb.append("    spatialUnitCoverage: ").append(toIndentedString(spatialUnitCoverage)).append("\n");
     sb.append("}");
     return sb.toString();
   }

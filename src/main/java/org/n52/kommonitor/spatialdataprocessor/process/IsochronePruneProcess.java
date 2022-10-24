@@ -6,15 +6,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.geotools.data.geojson.GeoJSONReader;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
-import org.n52.kommonitor.models.IndicatorCoverageType;
-import org.n52.kommonitor.models.IndicatorCoverageValueType;
-import org.n52.kommonitor.models.IsochronePruneProcessResultType;
-import org.n52.kommonitor.models.IsochronePruneProcessType;
+import org.geotools.feature.FeatureCollection;
+import org.n52.kommonitor.models.*;
 import org.n52.kommonitor.spatialdataprocessor.operations.OperationException;
 import org.n52.kommonitor.spatialdataprocessor.operations.SpatialOperationUtils;
 import org.n52.kommonitor.spatialdataprocessor.util.FeatureUtils;
 import org.n52.kommonitor.spatialdataprocessor.util.datamanagement.DataManagementClient;
-import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,75 +62,48 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
         SimpleFeatureCollection spatialUnitFc = GeoJSONReader.parseFeatureCollection(spatialUnit.toString());
         SimpleFeatureCollection isochronesFc = GeoJSONReader.parseFeatureCollection(isochrones);
 
-        // 2) Fetch indicators as timeseries only without geometry and store it within a lookup HashMap by indexing
+        // 2) Fetch indicators with timeseries only without geometry and store it within a lookup HashMap by indexing
         // it with the SpatialUnit Feature IDs
         Map<String, List<IndicatorValue>> lookupMap = createLookupMap(indicatorList, spatialUnitId, date);
-        List<IndicatorCoverageType> spatialUnitCoverageList = new ArrayList<>();
-        Map<UUID, IsochronePruneProcessResultType> resultMap = new HashMap<>();
 
-        // 3) For each isochrone, determine intersecting SpatialUnits
-        try (SimpleFeatureIterator iterator = isochronesFc.features()) {
-            while (iterator.hasNext()) {
-                SimpleFeature isochrone = iterator.next();
-                String isochroneFeatureId = featureUtils.getPropertyValueAsString(isochrone, ID_PROP_NAME);
-                LOGGER.debug("Calculate coverage proportions for isochrone with Feature ID {}", isochroneFeatureId);
-                // Preselect all spatial units that intersects the current isochrone
-                SimpleFeatureCollection intersectingFc = operationUtils.selectIntersectingFeatures(spatialUnitFc, isochrone);
-                // Map to store the summed up coverage for the current isochrone
-                Map<UUID, Float> poiCoverageSumMap = new HashMap<>();
+        // 3) Calculate intersections between POIs (isochrones) and SpatialUnit features
+        Map<String, Map<String, Float>> intersectionMap = createIntersectionMap(isochronesFc, spatialUnitFc);
 
-                // 4) Iterate over all intersecting feature, to determine the intersection proportion between
-                // SpatialUnits and the current isochrone
-                try (SimpleFeatureIterator iterator2 = intersectingFc.features()) {
-                    while (iterator2.hasNext()) {
-
-                        SimpleFeature spatialUnitFeature = iterator2.next();
-                        String featureId = featureUtils.getPropertyValueAsString(spatialUnitFeature, ID_PROP_NAME);
-                        LOGGER.debug("Calculate coverage proportions for isochrone {} and SpatialUnit {}",
-                                isochroneFeatureId, featureId);
-                        double proportion = operationUtils.polygonalIntersectionProportion(spatialUnitFeature, isochrone);
-
-                        // 5) Calculate indicator value fraction by using the intersecting proportion
-                        if (lookupMap.containsKey(featureId)) {
-                            List<IndicatorValue> indicatorValues = lookupMap.get(featureId);
-                            for (IndicatorValue v : indicatorValues) {
-                                if (!resultMap.containsKey(v.id)) {
-                                    IsochronePruneProcessResultType result = new IsochronePruneProcessResultType()
-                                            .indicatorId(v.id)
-                                            .spatialUnitCoverage(new ArrayList<IndicatorCoverageType>());
-                                    resultMap.put(v.id, result);
-                                }
-                                // Calculate the single SpatialUnit coverage for the current isochrone
-                                float absoluteCoverage = (float) (v.value * proportion);
-
-                                IndicatorCoverageType spatialUnitCoverage = new IndicatorCoverageType();
-                                spatialUnitCoverage.setPoiFeatureId(isochroneFeatureId);
-                                spatialUnitCoverage.setSpatialUnitFeatureId(featureId);
-                                spatialUnitCoverage.setCoverage(Arrays.asList(
-                                                new IndicatorCoverageValueType()
-                                                        .relativeCoverage((float) proportion)
-                                                        .absoluteCoverage(absoluteCoverage)
-                                                        .date(v.date)
-                                        )
-                                );
-                                resultMap.get(v.id).getSpatialUnitCoverage().add(spatialUnitCoverage);
-                                // Sum up overall indicator value fractions for each isochrone. This can be used
-                                // later for overall indicator coverage calculations.
-                                if (poiCoverageSumMap.containsKey(v.id)) {
-                                    float coverageSum = poiCoverageSumMap.get(v.id) + absoluteCoverage;
-                                    poiCoverageSumMap.put(v.id, coverageSum);
-                                } else {
-                                    poiCoverageSumMap.put(v.id, absoluteCoverage);
-                                }
-                            }
-                        }
-                    }
-                }
-                // TODO calculate summed up indicator coverage for each isochron
-            }
-            // TODO calculate summed up overall indicator coverage all isochrones
-        }
-        return resultMap.values();
+        // 4) Calculate indicator coverages for each combination of isochrones and SpatialUnits that intersect
+        List<IsochronePruneProcessResultType> resultList = new ArrayList<>();
+        indicatorList.forEach(i -> {
+            IsochronePruneProcessResultType result = new IsochronePruneProcessResultType();
+            result.setIndicatorId(i);
+            List<PoiCoverageType> poiCoverageTypeList = new ArrayList<>();
+            intersectionMap.forEach((pk, pv) -> {
+                PoiCoverageType poiCoverage = new PoiCoverageType();
+                poiCoverage.setPoiFeatureId(pk);
+                List<SpatialUnitCoverageType> spatialUnitCoverageList = new ArrayList<>();
+                pv.forEach((sk, sv) -> {
+                    SpatialUnitCoverageType spatialUnitCoverage = new SpatialUnitCoverageType();
+                    spatialUnitCoverage.setSpatialUnitFeatureId(sk);
+                    List<IndicatorCoverageValueType> coverageValueList = new ArrayList<>();
+                    lookupMap.get(sk).forEach(iv -> {
+                        // Calculate the single SpatialUnit coverage for the current isochrone
+                        float absoluteCoverage = (float) (iv.value * sv);
+                        IndicatorCoverageValueType coverageValue = new IndicatorCoverageValueType();
+                        coverageValue.setDate(iv.date);
+                        coverageValue.setRelativeCoverage(sv);
+                        coverageValue.setAbsoluteCoverage(absoluteCoverage);
+                        coverageValueList.add(coverageValue);
+                    });
+                    spatialUnitCoverage.setCoverage(coverageValueList);
+                    spatialUnitCoverageList.add(spatialUnitCoverage);
+                });
+                poiCoverage.setSpatialUnitCoverage(spatialUnitCoverageList);
+                poiCoverageTypeList.add(poiCoverage);
+            });
+            result.setPoiCoverage(poiCoverageTypeList);
+            resultList.add(result);
+        });
+        // TODO calculate summed up indicator coverage for each isochron
+        // TODO calculate summed up overall indicator coverage all isochrones
+        return resultList;
     }
 
     private class IndicatorValue {
@@ -142,7 +112,7 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
         private LocalDate date;
     }
 
-    private Map createLookupMap(List<UUID> indicatorList, UUID spatialUnitId, LocalDate date) {
+    private Map<String, List<IndicatorValue>> createLookupMap(List<UUID> indicatorList, UUID spatialUnitId, LocalDate date) {
         Map<String, List<IndicatorValue>> lookupMap = new HashMap();
         String dateProp = DATE_PROP_PREFIX.concat(date.toString());
         indicatorList.forEach(indicator -> {
@@ -171,5 +141,30 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
             }
         });
         return lookupMap;
+    }
+
+    private Map<String, Map<String, Float>> createIntersectionMap(SimpleFeatureCollection isochronesFc, SimpleFeatureCollection spatialUnitFc) throws OperationException {
+        Map<String, Map<String, Float>> intersectionMap = new HashMap<>();
+
+        try (SimpleFeatureIterator iterator = isochronesFc.features()) {
+            while (iterator.hasNext()) {
+                SimpleFeature isochrone = iterator.next();
+                String isochroneFeatureId = featureUtils.getPropertyValueAsString(isochrone, ID_PROP_NAME);
+                LOGGER.debug("Calculate coverage proportions for isochrone with Feature ID {}", isochroneFeatureId);
+                // Preselect all spatial units that intersects the current isochrone
+                SimpleFeatureCollection intersectingFc = operationUtils.selectIntersectingFeatures(spatialUnitFc, isochrone);
+                Map<String, Float> spatialUnitIntersectionMap = new HashMap<>();
+                try (SimpleFeatureIterator iterator2 = intersectingFc.features()) {
+                    while (iterator2.hasNext()) {
+                        SimpleFeature spatialUnitFeature = iterator2.next();
+                        String featureId = featureUtils.getPropertyValueAsString(spatialUnitFeature, ID_PROP_NAME);
+                        double proportion = operationUtils.polygonalIntersectionProportion(spatialUnitFeature, isochrone);
+                        spatialUnitIntersectionMap.put(featureId, (float) proportion);
+                    }
+                }
+                intersectionMap.put(isochroneFeatureId, spatialUnitIntersectionMap);
+            }
+        }
+        return intersectionMap;
     }
 }
