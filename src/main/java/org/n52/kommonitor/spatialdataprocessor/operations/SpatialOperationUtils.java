@@ -1,11 +1,11 @@
 package org.n52.kommonitor.spatialdataprocessor.operations;
 
 import org.geotools.data.crs.ReprojectFeatureReader;
+import org.geotools.data.geojson.GeoJSONWriter;
 import org.geotools.data.simple.SimpleFeatureCollection;
+import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.factory.CommonFactoryFinder;
-import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.geom.MultiPolygon;
-import org.locationtech.jts.geom.Polygon;
+import org.locationtech.jts.geom.*;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.type.FeatureType;
 import org.opengis.filter.Filter;
@@ -13,6 +13,9 @@ import org.opengis.filter.FilterFactory2;
 import org.opengis.geometry.BoundingBox;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class SpatialOperationUtils {
@@ -71,8 +74,18 @@ public class SpatialOperationUtils {
         }
     }
 
+    public double polygonalIntersectionProportion(Geometry geom1, Geometry geom2) throws OperationException {
+        Geometry geom = polygonalIntersection(geom1, geom2);
+        // This is fail-safe for an empty geometry of the first SimpleFeature, since it prevents dividing by zero area.
+        if (geom.isEmpty()) {
+            return 0;
+        } else {
+            return geom.getArea() / geom1.getArea();
+        }
+    }
+
     public SimpleFeatureCollection selectIntersectingFeatures(SimpleFeatureCollection fc, SimpleFeature feature)
-            throws OperationException{
+            throws OperationException {
         FeatureType schema = fc.getSchema();
         if (!checkCrs(schema, feature)) {
             throw new OperationException("Can not calculate intersection for two SimpleFeatures that have different" +
@@ -88,6 +101,24 @@ public class SpatialOperationUtils {
         Filter filter = ff.and(filter1, filter2);
 
         return fc.subCollection(filter);
+    }
+
+    public Geometry combineGeometries(SimpleFeatureCollection fc) {
+        List<Geometry> geometryList = new ArrayList<>();
+        try (SimpleFeatureIterator iterator = fc.features()) {
+            while (iterator.hasNext()) {
+                SimpleFeature feature = iterator.next();
+                geometryList.add((Geometry) feature.getDefaultGeometry());
+                feature.getAttributeCount();
+            }
+        }
+        return combineGeometries(geometryList);
+    }
+
+    public Geometry combineGeometries(List<Geometry> geometries) {
+        GeometryFactory geoFac = new GeometryFactory();
+        GeometryCollection geometryCollection = (GeometryCollection) geoFac.buildGeometry(geometries);
+        return geometryCollection.union();
     }
 
     /***
