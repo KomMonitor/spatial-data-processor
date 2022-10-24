@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.geotools.data.geojson.GeoJSONReader;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
-import org.geotools.feature.FeatureCollection;
 import org.n52.kommonitor.models.*;
 import org.n52.kommonitor.spatialdataprocessor.operations.OperationException;
 import org.n52.kommonitor.spatialdataprocessor.operations.SpatialOperationUtils;
@@ -20,6 +19,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Implements a process to cut isochrones with spatial units
@@ -64,7 +64,9 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
 
         // 2) Fetch indicators with timeseries only without geometry and store it within a lookup HashMap by indexing
         // it with the SpatialUnit Feature IDs
-        Map<String, List<IndicatorValue>> lookupMap = createLookupMap(indicatorList, spatialUnitId, date);
+        IndicatorSummary createIndicatorSummary = createIndicatorSummary(indicatorList, spatialUnitId, date);
+        Map<String, Map<UUID, List<IndicatorValue>>> lookupMap = createIndicatorSummary.lookupMap;
+        Map<UUID, Map<String, Double>> totalIndicatorScore = createIndicatorSummary.totalIndicatorScore;
 
         // 3) Calculate intersections between POIs (isochrones) and SpatialUnit features
         Map<String, Map<String, Float>> intersectionMap = createIntersectionMap(isochronesFc, spatialUnitFc);
@@ -74,16 +76,17 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
         indicatorList.forEach(i -> {
             IsochronePruneProcessResultType result = new IsochronePruneProcessResultType();
             result.setIndicatorId(i);
-            List<PoiCoverageType> poiCoverageTypeList = new ArrayList<>();
+            List<PoiCoverageType> poiCoverageList = new ArrayList<>();
             intersectionMap.forEach((pk, pv) -> {
                 PoiCoverageType poiCoverage = new PoiCoverageType();
                 poiCoverage.setPoiFeatureId(pk);
                 List<SpatialUnitCoverageType> spatialUnitCoverageList = new ArrayList<>();
+                HashMap<LocalDate, Double> coverageSumMap = new HashMap<>();
                 pv.forEach((sk, sv) -> {
                     SpatialUnitCoverageType spatialUnitCoverage = new SpatialUnitCoverageType();
                     spatialUnitCoverage.setSpatialUnitFeatureId(sk);
                     List<IndicatorCoverageValueType> coverageValueList = new ArrayList<>();
-                    lookupMap.get(sk).forEach(iv -> {
+                    lookupMap.get(sk).get(i).forEach(iv -> {
                         // Calculate the single SpatialUnit coverage for the current isochrone
                         float absoluteCoverage = (float) (iv.value * sv);
                         IndicatorCoverageValueType coverageValue = new IndicatorCoverageValueType();
@@ -91,19 +94,36 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
                         coverageValue.setRelativeCoverage(sv);
                         coverageValue.setAbsoluteCoverage(absoluteCoverage);
                         coverageValueList.add(coverageValue);
+
+                        if (!coverageSumMap.containsKey(iv.date)) {
+                            coverageSumMap.put(iv.date, 0.);
+                        }
+                        double coverageSum = coverageSumMap.get(iv.date) + absoluteCoverage;
+                        coverageSumMap.put(iv.date, coverageSum);
                     });
                     spatialUnitCoverage.setCoverage(coverageValueList);
                     spatialUnitCoverageList.add(spatialUnitCoverage);
                 });
                 poiCoverage.setSpatialUnitCoverage(spatialUnitCoverageList);
-                poiCoverageTypeList.add(poiCoverage);
+                List<IndicatorCoverageValueType> overalCoverageList = coverageSumMap.entrySet().stream()
+                        .map(e -> new IndicatorCoverageValueType()
+                                .date(e.getKey())
+                                .relativeCoverage(e.getValue().floatValue() / totalIndicatorScore.get(i).get(e.getKey().toString()).floatValue())
+                                .absoluteCoverage(e.getValue().floatValue()))
+                        .collect(Collectors.toList());
+                poiCoverage.setOverallCoverage(overalCoverageList);
+                poiCoverageList.add(poiCoverage);
             });
-            result.setPoiCoverage(poiCoverageTypeList);
+            result.setPoiCoverage(poiCoverageList);
             resultList.add(result);
         });
-        // TODO calculate summed up indicator coverage for each isochron
         // TODO calculate summed up overall indicator coverage all isochrones
         return resultList;
+    }
+
+    private class IndicatorSummary {
+        private Map<String, Map<UUID, List<IndicatorValue>>> lookupMap;
+        private Map<UUID, Map<String, Double>> totalIndicatorScore;
     }
 
     private class IndicatorValue {
@@ -112,8 +132,9 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
         private LocalDate date;
     }
 
-    private Map<String, List<IndicatorValue>> createLookupMap(List<UUID> indicatorList, UUID spatialUnitId, LocalDate date) {
-        Map<String, List<IndicatorValue>> lookupMap = new HashMap();
+    private IndicatorSummary createIndicatorSummary(List<UUID> indicatorList, UUID spatialUnitId, LocalDate date) {
+        Map<String, Map<UUID, List<IndicatorValue>>> lookupMap = new HashMap();
+        Map<UUID, Map<String, Double>> totalIndicatorScoreMap = new HashMap<>();
         String dateProp = DATE_PROP_PREFIX.concat(date.toString());
         indicatorList.forEach(indicator -> {
             try {
@@ -128,10 +149,32 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
                         indicatorValue.id = indicator;
                         indicatorValue.date = date;
                         indicatorValue.value = node.get(dateProp).asDouble();
+
                         if (lookupMap.containsKey(featureId)) {
-                            lookupMap.get(featureId).add(indicatorValue);
+                            Map<UUID, List<IndicatorValue>> indicatorMap = lookupMap.get(featureId);
+                            if (!indicatorMap.containsKey(indicator)) {
+                                List<IndicatorValue> indicatureValues = new ArrayList<>();
+                                indicatorMap.put(indicator, indicatureValues);
+                            }
+                            indicatorMap.get(indicator).add(indicatorValue);
                         } else {
-                            lookupMap.put(featureId, new ArrayList<>(List.of(indicatorValue)));
+                            Map<UUID, List<IndicatorValue>> indicatorMap = new HashMap<>();
+                            List<IndicatorValue> indicatureValues = new ArrayList<>();
+                            indicatureValues.add(indicatorValue);
+                            indicatorMap.put(indicator, indicatureValues);
+                            lookupMap.put(featureId, indicatorMap);
+                        }
+
+                        if (totalIndicatorScoreMap.containsKey(indicator)) {
+                            Map<String, Double> totalIndicatorDateMap = totalIndicatorScoreMap.get(indicator);
+                            if (!totalIndicatorDateMap.containsKey(date.toString())) {
+                                totalIndicatorDateMap.put(date.toString(), 0.);
+                            }
+                            totalIndicatorDateMap.put(date.toString(), totalIndicatorDateMap.get(date.toString()) + indicatorValue.value);
+                        } else {
+                            Map<String, Double> totalIndicatorDateMap = new HashMap<>();
+                            totalIndicatorDateMap.put(date.toString(), indicatorValue.value);
+                            totalIndicatorScoreMap.put(indicator, totalIndicatorDateMap);
                         }
                     }
                 }
@@ -140,7 +183,10 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
                         spatialUnitId, indicator, e.getMessage());
             }
         });
-        return lookupMap;
+        IndicatorSummary summary = new IndicatorSummary();
+        summary.lookupMap = lookupMap;
+        summary.totalIndicatorScore = totalIndicatorScoreMap;
+        return summary;
     }
 
     private Map<String, Map<String, Float>> createIntersectionMap(SimpleFeatureCollection isochronesFc, SimpleFeatureCollection spatialUnitFc) throws OperationException {
