@@ -63,6 +63,14 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
         SimpleFeatureCollection spatialUnitFc = GeoJSONReader.parseFeatureCollection(spatialUnit.toString());
         SimpleFeatureCollection isochronesFc = GeoJSONReader.parseFeatureCollection(isochrones);
 
+        return calculateIsochronePrune(indicatorList, spatialUnitId, date, isochronesFc, spatialUnitFc);
+    }
+
+    protected List<IsochronePruneProcessResultType> calculateIsochronePrune(List<UUID> indicatorList,
+                                                                            UUID spatialUnitId,
+                                                                            LocalDate date,
+                                                                            SimpleFeatureCollection isochronesFc,
+                                                                            SimpleFeatureCollection spatialUnitFc) throws OperationException {
         // 2) Fetch indicators with timeseries only without geometry and store it within a lookup HashMap by indexing
         // it with the SpatialUnit Feature IDs
         IndicatorSummary createIndicatorSummary = createIndicatorSummary(indicatorList, spatialUnitId, date);
@@ -120,24 +128,36 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
             //calculate summed up overall indicator coverage for all isochrones
             Geometry combinedIsochroneGemetry = operationUtils.combineGeometries(isochronesFc);
             Geometry combinedSpatialUnitGeometry = operationUtils.combineGeometries(spatialUnitFc);
+            List<IndicatorCoverageValueType> overallScore = null;
             try {
-                double intersectionProportion = operationUtils.polygonalIntersectionProportion(
-                        combinedSpatialUnitGeometry, combinedIsochroneGemetry);
-                List<IndicatorCoverageValueType> overallScore = totalIndicatorScore.get(i).entrySet().stream()
-                        .map(e -> new IndicatorCoverageValueType()
-                                .date(e.getKey())
-                                .relativeCoverage((float)intersectionProportion)
-                                .absoluteCoverage((float)(e.getValue() * intersectionProportion)))
-                        .collect(Collectors.toList());
+                overallScore = calculateOverallScore(spatialUnitFc, isochronesFc, totalIndicatorScore);
                 result.setOverallCoverage(overallScore.get(0));
+                resultList.add(result);
             } catch (OperationException e) {
-                throw new RuntimeException(e);
+                LOGGER.error("Could not calculate overall indicator coverage for indicator {} due to error: {}", i, e.getMessage());
             }
-
-            resultList.add(result);
         });
 
         return resultList;
+    }
+
+    private List<IndicatorCoverageValueType> calculateOverallScore(SimpleFeatureCollection spatialUnitFc,
+                                                                   SimpleFeatureCollection isochronesFc,
+                                                                   UUID indicatorId,
+                                                                   Map<UUID, Map<LocalDate, Double>> totalIndicatorScore) throws OperationException {
+        Geometry combinedIsochroneGemetry = operationUtils.combineGeometries(isochronesFc);
+        Geometry combinedSpatialUnitGeometry = operationUtils.combineGeometries(spatialUnitFc);
+        List<IndicatorCoverageValueType> overallScore = null;
+
+        double intersectionProportion = operationUtils.polygonalIntersectionProportion(
+                combinedSpatialUnitGeometry, combinedIsochroneGemetry);
+        overallScore = totalIndicatorScore.get(indicatorId).entrySet().stream()
+                .map(e -> new IndicatorCoverageValueType()
+                        .date(e.getKey())
+                        .relativeCoverage((float) intersectionProportion)
+                        .absoluteCoverage((float) (e.getValue() * intersectionProportion)))
+                .collect(Collectors.toList());
+        return overallScore;
     }
 
     private class IndicatorSummary {
