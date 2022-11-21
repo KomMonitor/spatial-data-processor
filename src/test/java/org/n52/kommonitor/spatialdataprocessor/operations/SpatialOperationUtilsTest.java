@@ -14,7 +14,6 @@ import org.mockito.Mockito;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 public class SpatialOperationUtilsTest {
 

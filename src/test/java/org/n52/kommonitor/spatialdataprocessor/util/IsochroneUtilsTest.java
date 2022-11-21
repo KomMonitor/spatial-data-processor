@@ -7,6 +7,7 @@ import org.geotools.data.simple.SimpleFeatureCollection;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.n52.kommonitor.spatialdataprocessor.operations.OperationException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +23,7 @@ public class IsochroneUtilsTest {
     }
 
     @Test
-    void testGetRanges() throws IOException {
+    void testGetRanges() throws IOException, OperationException {
         InputStream input = getClass().getResourceAsStream("/isochrones.geojson");
         ObjectMapper mapper = new ObjectMapper();
         JsonNode node = mapper.readTree(input);

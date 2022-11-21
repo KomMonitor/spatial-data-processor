@@ -38,7 +38,7 @@ public class Job<T extends ProcessType> implements Callable<Object> {
             LOGGER.info("Finished Job#" + id);
             return result;
         } catch (Exception e) {
-            LOGGER.error("Failing Job#" + id + ": " + e.getMessage());
+            LOGGER.error("Failing Job#" + id + ": ",e);
             status = JobOverviewType.StatusEnum.FAILED;
             return null;
         }

@@ -135,14 +135,14 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
             result.setPoiCoverage(poiCoverageList);
 
             //calculate summed up overall indicator coverage for all isochrones
-            List<OverallCoverageType> overallScore = null;
+            List<OverallCoverageType> overallScore = Collections.emptyList();
             try {
                 overallScore = calculateOverallScore(spatialUnitFc, isochronesFc, isochrones, i, totalIndicatorScore);
-                result.setOverallCoverage(overallScore);
-                resultList.add(result);
             } catch (OperationException | JsonProcessingException e) {
                 LOGGER.error("Could not calculate overall indicator coverage for indicator {} due to error: {}", i, e.getMessage());
             }
+            result.setOverallCoverage(overallScore);
+            resultList.add(result);
         });
 
         return resultList;
