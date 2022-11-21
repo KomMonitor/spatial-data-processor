@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import org.n52.kommonitor.models.IndicatorCoverageValueType;
+import org.n52.kommonitor.models.OverallCoverageType;
 import org.n52.kommonitor.models.PoiCoverageType;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
@@ -23,14 +23,15 @@ import javax.annotation.Generated;
  * IsochronePruneProcessResultType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-24T10:19:31.501040600+02:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-11-07T17:14:05.706474+01:00[Europe/Berlin]")
 public class IsochronePruneProcessResultType {
 
   @JsonProperty("indicatorId")
   private UUID indicatorId;
 
   @JsonProperty("overallCoverage")
-  private IndicatorCoverageValueType overallCoverage;
+  @Valid
+  private List<OverallCoverageType> overallCoverage = null;
 
   @JsonProperty("poiCoverage")
   @Valid
@@ -55,8 +56,16 @@ public class IsochronePruneProcessResultType {
     this.indicatorId = indicatorId;
   }
 
-  public IsochronePruneProcessResultType overallCoverage(IndicatorCoverageValueType overallCoverage) {
+  public IsochronePruneProcessResultType overallCoverage(List<OverallCoverageType> overallCoverage) {
     this.overallCoverage = overallCoverage;
+    return this;
+  }
+
+  public IsochronePruneProcessResultType addOverallCoverageItem(OverallCoverageType overallCoverageItem) {
+    if (this.overallCoverage == null) {
+      this.overallCoverage = new ArrayList<>();
+    }
+    this.overallCoverage.add(overallCoverageItem);
     return this;
   }
 
@@ -66,11 +75,11 @@ public class IsochronePruneProcessResultType {
   */
   @Valid 
   @Schema(name = "overallCoverage", required = false)
-  public IndicatorCoverageValueType getOverallCoverage() {
+  public List<OverallCoverageType> getOverallCoverage() {
     return overallCoverage;
   }
 
-  public void setOverallCoverage(IndicatorCoverageValueType overallCoverage) {
+  public void setOverallCoverage(List<OverallCoverageType> overallCoverage) {
     this.overallCoverage = overallCoverage;
   }
 

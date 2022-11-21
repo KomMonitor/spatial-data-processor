@@ -277,7 +277,9 @@ components:
           type: string
           format: uuid
         overallCoverage:
-          $ref: '#/components/schemas/IndicatorCoverageValueType'
+          type: array
+          items:
+            $ref: '#/components/schemas/OverallCoverageType'
         poiCoverage:
           type: array
           items:
@@ -306,6 +308,19 @@ components:
       properties:
         spatialUnitFeatureId:
           type: string
+        coverage:
+          type: array
+          items:
+            $ref: '#/components/schemas/IndicatorCoverageValueType'
+
+    OverallCoverageType:
+      type: object
+      required:
+        - range
+      properties:
+        range:
+          type: number
+          format: float
         coverage:
           type: array
           items:

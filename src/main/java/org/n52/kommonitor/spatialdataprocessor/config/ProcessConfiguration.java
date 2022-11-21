@@ -9,6 +9,7 @@ import org.n52.kommonitor.spatialdataprocessor.process.IsochronePruneProcess;
 import org.n52.kommonitor.spatialdataprocessor.process.Process;
 import org.n52.kommonitor.spatialdataprocessor.process.TestProcess;
 import org.n52.kommonitor.spatialdataprocessor.util.FeatureUtils;
+import org.n52.kommonitor.spatialdataprocessor.util.IsochroneUtils;
 import org.n52.kommonitor.spatialdataprocessor.util.datamanagement.DataManagementClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -31,7 +32,8 @@ public class ProcessConfiguration {
     @Bean
     public ProcessFactory<IsochronePruneProcessType> IsochronePruneProcessFactory(DataManagementClient dmc,
                                                                                   SpatialOperationUtils operationUtils,
-                                                                                  FeatureUtils featureUtils) {
+                                                                                  FeatureUtils featureUtils,
+                                                                                  IsochroneUtils isochroneUtils) {
         return new ProcessFactory<>() {
 
             private final String name = "isochrone-prune";
@@ -43,7 +45,7 @@ public class ProcessConfiguration {
 
             @Override
             public Process<IsochronePruneProcessType> createProcess(IsochronePruneProcessType parameters) {
-                return new IsochronePruneProcess(parameters, dmc, operationUtils, featureUtils);
+                return new IsochronePruneProcess(parameters, dmc, operationUtils, featureUtils, isochroneUtils);
             }
 
             @Override

@@ -1,6 +1,8 @@
 package org.n52.kommonitor.spatialdataprocessor.process;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.geotools.data.geojson.GeoJSONReader;
@@ -11,6 +13,7 @@ import org.n52.kommonitor.models.*;
 import org.n52.kommonitor.spatialdataprocessor.operations.OperationException;
 import org.n52.kommonitor.spatialdataprocessor.operations.SpatialOperationUtils;
 import org.n52.kommonitor.spatialdataprocessor.util.FeatureUtils;
+import org.n52.kommonitor.spatialdataprocessor.util.IsochroneUtils;
 import org.n52.kommonitor.spatialdataprocessor.util.datamanagement.DataManagementClient;
 import org.opengis.feature.simple.SimpleFeature;
 import org.slf4j.Logger;
@@ -40,12 +43,16 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
 
     private final FeatureUtils featureUtils;
 
+    private final IsochroneUtils isochroneUtils;
+
     public IsochronePruneProcess(IsochronePruneProcessType parameters, DataManagementClient dmc,
-                                 SpatialOperationUtils operationUtils, FeatureUtils featureUtils) {
+                                 SpatialOperationUtils operationUtils, FeatureUtils featureUtils,
+                                 IsochroneUtils isochroneUtils) {
         this.parameters = parameters;
         this.dmc = dmc;
         this.operationUtils = operationUtils;
         this.featureUtils = featureUtils;
+        this.isochroneUtils = isochroneUtils;
     }
 
 
@@ -63,26 +70,28 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
         SimpleFeatureCollection spatialUnitFc = GeoJSONReader.parseFeatureCollection(spatialUnit.toString());
         SimpleFeatureCollection isochronesFc = GeoJSONReader.parseFeatureCollection(isochrones);
 
-        return calculateIsochronePrune(indicatorList, spatialUnitId, date, isochronesFc, spatialUnitFc);
+        return calculateIsochronePrune(indicatorList, spatialUnitId, date, isochrones, isochronesFc, spatialUnitFc);
     }
 
     protected List<IsochronePruneProcessResultType> calculateIsochronePrune(List<UUID> indicatorList,
                                                                             UUID spatialUnitId,
                                                                             LocalDate date,
+                                                                            String isochrones,
                                                                             SimpleFeatureCollection isochronesFc,
                                                                             SimpleFeatureCollection spatialUnitFc) throws OperationException {
         // 2) Fetch indicators with timeseries only without geometry and store it within a lookup HashMap by indexing
         // it with the SpatialUnit Feature IDs
-        IndicatorSummary createIndicatorSummary = createIndicatorSummary(indicatorList, spatialUnitId, date);
-        Map<String, Map<UUID, List<IndicatorValue>>> lookupMap = createIndicatorSummary.lookupMap;
-        Map<UUID, Map<LocalDate, Double>> totalIndicatorScore = createIndicatorSummary.totalIndicatorScore;
+        IndicatorSummary indicatorSummary = createIndicatorSummary(indicatorList, spatialUnitId, date);
+
+        Map<String, Map<UUID, List<IndicatorValue>>> lookupMap = indicatorSummary.lookupMap;
+        Map<UUID, Map<LocalDate, Double>> totalIndicatorScore = indicatorSummary.totalIndicatorScore;
 
         // 3) Calculate intersections between POIs (isochrones) and SpatialUnit features
         Map<String, Map<String, Float>> intersectionMap = createIntersectionMap(isochronesFc, spatialUnitFc);
 
         // 4) Calculate indicator coverages for each combination of isochrones and SpatialUnits that intersect
         List<IsochronePruneProcessResultType> resultList = new ArrayList<>();
-        indicatorList.forEach(i -> {
+        totalIndicatorScore.keySet().forEach(i -> {
             IsochronePruneProcessResultType result = new IsochronePruneProcessResultType();
             result.setIndicatorId(i);
             List<PoiCoverageType> poiCoverageList = new ArrayList<>();
@@ -126,14 +135,12 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
             result.setPoiCoverage(poiCoverageList);
 
             //calculate summed up overall indicator coverage for all isochrones
-            Geometry combinedIsochroneGemetry = operationUtils.combineGeometries(isochronesFc);
-            Geometry combinedSpatialUnitGeometry = operationUtils.combineGeometries(spatialUnitFc);
-            List<IndicatorCoverageValueType> overallScore = null;
+            List<OverallCoverageType> overallScore = null;
             try {
-                overallScore = calculateOverallScore(spatialUnitFc, isochronesFc, totalIndicatorScore);
-                result.setOverallCoverage(overallScore.get(0));
+                overallScore = calculateOverallScore(spatialUnitFc, isochronesFc, isochrones, i, totalIndicatorScore);
+                result.setOverallCoverage(overallScore);
                 resultList.add(result);
-            } catch (OperationException e) {
+            } catch (OperationException | JsonProcessingException e) {
                 LOGGER.error("Could not calculate overall indicator coverage for indicator {} due to error: {}", i, e.getMessage());
             }
         });
@@ -141,23 +148,51 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
         return resultList;
     }
 
-    private List<IndicatorCoverageValueType> calculateOverallScore(SimpleFeatureCollection spatialUnitFc,
-                                                                   SimpleFeatureCollection isochronesFc,
-                                                                   UUID indicatorId,
-                                                                   Map<UUID, Map<LocalDate, Double>> totalIndicatorScore) throws OperationException {
-        Geometry combinedIsochroneGemetry = operationUtils.combineGeometries(isochronesFc);
+    private List<OverallCoverageType> calculateOverallScore(SimpleFeatureCollection spatialUnitFc,
+                                                            SimpleFeatureCollection isochronesFc,
+                                                            String isochrones,
+                                                            UUID indicatorId,
+                                                            Map<UUID, Map<LocalDate, Double>> totalIndicatorScore) throws OperationException, JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode isochroneNode = mapper.readTree(isochrones);
+        List<Double> rangeList = isochroneUtils.getRanges(isochroneNode);
         Geometry combinedSpatialUnitGeometry = operationUtils.combineGeometries(spatialUnitFc);
+
+        List<OverallCoverageType> resultList = new ArrayList<>();
+        // Calculate the total coverage for each isochrone range group
+        rangeList.forEach(r -> {
+            try {
+                OverallCoverageType rangeCoverage = calculateRangeCoverage(combinedSpatialUnitGeometry, isochronesFc,
+                        indicatorId, totalIndicatorScore, r);
+                resultList.add(rangeCoverage);
+            } catch (OperationException e) {
+                LOGGER.warn(String.format("Could not calculate overall coverage for indicator %s and range %s.", indicatorId, r), e);
+            }
+        });
+        return resultList;
+    }
+
+    private OverallCoverageType calculateRangeCoverage(Geometry spatialUnitGeom,
+                                                       SimpleFeatureCollection isochronesFc,
+                                                       UUID indicatorId,
+                                                       Map<UUID, Map<LocalDate, Double>> totalIndicatorScore,
+                                                       Double range) throws OperationException {
+        SimpleFeatureCollection isochronesSubsetFc = isochroneUtils.subsetRange(isochronesFc, range);
+        Geometry combinedIsochroneGeometry = operationUtils.combineGeometries(isochronesSubsetFc);
         List<IndicatorCoverageValueType> overallScore = null;
 
         double intersectionProportion = operationUtils.polygonalIntersectionProportion(
-                combinedSpatialUnitGeometry, combinedIsochroneGemetry);
+                spatialUnitGeom, combinedIsochroneGeometry);
         overallScore = totalIndicatorScore.get(indicatorId).entrySet().stream()
                 .map(e -> new IndicatorCoverageValueType()
                         .date(e.getKey())
                         .relativeCoverage((float) intersectionProportion)
                         .absoluteCoverage((float) (e.getValue() * intersectionProportion)))
                 .collect(Collectors.toList());
-        return overallScore;
+        OverallCoverageType overallCoverage = new OverallCoverageType();
+        overallCoverage.coverage(overallScore)
+                .range(range.floatValue());
+        return overallCoverage;
     }
 
     private class IndicatorSummary {
