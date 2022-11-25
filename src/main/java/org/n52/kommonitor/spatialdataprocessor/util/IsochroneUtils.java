@@ -18,10 +18,10 @@ public class IsochroneUtils {
     private static final String PROP_VALUE_NAME = "value";
 
     public List<Double> getRanges(JsonNode isochroneNode) throws OperationException {
-        if (isochroneNode.at(PROP_RANGES_PATH).isEmpty()) {
+        String rangeValue = isochroneNode.at(PROP_RANGES_PATH).asText();
+        if (rangeValue.isEmpty()) {
             throw new OperationException("Isochrones FeatureCollection does not contain a 'ranges' field.");
         } else {
-            String rangeValue = isochroneNode.at(PROP_RANGES_PATH).asText();
             try {
                 return Arrays.stream(rangeValue.split(",")).map(Double::parseDouble).toList();
             } catch (NumberFormatException e) {
