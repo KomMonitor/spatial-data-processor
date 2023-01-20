@@ -18,6 +18,7 @@ import org.n52.kommonitor.spatialdataprocessor.util.datamanagement.DataManagemen
 import org.opengis.feature.simple.SimpleFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3.xlink.Simple;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -87,7 +88,7 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
         Map<UUID, Map<LocalDate, Double>> totalIndicatorScore = indicatorSummary.totalIndicatorScore;
 
         // 3) Calculate intersections between POIs (isochrones) and SpatialUnit features
-        Map<String, Map<String, Float>> intersectionMap = createIntersectionMap(isochronesFc, spatialUnitFc);
+        Map<String, Map<String, Float>> intersectionMap = calculateSimpleAreaWeightedIntersection(isochronesFc, spatialUnitFc);
 
         // 4) Calculate indicator coverages for each combination of isochrones and SpatialUnits that intersect
         List<IsochronePruneProcessResultType> resultList = new ArrayList<>();
@@ -263,7 +264,40 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
         return summary;
     }
 
-    private Map<String, Map<String, Float>> createIntersectionMap(SimpleFeatureCollection isochronesFc, SimpleFeatureCollection spatialUnitFc) throws OperationException {
+    protected Map<String, Map<String, Float>> calculateSimpleAreaWeightedIntersection(SimpleFeatureCollection isochronesFc,
+                                                                                      SimpleFeatureCollection spatialUnitFc) {
+        Map<String, Map<String, Float>> intersectionMap = new HashMap<>();
+        try (SimpleFeatureIterator iterator = isochronesFc.features()) {
+            while (iterator.hasNext()) {
+                SimpleFeature isochrone = iterator.next();
+                String isochroneFeatureId = null;
+                try {
+                    isochroneFeatureId = featureUtils.getPropertyValueAsString(isochrone, ID_PROP_NAME);
+                    LOGGER.debug("Calculate coverage proportions for isochrone with Feature ID {}", isochroneFeatureId);
+                    // Preselect all spatial units that intersects the current isochrone
+                    SimpleFeatureCollection intersectingFc = operationUtils.selectIntersectingFeatures(spatialUnitFc, isochrone);
+                    Map<String, Float> spatialUnitIntersectionMap = new HashMap<>();
+                    try (SimpleFeatureIterator iterator2 = intersectingFc.features()) {
+                        while (iterator2.hasNext()) {
+                            SimpleFeature spatialUnitFeature = iterator2.next();
+                            String featureId = featureUtils.getPropertyValueAsString(spatialUnitFeature, ID_PROP_NAME);
+                            double proportion = operationUtils.polygonalIntersectionProportion(spatialUnitFeature, isochrone);
+                            spatialUnitIntersectionMap.put(featureId, (float) proportion);
+                        }
+                    }
+                    intersectionMap.put(isochroneFeatureId, spatialUnitIntersectionMap);
+                } catch (OperationException e) {
+                    LOGGER.warn("Could not calculate area weighted intersection for isochrone {}. Cause: {}",
+                            isochroneFeatureId, e.getMessage());
+                }
+            }
+        }
+        return intersectionMap;
+    }
+
+    protected Map<String, Map<String, Float>> calculateResidentialAreaWeightedIntersection(SimpleFeatureCollection isochronesFc,
+                                                                                           SimpleFeatureCollection spatialUnitFc,
+                                                                                           SimpleFeatureCollection residentialAreaFc) throws OperationException {
         Map<String, Map<String, Float>> intersectionMap = new HashMap<>();
 
         try (SimpleFeatureIterator iterator = isochronesFc.features()) {
@@ -272,13 +306,16 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
                 String isochroneFeatureId = featureUtils.getPropertyValueAsString(isochrone, ID_PROP_NAME);
                 LOGGER.debug("Calculate coverage proportions for isochrone with Feature ID {}", isochroneFeatureId);
                 // Preselect all spatial units that intersects the current isochrone
-                SimpleFeatureCollection intersectingFc = operationUtils.selectIntersectingFeatures(spatialUnitFc, isochrone);
+                SimpleFeatureCollection intersectingSpatialUnitsFc = operationUtils.selectIntersectingFeatures(spatialUnitFc, isochrone);
+                // Preselect all residential areas that intersects the current isochrone
+                SimpleFeatureCollection intersectingResidentialAreasFc = operationUtils.selectIntersectingFeatures(residentialAreaFc, isochrone);
                 Map<String, Float> spatialUnitIntersectionMap = new HashMap<>();
-                try (SimpleFeatureIterator iterator2 = intersectingFc.features()) {
+                try (SimpleFeatureIterator iterator2 = intersectingSpatialUnitsFc.features()) {
                     while (iterator2.hasNext()) {
                         SimpleFeature spatialUnitFeature = iterator2.next();
                         String featureId = featureUtils.getPropertyValueAsString(spatialUnitFeature, ID_PROP_NAME);
-                        double proportion = operationUtils.polygonalIntersectionProportion(spatialUnitFeature, isochrone);
+                        // Calculate intersection of preselected residential area features and the current spatial unit
+                        double proportion = operationUtils.polygonalIntersectionProportion(spatialUnitFeature, intersectingResidentialAreasFc);
                         spatialUnitIntersectionMap.put(featureId, (float) proportion);
                     }
                 }
