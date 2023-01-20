@@ -211,6 +211,13 @@ components:
         date:
           type: string
           format: date
+        weighting:
+          type: string
+          description:
+            "Method to use for weighting intersections of spatial units and isochrones.
+            simple: No weighting will be applied, which means that intersection proportions are returned as is. 
+            residential_areas: Residential areas are additionally considered to calculate an intersection proportion."
+          enum: [ simple, residential_areas ]
         configuration:
           type: object
           #TODO: expand on this

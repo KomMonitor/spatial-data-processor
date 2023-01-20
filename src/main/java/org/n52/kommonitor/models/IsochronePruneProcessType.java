@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ import javax.annotation.Generated;
  */
 
 @Schema(name = "IsochronePruneProcessType", description = "Process that calculates overlap of spatial-units with isochrones")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-21T12:45:15.139999500+02:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-01-20T13:19:56.992510600+01:00[Europe/Berlin]")
 public class IsochronePruneProcessType implements ProcessType {
 
   @JsonProperty("name")
@@ -46,6 +47,44 @@ public class IsochronePruneProcessType implements ProcessType {
   @JsonProperty("date")
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
   private LocalDate date;
+
+  /**
+   * Method to use for weighting intersections of spatial units and isochrones. simple: No weighting will be applied, which means that intersection proportions are returned as is. residential_areas: Residential areas are additionally considered to calculate an intersection proportion.
+   */
+  public enum WeightingEnum {
+    SIMPLE("simple"),
+    
+    RESIDENTIAL_AREAS("residential_areas");
+
+    private String value;
+
+    WeightingEnum(String value) {
+      this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static WeightingEnum fromValue(String value) {
+      for (WeightingEnum b : WeightingEnum.values()) {
+        if (b.value.equals(value)) {
+          return b;
+        }
+      }
+      throw new IllegalArgumentException("Unexpected value '" + value + "'");
+    }
+  }
+
+  @JsonProperty("weighting")
+  private WeightingEnum weighting;
 
   @JsonProperty("configuration")
   private Object _configuration;
@@ -150,6 +189,25 @@ public class IsochronePruneProcessType implements ProcessType {
     this.date = date;
   }
 
+  public IsochronePruneProcessType weighting(WeightingEnum weighting) {
+    this.weighting = weighting;
+    return this;
+  }
+
+  /**
+   * Method to use for weighting intersections of spatial units and isochrones. simple: No weighting will be applied, which means that intersection proportions are returned as is. residential_areas: Residential areas are additionally considered to calculate an intersection proportion.
+   * @return weighting
+  */
+  
+  @Schema(name = "weighting", description = "Method to use for weighting intersections of spatial units and isochrones. simple: No weighting will be applied, which means that intersection proportions are returned as is. residential_areas: Residential areas are additionally considered to calculate an intersection proportion.", required = false)
+  public WeightingEnum getWeighting() {
+    return weighting;
+  }
+
+  public void setWeighting(WeightingEnum weighting) {
+    this.weighting = weighting;
+  }
+
   public IsochronePruneProcessType _configuration(Object _configuration) {
     this._configuration = _configuration;
     return this;
@@ -183,12 +241,13 @@ public class IsochronePruneProcessType implements ProcessType {
         Objects.equals(this.spatialUnit, isochronePruneProcessType.spatialUnit) &&
         Objects.equals(this.indicator, isochronePruneProcessType.indicator) &&
         Objects.equals(this.date, isochronePruneProcessType.date) &&
+        Objects.equals(this.weighting, isochronePruneProcessType.weighting) &&
         Objects.equals(this._configuration, isochronePruneProcessType._configuration);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, isochron, spatialUnit, indicator, date, _configuration);
+    return Objects.hash(name, isochron, spatialUnit, indicator, date, weighting, _configuration);
   }
 
   @Override
@@ -200,6 +259,7 @@ public class IsochronePruneProcessType implements ProcessType {
     sb.append("    spatialUnit: ").append(toIndentedString(spatialUnit)).append("\n");
     sb.append("    indicator: ").append(toIndentedString(indicator)).append("\n");
     sb.append("    date: ").append(toIndentedString(date)).append("\n");
+    sb.append("    weighting: ").append(toIndentedString(weighting)).append("\n");
     sb.append("    _configuration: ").append(toIndentedString(_configuration)).append("\n");
     sb.append("}");
     return sb.toString();
