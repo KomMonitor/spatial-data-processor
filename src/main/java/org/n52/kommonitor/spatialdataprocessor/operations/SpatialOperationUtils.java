@@ -6,12 +6,15 @@ import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.factory.CommonFactoryFinder;
 import org.locationtech.jts.geom.*;
+import org.n52.kommonitor.spatialdataprocessor.process.IsochronePruneProcess;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.type.FeatureType;
 import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.geometry.BoundingBox;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -19,6 +22,8 @@ import java.util.List;
 
 @Component
 public class SpatialOperationUtils {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SpatialOperationUtils.class);
 
     /***
      * Calculates the polygonal intersection Geometry of the geometries from two SimpleFeatures, assuming that both
@@ -82,6 +87,22 @@ public class SpatialOperationUtils {
         } else {
             return geom.getArea() / geom1.getArea();
         }
+    }
+
+    public double polygonalIntersectionProportion(SimpleFeature feature, SimpleFeatureCollection featureCollection) {
+        double intersection = 0;
+        try (SimpleFeatureIterator iterator = featureCollection.features()) {
+            while (iterator.hasNext()) {
+                SimpleFeature f2 = iterator.next();
+                try {
+                    intersection += polygonalIntersectionProportion(feature, f2);
+                } catch (OperationException e) {
+                    LOGGER.warn("Could not calculate intersection between features {} and {}", feature.getID(), f2.getID());
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        return intersection;
     }
 
     public SimpleFeatureCollection selectIntersectingFeatures(SimpleFeatureCollection fc, SimpleFeature feature)

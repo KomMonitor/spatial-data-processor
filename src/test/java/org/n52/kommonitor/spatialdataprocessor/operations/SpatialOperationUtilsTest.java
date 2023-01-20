@@ -1,5 +1,7 @@
 package org.n52.kommonitor.spatialdataprocessor.operations;
 
+import org.geotools.data.simple.SimpleFeatureCollection;
+import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.geometry.jts.JTSFactoryFinder;
 import org.geotools.referencing.CRS;
 import org.junit.jupiter.api.Assertions;
@@ -74,6 +76,24 @@ public class SpatialOperationUtilsTest {
         Assertions.assertEquals(0, utils.polygonalIntersectionProportion(sf1, sf3));
         Assertions.assertEquals(1, utils.polygonalIntersectionProportion(sf1, sf1));
         Assertions.assertEquals(0, utils.polygonalIntersectionProportion(sf4, sf1));
+    }
+
+    @Test
+    public void polygonalIntersectionProportionFeatureCollectionTest() throws ParseException, OperationException, FactoryException {
+        SimpleFeature sf1 = mockSimpleFeature("POLYGON((0 0, 20 0, 20 20, 0 20, 0 0))", DEFAULT_EPSG);
+        SimpleFeature sf2 = mockSimpleFeature("POLYGON((5 5, 10 5, 10 15, 5 15, 5 5))", DEFAULT_EPSG);
+        SimpleFeature sf3 = mockSimpleFeature("POLYGON((15 5, 20 5, 20 10, 15 10, 15 5))", DEFAULT_EPSG);
+        SimpleFeature sf4 = mockSimpleFeature("POLYGON((15 15, 20 15, 20 20, 15 20, 15 15))", DEFAULT_EPSG);
+        SimpleFeature sf5 = mockSimpleFeature("POLYGON((30 30, 50 30, 50 50, 30 50, 30 30))", DEFAULT_EPSG);
+
+        SimpleFeatureIterator iterator = Mockito.mock(SimpleFeatureIterator.class);
+        Mockito.when(iterator.hasNext()).thenReturn(true, true, true, true, false);
+        Mockito.when(iterator.next()).thenReturn(sf2, sf3, sf4, sf5);
+
+        SimpleFeatureCollection fc = Mockito.mock(SimpleFeatureCollection.class);
+        Mockito.when(fc.features()).thenReturn(iterator);
+
+        Assertions.assertEquals(0.25,utils.polygonalIntersectionProportion(sf1, fc));
     }
 
     private SimpleFeature mockSimpleFeature(String wkt, String epsg) throws ParseException, FactoryException {
