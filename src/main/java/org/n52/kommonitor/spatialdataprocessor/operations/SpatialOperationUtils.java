@@ -5,6 +5,7 @@ import org.geotools.data.geojson.GeoJSONWriter;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.factory.CommonFactoryFinder;
+import org.geotools.feature.FeatureCollection;
 import org.locationtech.jts.geom.*;
 import org.n52.kommonitor.spatialdataprocessor.process.IsochronePruneProcess;
 import org.opengis.feature.simple.SimpleFeature;
@@ -108,7 +109,7 @@ public class SpatialOperationUtils {
     public SimpleFeatureCollection selectIntersectingFeatures(SimpleFeatureCollection fc, SimpleFeature feature)
             throws OperationException {
         FeatureType schema = fc.getSchema();
-        if (!checkCrs(schema, feature)) {
+        if (!checkCrs(schema, feature.getFeatureType())) {
             throw new OperationException("Can not calculate intersection for two SimpleFeatures that have different" +
                     " CoordinateReferenceSystems.");
         }
@@ -149,21 +150,37 @@ public class SpatialOperationUtils {
      * @param geom Geometry to check
      * @throws OperationException
      */
-    private void checkPolygonalType(Geometry geom) throws OperationException {
+    public void checkPolygonalType(Geometry geom) throws OperationException {
         if (!(geom instanceof Polygon) && !(geom instanceof MultiPolygon)) {
             throw new OperationException("Geometry is not of one of the types:" + "[Polygon, MultiPolygon].");
         }
     }
 
-    private boolean checkCrs(SimpleFeature sf1, SimpleFeature sf2) {
-        CoordinateReferenceSystem crs1 = sf1.getFeatureType().getCoordinateReferenceSystem();
-        CoordinateReferenceSystem crs2 = sf2.getFeatureType().getCoordinateReferenceSystem();
-        return crs1.getName().equals(crs2.getName());
+    /**
+     * Checks if the CRS of two SimpleFeatures are identical.
+     *
+     * @param sf1 First SimpleFeature
+     * @param sf2 Second SimpleFeature
+     * @return True if the CRS of both SimpleFeatures is identical
+     */
+    public boolean checkCrs(SimpleFeature sf1, SimpleFeature sf2) {
+        return checkCrs(sf1.getFeatureType(), sf2.getFeatureType());
     }
 
-    private boolean checkCrs(FeatureType schema, SimpleFeature sf) {
-        CoordinateReferenceSystem crs1 = schema.getCoordinateReferenceSystem();
-        CoordinateReferenceSystem crs2 = sf.getFeatureType().getCoordinateReferenceSystem();
+    /**
+     * Checks if the CRS of two SimpleFeatureCollections is identical
+     *
+     * @param fc1 First SimpleFeatureCollection
+     * @param fc2 Seconds SimpleFeatureCollection
+     * @return True if the CRS of both SimpleFeatureCollections is identical
+     */
+    public boolean checkCrs(SimpleFeatureCollection fc1, SimpleFeatureCollection fc2) {
+        return checkCrs(fc1.getSchema(), fc2.getSchema());
+    }
+
+    private boolean checkCrs(FeatureType schema1, FeatureType schema2) {
+        CoordinateReferenceSystem crs1 = schema1.getCoordinateReferenceSystem();
+        CoordinateReferenceSystem crs2 = schema2.getCoordinateReferenceSystem();
         return crs1.getName().equals(crs2.getName());
     }
 
