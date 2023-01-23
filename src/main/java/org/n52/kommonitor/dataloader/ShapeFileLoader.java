@@ -25,7 +25,7 @@ public class ShapeFileLoader implements FeatureLoader<ShapeFileDataSource>{
     }
 
     @Override
-    public FeatureCollection loadFeatureCollection(ShapeFileDataSource dataSource) throws IOException {
+    public SimpleFeatureCollection loadFeatureCollection(ShapeFileDataSource dataSource) throws IOException {
         File file = new File(dataSource.getFilePath());
         DataStore dataStore = FileDataStoreFinder.getDataStore(file);
         String typeName = dataStore.getTypeNames()[0];
@@ -37,6 +37,6 @@ public class ShapeFileLoader implements FeatureLoader<ShapeFileDataSource>{
                 .collect(Collectors.toList());
 
         Filter filter = ff.or(filterList);
-        return source.getFeatures(filter);
+        return DataUtilities.simple(source.getFeatures(filter));
     }
 }

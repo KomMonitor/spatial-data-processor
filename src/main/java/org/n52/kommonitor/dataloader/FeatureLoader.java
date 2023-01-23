@@ -11,5 +11,5 @@ import java.io.IOException;
 public interface FeatureLoader<T extends FeatureDataSource> {
     String getSupportedDataSource();
 
-    FeatureCollection loadFeatureCollection(T dataSource) throws IOException;
+    SimpleFeatureCollection loadFeatureCollection(T dataSource) throws IOException;
 }
