@@ -40,7 +40,7 @@ public class Job<T extends ProcessType> implements Callable<Object> {
         } catch (Exception e) {
             LOGGER.error("Failing Job#" + id + ": ",e);
             status = JobOverviewType.StatusEnum.FAILED;
-            return null;
+            return e.getMessage();
         }
     }
 
