@@ -15,7 +15,7 @@ public class FeatureLoaderRepository {
     /**
      * Retrieve a certain {@link FeatureLoader} implementation by a data source type
      *
-     * @param datasourceType the type of  a certain {@link FeatureDataSource} implementation
+     * @param datasourceType the type of certain {@link FeatureDataSource} implementation
      * @return an {@link Optional} describing the found {@link FeatureLoader} implementation
      */
     public Optional<FeatureLoader> getFeatureLoader(String datasourceType) {

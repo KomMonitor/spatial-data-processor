@@ -1,11 +1,13 @@
 package org.n52.kommonitor.spatialdataprocessor.config;
 
+import org.n52.kommonitor.dataloader.FeatureLoaderRepository;
 import org.n52.kommonitor.models.IsochronePruneProcessType;
 import org.n52.kommonitor.models.ProcessOverviewType;
 import org.n52.kommonitor.models.ProcessType;
 import org.n52.kommonitor.models.TestProcessType;
 import org.n52.kommonitor.spatialdataprocessor.operations.SpatialOperationUtils;
 import org.n52.kommonitor.spatialdataprocessor.process.IsochronePruneProcess;
+import org.n52.kommonitor.spatialdataprocessor.process.IsochronePruneProcessConfigProperties;
 import org.n52.kommonitor.spatialdataprocessor.process.Process;
 import org.n52.kommonitor.spatialdataprocessor.process.TestProcess;
 import org.n52.kommonitor.spatialdataprocessor.util.FeatureUtils;
@@ -33,7 +35,9 @@ public class ProcessConfiguration {
     public ProcessFactory<IsochronePruneProcessType> IsochronePruneProcessFactory(DataManagementClient dmc,
                                                                                   SpatialOperationUtils operationUtils,
                                                                                   FeatureUtils featureUtils,
-                                                                                  IsochroneUtils isochroneUtils) {
+                                                                                  IsochroneUtils isochroneUtils,
+                                                                                  IsochronePruneProcessConfigProperties config,
+                                                                                  FeatureLoaderRepository repository) {
         return new ProcessFactory<>() {
 
             private final String name = "isochrone-prune";
@@ -45,7 +49,7 @@ public class ProcessConfiguration {
 
             @Override
             public Process<IsochronePruneProcessType> createProcess(IsochronePruneProcessType parameters) {
-                return new IsochronePruneProcess(parameters, dmc, operationUtils, featureUtils, isochroneUtils);
+                return new IsochronePruneProcess(parameters, dmc, operationUtils, featureUtils, isochroneUtils, config, repository);
             }
 
             @Override

@@ -3,12 +3,10 @@ package org.n52.kommonitor.dataloader;
 import org.geotools.data.*;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.factory.CommonFactoryFinder;
-import org.geotools.feature.FeatureCollection;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory2;
-import org.opengis.geometry.BoundingBox;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -26,14 +24,14 @@ public class ShapeFileLoader implements FeatureLoader<ShapeFileDataSource>{
 
     @Override
     public SimpleFeatureCollection loadFeatureCollection(ShapeFileDataSource dataSource) throws IOException {
-        File file = new File(dataSource.getFilePath());
+        File file = new File(dataSource.filePath());
         DataStore dataStore = FileDataStoreFinder.getDataStore(file);
         String typeName = dataStore.getTypeNames()[0];
         FeatureSource<SimpleFeatureType, SimpleFeature> source = dataStore.getFeatureSource(typeName);
         FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
-        List<Filter> filterList = dataSource.getFieldValues()
+        List<Filter> filterList = dataSource.fieldValues()
                 .stream()
-                .map(v -> ff.equals(ff.property(dataSource.getFieldName()), ff.literal(v)))
+                .map(v -> ff.equals(ff.property(dataSource.fieldName()), ff.literal(v)))
                 .collect(Collectors.toList());
 
         Filter filter = ff.or(filterList);
