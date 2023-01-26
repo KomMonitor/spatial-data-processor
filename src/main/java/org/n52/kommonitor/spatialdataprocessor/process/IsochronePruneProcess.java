@@ -157,7 +157,7 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
             //calculate summed up overall indicator coverage for all isochrones
             List<OverallCoverageType> overallScore = Collections.emptyList();
             try {
-                overallScore = calculateOverallScore(spatialUnitFc, isochronesFc, isochrones, i, totalIndicatorScore);
+                overallScore = calculateOverallScore(spatialUnitFc, isochronesFc, isochrones, i, totalIndicatorScore, parameters.getWeighting());
             } catch (OperationException | JsonProcessingException e) {
                 LOGGER.error("Could not calculate overall indicator coverage for indicator {} due to error: {}", i, e.getMessage());
             }
@@ -172,7 +172,8 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
                                                             SimpleFeatureCollection isochronesFc,
                                                             String isochrones,
                                                             UUID indicatorId,
-                                                            Map<UUID, Map<LocalDate, Double>> totalIndicatorScore) throws OperationException, JsonProcessingException {
+                                                            Map<UUID, Map<LocalDate, Double>> totalIndicatorScore,
+                                                            IsochronePruneProcessType.WeightingEnum weighting) throws OperationException, JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode isochroneNode = mapper.readTree(isochrones);
         List<Double> rangeList = isochroneUtils.getRanges(isochroneNode);
@@ -182,8 +183,22 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
         // Calculate the total coverage for each isochrone range group
         rangeList.forEach(r -> {
             try {
-                OverallCoverageType rangeCoverage = calculateRangeCoverage(combinedSpatialUnitGeometry, isochronesFc,
-                        indicatorId, totalIndicatorScore, r);
+                OverallCoverageType rangeCoverage = switch (weighting) {
+                    case RESIDENTIAL_AREAS -> calculateResidentialAreaWeightedRangeCoverage(
+                            combinedSpatialUnitGeometry,
+                            isochronesFc,
+                            indicatorId,
+                            totalIndicatorScore,
+                            r
+                    );
+                    default -> calculateSimpleWeightedRangeCoverage(
+                            combinedSpatialUnitGeometry,
+                            isochronesFc,
+                            indicatorId,
+                            totalIndicatorScore,
+                            r
+                    );
+                };
                 resultList.add(rangeCoverage);
             } catch (OperationException e) {
                 LOGGER.warn(String.format("Could not calculate overall coverage for indicator %s and range %s.", indicatorId, r), e);
@@ -192,17 +207,66 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
         return resultList;
     }
 
-    private OverallCoverageType calculateRangeCoverage(Geometry spatialUnitGeom,
-                                                       SimpleFeatureCollection isochronesFc,
-                                                       UUID indicatorId,
-                                                       Map<UUID, Map<LocalDate, Double>> totalIndicatorScore,
-                                                       Double range) throws OperationException {
+    private OverallCoverageType calculateSimpleWeightedRangeCoverage(Geometry spatialUnitGeom,
+                                                                     SimpleFeatureCollection isochronesFc,
+                                                                     UUID indicatorId,
+                                                                     Map<UUID, Map<LocalDate, Double>> totalIndicatorScore,
+                                                                     Double range) throws OperationException {
+        SimpleFeatureCollection isochronesSubsetFc = isochroneUtils.subsetRange(isochronesFc, range);
+        Geometry combinedIsochroneGeometry = operationUtils.combineGeometries(isochronesSubsetFc);
+        List<IndicatorCoverageValueType> overallScore;
+        // Calculate intersection proportion of SpatialUnit geometry and the combined isochrone geometry
+        double intersectionProportion = operationUtils.polygonalIntersectionProportion(
+                spatialUnitGeom, combinedIsochroneGeometry);
+        // Calculate and set overall coverage for each indicator
+        overallScore = totalIndicatorScore.get(indicatorId).entrySet().stream()
+                .map(e -> new IndicatorCoverageValueType()
+                        .date(e.getKey())
+                        .relativeCoverage((float) intersectionProportion)
+                        .absoluteCoverage((float) (e.getValue() * intersectionProportion)))
+                .collect(Collectors.toList());
+        OverallCoverageType overallCoverage = new OverallCoverageType();
+        overallCoverage.coverage(overallScore)
+                .range(range.floatValue());
+        return overallCoverage;
+    }
+
+    private OverallCoverageType calculateResidentialAreaWeightedRangeCoverage(Geometry spatialUnitGeom,
+                                                                              SimpleFeatureCollection isochronesFc,
+                                                                              UUID indicatorId,
+                                                                              Map<UUID, Map<LocalDate, Double>> totalIndicatorScore,
+                                                                              Double range) throws OperationException {
+        try {
+            SimpleFeatureCollection residentialAreaFc = featureLoader.loadFeatureCollection(residentialAreaSource);
+            return calculateResidentialAreaWeightedRangeCoverage(spatialUnitGeom, isochronesFc, residentialAreaFc,
+                    indicatorId, totalIndicatorScore, range);
+        } catch (IOException e) {
+            throw new OperationException(String.format("Could not load residential areas from data source %s", residentialAreaSource.filePath()));
+        }
+    }
+
+    private OverallCoverageType calculateResidentialAreaWeightedRangeCoverage(Geometry spatialUnitGeom,
+                                                                              SimpleFeatureCollection isochronesFc,
+                                                                              SimpleFeatureCollection residentialAreaFc,
+                                                                              UUID indicatorId,
+                                                                              Map<UUID, Map<LocalDate, Double>> totalIndicatorScore,
+                                                                              Double range) throws OperationException {
         SimpleFeatureCollection isochronesSubsetFc = isochroneUtils.subsetRange(isochronesFc, range);
         Geometry combinedIsochroneGeometry = operationUtils.combineGeometries(isochronesSubsetFc);
         List<IndicatorCoverageValueType> overallScore;
 
+        // Calculate intersection between the SpatiaUnit geometry and the combined isochrone Geometry
+        Geometry isochroneSpatialUnitIntersectionGeom = operationUtils.polygonalIntersection(spatialUnitGeom, combinedIsochroneGeometry);
+        // Use intersection geometry to preselect all residential areas that intersects it
+        SimpleFeatureCollection intersectingResidentialAreasFc = operationUtils.filterIntersectingFeatures(residentialAreaFc, isochroneSpatialUnitIntersectionGeom);
+        // Calculate intersection proportion of preselected residential area features and combined SpatialUnit geometry
+        // by taking into account the intersection geometry above
         double intersectionProportion = operationUtils.polygonalIntersectionProportion(
-                spatialUnitGeom, combinedIsochroneGeometry);
+                spatialUnitGeom,
+                isochroneSpatialUnitIntersectionGeom,
+                intersectingResidentialAreasFc
+        );
+        // Calculate and set overall coverage for each indicator
         overallScore = totalIndicatorScore.get(indicatorId).entrySet().stream()
                 .map(e -> new IndicatorCoverageValueType()
                         .date(e.getKey())
@@ -353,7 +417,7 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
                         // Use intersection geometry to preselect all residential areas that intersects it
                         SimpleFeatureCollection intersectingResidentialAreasFc = operationUtils.filterIntersectingFeatures(residentialAreaFc, isochroneSpatialUnitIntersectionGeom);
                         // Calculate intersection proportion of preselected residential area features and the current
-                        // by taking into account the intersection geometry above spatial unit
+                        // spatial unit by taking into account the intersection geometry above
                         double proportion = operationUtils.polygonalIntersectionProportion(spatialUnitFeature, isochroneSpatialUnitIntersectionGeom, intersectingResidentialAreasFc);
                         String featureId = featureUtils.getPropertyValueAsString(spatialUnitFeature, ID_PROP_NAME);
                         spatialUnitIntersectionMap.put(featureId, (float) proportion);

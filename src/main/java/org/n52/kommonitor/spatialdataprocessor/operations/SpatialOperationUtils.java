@@ -60,23 +60,6 @@ public class SpatialOperationUtils {
     }
 
     /**
-     * Calculates the polygonal intersection Geometry of three geometries
-     *
-     * @param geom1 First Geometry
-     * @param geom2 Second Geometry
-     * @param geom3 Third Geometry
-     * @return Intersecting Geometry
-     * @throws OperationException if one of the two geometries is not a Polygon or MultiPolygon
-     */
-    public Geometry polygonalIntersection(Geometry geom1, Geometry geom2, Geometry geom3) throws OperationException {
-        checkPolygonalType(geom1);
-        checkPolygonalType(geom2);
-        checkPolygonalType(geom3);
-        Geometry intersectionGeom = geom1.intersection(geom2);
-        return intersectionGeom.intersection(geom3);
-    }
-
-    /**
      * Calculates the proportion of intersection for the geometries of two SimpleFeatures. The result gives the
      * proportion of the intersecting geometry in relation to the geometry of the first SimpleFeature.
      *
@@ -144,21 +127,26 @@ public class SpatialOperationUtils {
         return intersection;
     }
 
-    public double polygonalIntersectionProportion(SimpleFeature feature, Geometry geom, SimpleFeatureCollection featureCollection) {
+
+    public double polygonalIntersectionProportion(Geometry geom1, Geometry geom2, SimpleFeatureCollection featureCollection) {
         double intersection = 0;
         try (SimpleFeatureIterator iterator = featureCollection.features()) {
             while (iterator.hasNext()) {
-                SimpleFeature f2 = iterator.next();
+                SimpleFeature f = iterator.next();
                 try {
-                    intersection += polygonalIntersectionProportion((Geometry) feature.getDefaultGeometry(),
-                            geom, (Geometry)f2.getDefaultGeometry());
+                    intersection += polygonalIntersectionProportion(geom1, geom2, (Geometry)f.getDefaultGeometry());
                 } catch (OperationException e) {
-                    LOGGER.warn("Could not calculate intersection between Geometry and feature {}", f2.getID());
+                    LOGGER.warn("Could not calculate intersection between Geometry and feature {}", f.getID());
                     throw new RuntimeException(e);
                 }
             }
         }
         return intersection;
+    }
+
+
+    public double polygonalIntersectionProportion(SimpleFeature feature, Geometry geom, SimpleFeatureCollection featureCollection) {
+        return polygonalIntersectionProportion((Geometry) feature.getDefaultGeometry(), geom, featureCollection);
     }
 
     public SimpleFeatureCollection filterIntersectingFeatures(SimpleFeatureCollection fc, SimpleFeature feature)
