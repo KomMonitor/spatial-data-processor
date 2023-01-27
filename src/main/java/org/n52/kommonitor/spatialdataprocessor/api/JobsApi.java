@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-20T10:40:58.862087900+02:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-01-27T15:13:32.128850400+01:00[Europe/Berlin]")
 @Validated
 @Tag(name = "jobs", description = "Jobs that are being processed")
 @RequestMapping("${openapi.komMonitorSpatialDataProcessor.base-path:}")

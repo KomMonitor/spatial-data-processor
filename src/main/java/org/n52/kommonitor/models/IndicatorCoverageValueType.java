@@ -20,7 +20,7 @@ import javax.annotation.Generated;
  * IndicatorCoverageValueType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-21T12:45:15.139999500+02:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-01-27T15:13:32.128850400+01:00[Europe/Berlin]")
 public class IndicatorCoverageValueType {
 
   @JsonProperty("date")
@@ -39,11 +39,11 @@ public class IndicatorCoverageValueType {
   }
 
   /**
-   * Get date
+   * Indicates for which indicator timeseries date the coverage values relate to. 
    * @return date
   */
   @Valid 
-  @Schema(name = "date", required = false)
+  @Schema(name = "date", description = "Indicates for which indicator timeseries date the coverage values relate to. ", required = false)
   public LocalDate getDate() {
     return date;
   }
@@ -58,11 +58,11 @@ public class IndicatorCoverageValueType {
   }
 
   /**
-   * Get absoluteCoverage
+   * Absolute indicator coverage value. This value is calculated by multiplying the relative coverage with the indicator value. 
    * @return absoluteCoverage
   */
   
-  @Schema(name = "absoluteCoverage", required = false)
+  @Schema(name = "absoluteCoverage", description = "Absolute indicator coverage value. This value is calculated by multiplying the relative coverage with the indicator value. ", required = false)
   public Float getAbsoluteCoverage() {
     return absoluteCoverage;
   }
@@ -77,11 +77,11 @@ public class IndicatorCoverageValueType {
   }
 
   /**
-   * Get relativeCoverage
+   * Relative indicator coverage value. This value is calculated by determining the proportion of intersection of an isochron geometry with spatial unit feature geometries. 
    * @return relativeCoverage
   */
   
-  @Schema(name = "relativeCoverage", required = false)
+  @Schema(name = "relativeCoverage", description = "Relative indicator coverage value. This value is calculated by determining the proportion of intersection of an isochron geometry with spatial unit feature geometries. ", required = false)
   public Float getRelativeCoverage() {
     return relativeCoverage;
   }

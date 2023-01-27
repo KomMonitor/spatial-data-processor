@@ -21,7 +21,7 @@ import javax.annotation.Generated;
  * OverallCoverageType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-11-07T17:14:05.706474+01:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-01-27T15:13:32.128850400+01:00[Europe/Berlin]")
 public class OverallCoverageType {
 
   @JsonProperty("range")
@@ -37,11 +37,11 @@ public class OverallCoverageType {
   }
 
   /**
-   * Get range
+   * Indicates the isochron range that relates to the indicator coverage values. 
    * @return range
   */
   @NotNull 
-  @Schema(name = "range", required = true)
+  @Schema(name = "range", description = "Indicates the isochron range that relates to the indicator coverage values. ", required = true)
   public Float getRange() {
     return range;
   }
@@ -64,11 +64,11 @@ public class OverallCoverageType {
   }
 
   /**
-   * Get coverage
+   * The coverage values of an isochron for a certain indicator. 
    * @return coverage
   */
   @Valid 
-  @Schema(name = "coverage", required = false)
+  @Schema(name = "coverage", description = "The coverage values of an isochron for a certain indicator. ", required = false)
   public List<IndicatorCoverageValueType> getCoverage() {
     return coverage;
   }

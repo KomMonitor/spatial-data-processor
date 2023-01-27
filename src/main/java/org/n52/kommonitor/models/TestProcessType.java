@@ -22,7 +22,7 @@ import javax.annotation.Generated;
  */
 
 @Schema(name = "TestProcessType", description = "Process for testing the API.")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-07T13:59:52.529732386+02:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-01-27T15:13:32.128850400+01:00[Europe/Berlin]")
 public class TestProcessType implements ProcessType {
 
   @JsonProperty("name")
@@ -37,11 +37,11 @@ public class TestProcessType implements ProcessType {
   }
 
   /**
-   * Get name
+   * Unique name of the process. Will be used to determine which process will be triggered server-side. 
    * @return name
   */
   @NotNull 
-  @Schema(name = "name", required = true)
+  @Schema(name = "name", description = "Unique name of the process. Will be used to determine which process will be triggered server-side. ", required = true)
   public String getName() {
     return name;
   }
@@ -56,11 +56,11 @@ public class TestProcessType implements ProcessType {
   }
 
   /**
-   * Get test
+   * Just a dummy test parameter. 
    * @return test
   */
   @NotNull 
-  @Schema(name = "test", required = true)
+  @Schema(name = "test", description = "Just a dummy test parameter. ", required = true)
   public String getTest() {
     return test;
   }

@@ -19,7 +19,7 @@ import javax.annotation.Generated;
  * JobResultType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-20T10:40:58.862087900+02:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-01-27T15:13:32.128850400+01:00[Europe/Berlin]")
 public class JobResultType {
 
   @JsonProperty("id")
@@ -53,11 +53,11 @@ public class JobResultType {
   }
 
   /**
-   * The result is a JSON object whose schema depends on the underlying process. Each process has its own result schema. 
+   * Result of the process execution. The result is a JSON object whose schema depends on the underlying process. Each process has its own result schema. 
    * @return result
   */
   @NotNull 
-  @Schema(name = "result", description = "The result is a JSON object whose schema depends on the underlying process. Each process has its own result schema. ", required = true)
+  @Schema(name = "result", description = "Result of the process execution. The result is a JSON object whose schema depends on the underlying process. Each process has its own result schema. ", required = true)
   public Object getResult() {
     return result;
   }

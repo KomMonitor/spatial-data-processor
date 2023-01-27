@@ -24,18 +24,18 @@ import java.util.*;
 import javax.annotation.Generated;
 
 /**
- * Process that calculates overlap of spatial-units with isochrones
+ * Process that calculates overlap of spatial-units with isochrones to determine an accessibility rate for certain indicators. 
  */
 
-@Schema(name = "IsochronePruneProcessType", description = "Process that calculates overlap of spatial-units with isochrones")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-01-20T13:19:56.992510600+01:00[Europe/Berlin]")
+@Schema(name = "IsochronePruneProcessType", description = "Process that calculates overlap of spatial-units with isochrones to determine an accessibility rate for certain indicators. ")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-01-27T15:13:32.128850400+01:00[Europe/Berlin]")
 public class IsochronePruneProcessType implements ProcessType {
 
   @JsonProperty("name")
   private String name = "isochrone-prune";
 
-  @JsonProperty("isochron")
-  private Object isochron;
+  @JsonProperty("isochrones")
+  private Object isochrones;
 
   @JsonProperty("spatialUnit")
   private UUID spatialUnit;
@@ -49,7 +49,7 @@ public class IsochronePruneProcessType implements ProcessType {
   private LocalDate date;
 
   /**
-   * Method to use for weighting intersections of spatial units and isochrones. simple: No weighting will be applied, which means that intersection proportions are returned as is. residential_areas: Residential areas are additionally considered to calculate an intersection proportion.
+   * Method to use for weighting intersections of spatial units and isochrones:  * `simple` - No weighting will be applied, which means that intersection proportions are returned as is.  * `residential_areas` - Residential areas are additionally considered to calculate an intersection proportion. 
    */
   public enum WeightingEnum {
     SIMPLE("simple"),
@@ -86,20 +86,17 @@ public class IsochronePruneProcessType implements ProcessType {
   @JsonProperty("weighting")
   private WeightingEnum weighting;
 
-  @JsonProperty("configuration")
-  private Object _configuration;
-
   public IsochronePruneProcessType name(String name) {
     this.name = name;
     return this;
   }
 
   /**
-   * Get name
+   * Unique name of the process. Will be used to determine which process will be triggered server-side. 
    * @return name
   */
   @NotNull 
-  @Schema(name = "name", required = true)
+  @Schema(name = "name", description = "Unique name of the process. Will be used to determine which process will be triggered server-side. ", required = true)
   public String getName() {
     return name;
   }
@@ -108,23 +105,23 @@ public class IsochronePruneProcessType implements ProcessType {
     this.name = name;
   }
 
-  public IsochronePruneProcessType isochron(Object isochron) {
-    this.isochron = isochron;
+  public IsochronePruneProcessType isochrones(Object isochrones) {
+    this.isochrones = isochrones;
     return this;
   }
 
   /**
-   * GeoJSON FeatureCollection
-   * @return isochron
+   * Generic type as container for GeoJSON FeatureCollections
+   * @return isochrones
   */
-  @NotNull 
-  @Schema(name = "isochron", description = "GeoJSON FeatureCollection", required = true)
-  public Object getIsochron() {
-    return isochron;
+  
+  @Schema(name = "isochrones", description = "Generic type as container for GeoJSON FeatureCollections", required = false)
+  public Object getIsochrones() {
+    return isochrones;
   }
 
-  public void setIsochron(Object isochron) {
-    this.isochron = isochron;
+  public void setIsochrones(Object isochrones) {
+    this.isochrones = isochrones;
   }
 
   public IsochronePruneProcessType spatialUnit(UUID spatialUnit) {
@@ -133,11 +130,11 @@ public class IsochronePruneProcessType implements ProcessType {
   }
 
   /**
-   * Get spatialUnit
+   * Unique identifier of the spatial unit. This ID will be used to fetch spatial unit data from the  KomMonitor DataManagement API. 
    * @return spatialUnit
   */
   @NotNull @Valid 
-  @Schema(name = "spatialUnit", required = true)
+  @Schema(name = "spatialUnit", description = "Unique identifier of the spatial unit. This ID will be used to fetch spatial unit data from the  KomMonitor DataManagement API. ", required = true)
   public UUID getSpatialUnit() {
     return spatialUnit;
   }
@@ -157,11 +154,11 @@ public class IsochronePruneProcessType implements ProcessType {
   }
 
   /**
-   * Get indicator
+   * List of unique indicator identifiers. These IDs will be used to fetch indicator timeseries data from the  KomMonitor DataManagement API. 
    * @return indicator
   */
   @NotNull @Valid 
-  @Schema(name = "indicator", required = true)
+  @Schema(name = "indicator", description = "List of unique indicator identifiers. These IDs will be used to fetch indicator timeseries data from the  KomMonitor DataManagement API. ", required = true)
   public List<UUID> getIndicator() {
     return indicator;
   }
@@ -176,11 +173,11 @@ public class IsochronePruneProcessType implements ProcessType {
   }
 
   /**
-   * Get date
+   * Defines the date for which indicator timeseries data will be fetched from DataManagement API. 
    * @return date
   */
   @Valid 
-  @Schema(name = "date", required = false)
+  @Schema(name = "date", description = "Defines the date for which indicator timeseries data will be fetched from DataManagement API. ", required = false)
   public LocalDate getDate() {
     return date;
   }
@@ -195,36 +192,17 @@ public class IsochronePruneProcessType implements ProcessType {
   }
 
   /**
-   * Method to use for weighting intersections of spatial units and isochrones. simple: No weighting will be applied, which means that intersection proportions are returned as is. residential_areas: Residential areas are additionally considered to calculate an intersection proportion.
+   * Method to use for weighting intersections of spatial units and isochrones:  * `simple` - No weighting will be applied, which means that intersection proportions are returned as is.  * `residential_areas` - Residential areas are additionally considered to calculate an intersection proportion. 
    * @return weighting
   */
   
-  @Schema(name = "weighting", description = "Method to use for weighting intersections of spatial units and isochrones. simple: No weighting will be applied, which means that intersection proportions are returned as is. residential_areas: Residential areas are additionally considered to calculate an intersection proportion.", required = false)
+  @Schema(name = "weighting", description = "Method to use for weighting intersections of spatial units and isochrones:  * `simple` - No weighting will be applied, which means that intersection proportions are returned as is.  * `residential_areas` - Residential areas are additionally considered to calculate an intersection proportion. ", required = false)
   public WeightingEnum getWeighting() {
     return weighting;
   }
 
   public void setWeighting(WeightingEnum weighting) {
     this.weighting = weighting;
-  }
-
-  public IsochronePruneProcessType _configuration(Object _configuration) {
-    this._configuration = _configuration;
-    return this;
-  }
-
-  /**
-   * Additional configuration properties for this process
-   * @return _configuration
-  */
-  @NotNull 
-  @Schema(name = "configuration", description = "Additional configuration properties for this process", required = true)
-  public Object getConfiguration() {
-    return _configuration;
-  }
-
-  public void setConfiguration(Object _configuration) {
-    this._configuration = _configuration;
   }
 
   @Override
@@ -237,17 +215,16 @@ public class IsochronePruneProcessType implements ProcessType {
     }
     IsochronePruneProcessType isochronePruneProcessType = (IsochronePruneProcessType) o;
     return Objects.equals(this.name, isochronePruneProcessType.name) &&
-        Objects.equals(this.isochron, isochronePruneProcessType.isochron) &&
+        Objects.equals(this.isochrones, isochronePruneProcessType.isochrones) &&
         Objects.equals(this.spatialUnit, isochronePruneProcessType.spatialUnit) &&
         Objects.equals(this.indicator, isochronePruneProcessType.indicator) &&
         Objects.equals(this.date, isochronePruneProcessType.date) &&
-        Objects.equals(this.weighting, isochronePruneProcessType.weighting) &&
-        Objects.equals(this._configuration, isochronePruneProcessType._configuration);
+        Objects.equals(this.weighting, isochronePruneProcessType.weighting);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, isochron, spatialUnit, indicator, date, weighting, _configuration);
+    return Objects.hash(name, isochrones, spatialUnit, indicator, date, weighting);
   }
 
   @Override
@@ -255,12 +232,11 @@ public class IsochronePruneProcessType implements ProcessType {
     StringBuilder sb = new StringBuilder();
     sb.append("class IsochronePruneProcessType {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    isochron: ").append(toIndentedString(isochron)).append("\n");
+    sb.append("    isochrones: ").append(toIndentedString(isochrones)).append("\n");
     sb.append("    spatialUnit: ").append(toIndentedString(spatialUnit)).append("\n");
     sb.append("    indicator: ").append(toIndentedString(indicator)).append("\n");
     sb.append("    date: ").append(toIndentedString(date)).append("\n");
     sb.append("    weighting: ").append(toIndentedString(weighting)).append("\n");
-    sb.append("    _configuration: ").append(toIndentedString(_configuration)).append("\n");
     sb.append("}");
     return sb.toString();
   }

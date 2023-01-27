@@ -74,7 +74,7 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
         LOGGER.info("Start executing IsochronePrune process.");
         List<UUID> indicatorList = parameters.getIndicator();
         UUID spatialUnitId = parameters.getSpatialUnit();
-        String isochrones = (String) parameters.getIsochron();
+        String isochrones = (String) parameters.getIsochrones();
         LocalDate date = parameters.getDate();
 
         // 1) Fetch geometries only for the specified SpatialUnit and create a FeatureCollection for it as well

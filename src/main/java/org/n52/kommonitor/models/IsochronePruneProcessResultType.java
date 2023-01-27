@@ -23,7 +23,7 @@ import javax.annotation.Generated;
  * IsochronePruneProcessResultType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-11-07T17:14:05.706474+01:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-01-27T15:13:32.128850400+01:00[Europe/Berlin]")
 public class IsochronePruneProcessResultType {
 
   @JsonProperty("indicatorId")
@@ -43,11 +43,11 @@ public class IsochronePruneProcessResultType {
   }
 
   /**
-   * Get indicatorId
+   * Unique indicator identifier. Coverage values relates to this indicator. 
    * @return indicatorId
   */
   @NotNull @Valid 
-  @Schema(name = "indicatorId", required = true)
+  @Schema(name = "indicatorId", description = "Unique indicator identifier. Coverage values relates to this indicator. ", required = true)
   public UUID getIndicatorId() {
     return indicatorId;
   }
@@ -70,11 +70,11 @@ public class IsochronePruneProcessResultType {
   }
 
   /**
-   * Get overallCoverage
+   * Indicates coverages for the entire spatial unit, which means the coverage of all isochrones of a certain  range together for all spatial unit features. 
    * @return overallCoverage
   */
   @Valid 
-  @Schema(name = "overallCoverage", required = false)
+  @Schema(name = "overallCoverage", description = "Indicates coverages for the entire spatial unit, which means the coverage of all isochrones of a certain  range together for all spatial unit features. ", required = false)
   public List<OverallCoverageType> getOverallCoverage() {
     return overallCoverage;
   }
@@ -97,11 +97,11 @@ public class IsochronePruneProcessResultType {
   }
 
   /**
-   * Get poiCoverage
+   * Indicates single isochron coverages for each spatial unit. 
    * @return poiCoverage
   */
   @Valid 
-  @Schema(name = "poiCoverage", required = false)
+  @Schema(name = "poiCoverage", description = "Indicates single isochron coverages for each spatial unit. ", required = false)
   public List<PoiCoverageType> getPoiCoverage() {
     return poiCoverage;
   }

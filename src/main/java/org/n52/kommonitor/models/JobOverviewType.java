@@ -23,7 +23,7 @@ import javax.annotation.Generated;
  */
 
 @Schema(name = "JobOverviewType", description = "Description of a Job")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-20T10:40:58.862087900+02:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-01-27T15:13:32.128850400+01:00[Europe/Berlin]")
 public class JobOverviewType {
 
   @JsonProperty("id")
@@ -37,7 +37,7 @@ public class JobOverviewType {
   private OffsetDateTime timestamp;
 
   /**
-   * Gets or Sets status
+   * Indicates the execution status of a job:  * `queued` - The job has been created but process execution has not started, yet.  * `running` - Process execution has started.  * `finished` - Process execution has finished.  * `failed` - The job failed due to an error during process execution. 
    */
   public enum StatusEnum {
     QUEUED("queued"),
@@ -103,11 +103,11 @@ public class JobOverviewType {
   }
 
   /**
-   * Get process
+   * Name of the process that will be executed by this job. 
    * @return process
   */
   @NotNull 
-  @Schema(name = "process", required = true)
+  @Schema(name = "process", description = "Name of the process that will be executed by this job. ", required = true)
   public String getProcess() {
     return process;
   }
@@ -122,11 +122,11 @@ public class JobOverviewType {
   }
 
   /**
-   * Get timestamp
+   * Timestamp for job execution start.
    * @return timestamp
   */
   @NotNull @Valid 
-  @Schema(name = "timestamp", required = true)
+  @Schema(name = "timestamp", description = "Timestamp for job execution start.", required = true)
   public OffsetDateTime getTimestamp() {
     return timestamp;
   }
@@ -141,11 +141,11 @@ public class JobOverviewType {
   }
 
   /**
-   * Get status
+   * Indicates the execution status of a job:  * `queued` - The job has been created but process execution has not started, yet.  * `running` - Process execution has started.  * `finished` - Process execution has finished.  * `failed` - The job failed due to an error during process execution. 
    * @return status
   */
   @NotNull 
-  @Schema(name = "status", required = true)
+  @Schema(name = "status", description = "Indicates the execution status of a job:  * `queued` - The job has been created but process execution has not started, yet.  * `running` - Process execution has started.  * `finished` - Process execution has finished.  * `failed` - The job failed due to an error during process execution. ", required = true)
   public StatusEnum getStatus() {
     return status;
   }

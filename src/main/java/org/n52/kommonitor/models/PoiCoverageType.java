@@ -22,7 +22,7 @@ import javax.annotation.Generated;
  * PoiCoverageType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-24T10:19:31.501040600+02:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-01-27T15:13:32.128850400+01:00[Europe/Berlin]")
 public class PoiCoverageType {
 
   @JsonProperty("poiFeatureId")
@@ -69,11 +69,11 @@ public class PoiCoverageType {
   }
 
   /**
-   * Get overallCoverage
+   * Indicates the coverage for the entire spatial unit, which means the coverage of a single isochron for all spatial unit features. 
    * @return overallCoverage
   */
   @Valid 
-  @Schema(name = "overallCoverage", required = false)
+  @Schema(name = "overallCoverage", description = "Indicates the coverage for the entire spatial unit, which means the coverage of a single isochron for all spatial unit features. ", required = false)
   public List<IndicatorCoverageValueType> getOverallCoverage() {
     return overallCoverage;
   }
@@ -96,11 +96,11 @@ public class PoiCoverageType {
   }
 
   /**
-   * Get spatialUnitCoverage
+   * Indicates the coverage for single spatial unit features, which means the coverage of a single isochron for each feature of a spatial unit. 
    * @return spatialUnitCoverage
   */
   @Valid 
-  @Schema(name = "spatialUnitCoverage", required = false)
+  @Schema(name = "spatialUnitCoverage", description = "Indicates the coverage for single spatial unit features, which means the coverage of a single isochron for each feature of a spatial unit. ", required = false)
   public List<SpatialUnitCoverageType> getSpatialUnitCoverage() {
     return spatialUnitCoverage;
   }

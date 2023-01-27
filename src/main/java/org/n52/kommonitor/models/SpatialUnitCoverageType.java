@@ -21,7 +21,7 @@ import javax.annotation.Generated;
  * SpatialUnitCoverageType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-24T10:19:31.501040600+02:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-01-27T15:13:32.128850400+01:00[Europe/Berlin]")
 public class SpatialUnitCoverageType {
 
   @JsonProperty("spatialUnitFeatureId")
@@ -37,11 +37,11 @@ public class SpatialUnitCoverageType {
   }
 
   /**
-   * Get spatialUnitFeatureId
+   * Unique identifier for the spatial unit. This ID can be used to identify a spatial unit at the  DataManagement API. 
    * @return spatialUnitFeatureId
   */
   @NotNull 
-  @Schema(name = "spatialUnitFeatureId", required = true)
+  @Schema(name = "spatialUnitFeatureId", description = "Unique identifier for the spatial unit. This ID can be used to identify a spatial unit at the  DataManagement API. ", required = true)
   public String getSpatialUnitFeatureId() {
     return spatialUnitFeatureId;
   }
@@ -64,11 +64,11 @@ public class SpatialUnitCoverageType {
   }
 
   /**
-   * Get coverage
+   * Indicator coverage for this spatial unit. 
    * @return coverage
   */
   @Valid 
-  @Schema(name = "coverage", required = false)
+  @Schema(name = "coverage", description = "Indicator coverage for this spatial unit. ", required = false)
   public List<IndicatorCoverageValueType> getCoverage() {
     return coverage;
   }

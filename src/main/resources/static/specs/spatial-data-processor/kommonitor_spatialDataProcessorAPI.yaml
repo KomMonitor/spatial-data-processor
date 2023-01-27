@@ -184,7 +184,9 @@ components:
         - $ref: "#/components/schemas/TestProcessType"
 
     IsochronePruneProcessType:
-      description: Process that calculates overlap of spatial-units with isochrones
+      description: > 
+        Process that calculates overlap of spatial-units with isochrones to determine an accessibility rate for certain
+        indicators.
       type: object
       required:
           - name
@@ -196,32 +198,38 @@ components:
         name:
           type: string
           default: "isochrone-prune"
-        isochron:
+          description: >
+            Unique name of the process. Will be used to determine which process will be triggered server-side.
+        isochrones:
+          description: >
+            Isochrones as GeoJSON FeatureCollection
           $ref: "#/components/schemas/FeatureCollectionType"
         spatialUnit:
-          #$ref: "../data-management/kommonitor_dataAccessAPI.yaml/#/definitions/SpatialUnitOverviewType"
           type: string
           format: uuid
+          description: >
+            Unique identifier of the spatial unit. This ID will be used to fetch spatial unit data from the 
+            KomMonitor DataManagement API.
         indicator:
-          #$ref: "../data-management/kommonitor_dataAccessAPI.yaml/#/definitions/IndicatorOverviewType"
           type: array
           items:
             type: string
             format: uuid
+          description: >
+            List of unique indicator identifiers. These IDs will be used to fetch indicator timeseries data from the 
+            KomMonitor DataManagement API.
         date:
           type: string
           format: date
+          description: >
+            Defines the date for which indicator timeseries data will be fetched from DataManagement API.
         weighting:
           type: string
-          description:
-            "Method to use for weighting intersections of spatial units and isochrones.
-            simple: No weighting will be applied, which means that intersection proportions are returned as is. 
-            residential_areas: Residential areas are additionally considered to calculate an intersection proportion."
           enum: [ simple, residential_areas ]
-        configuration:
-          type: object
-          #TODO: expand on this
-          description: Additional configuration properties for this process
+          description: |
+            Method to use for weighting intersections of spatial units and isochrones:
+             * `simple` - No weighting will be applied, which means that intersection proportions are returned as is.
+             * `residential_areas` - Residential areas are additionally considered to calculate an intersection proportion.
 
     TestProcessType:
       description: Process for testing the API.
@@ -233,11 +241,15 @@ components:
         name:
           type: string
           default: "test"
+          description: >
+            Unique name of the process. Will be used to determine which process will be triggered server-side.
         test:
           type: string
+          description: >
+            Just a dummy test parameter.
 
     FeatureCollectionType:
-      description: GeoJSON FeatureCollection
+      description: Generic type as container for GeoJSON FeatureCollections
       type: object
       #TODO: expand with actual schema
 
@@ -254,12 +266,22 @@ components:
           $ref: '#/components/schemas/uuid'
         process:
           type: string
+          description: >
+            Name of the process that will be executed by this job.
         timestamp:
           type: string
           format: date-time
+          description:
+            Timestamp for job execution start.
         status:
           type: string
           enum: [ queued, running, finished, failed ]
+          description: |
+            Indicates the execution status of a job:
+             * `queued` - The job has been created but process execution has not started, yet.
+             * `running` - Process execution has started.
+             * `finished` - Process execution has finished.
+             * `failed` - The job failed due to an error during process execution.
 
     JobResultType:
       type: object
@@ -269,11 +291,13 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/uuid'
+          description: >
+            Unique job ID
         result:
           type: object
-          description: |
-            The result is a JSON object whose schema depends on the underlying process. Each process has its own result
-            schema.
+          description: >
+            Result of the process execution. The result is a JSON object whose schema depends on the underlying process.
+            Each process has its own result schema.
             
     IsochronePruneProcessResultType:
       type: object
@@ -283,14 +307,21 @@ components:
         indicatorId:
           type: string
           format: uuid
+          description: >
+            Unique indicator identifier. Coverage values relates to this indicator.
         overallCoverage:
           type: array
           items:
             $ref: '#/components/schemas/OverallCoverageType'
+          description: >
+            Indicates coverages for the entire spatial unit, which means the coverage of all isochrones of a certain 
+            range together for all spatial unit features.
         poiCoverage:
           type: array
           items:
             $ref: '#/components/schemas/PoiCoverageType'
+          description: >
+            Indicates single isochron coverages for each spatial unit.
 
     PoiCoverageType:
       type: object
@@ -303,10 +334,16 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/IndicatorCoverageValueType'
+          description: >
+            Indicates the coverage for the entire spatial unit, which means the coverage of a single isochron for
+            all spatial unit features.
         spatialUnitCoverage:
           type: array
           items:
             $ref: '#/components/schemas/SpatialUnitCoverageType'
+          description: >
+            Indicates the coverage for single spatial unit features, which means the coverage of a single isochron for
+            each feature of a spatial unit.
 
     SpatialUnitCoverageType:
       type: object
@@ -315,10 +352,15 @@ components:
       properties:
         spatialUnitFeatureId:
           type: string
+          description: >
+            Unique identifier for the spatial unit. This ID can be used to identify a spatial unit at the 
+            DataManagement API.
         coverage:
           type: array
           items:
             $ref: '#/components/schemas/IndicatorCoverageValueType'
+          description: >
+            Indicator coverage for this spatial unit.
 
     OverallCoverageType:
       type: object
@@ -328,10 +370,14 @@ components:
         range:
           type: number
           format: float
+          description: >
+            Indicates the isochron range that relates to the indicator coverage values.
         coverage:
           type: array
           items:
             $ref: '#/components/schemas/IndicatorCoverageValueType'
+          description: >
+            The coverage values of an isochron for a certain indicator.
 
     IndicatorCoverageValueType:
       type: object
@@ -339,12 +385,20 @@ components:
         date:
           type: string
           format: date
+          description: >
+            Indicates for which indicator timeseries date the coverage values relate to.
         absoluteCoverage:
           type: number
           format: float
+          description: >
+            Absolute indicator coverage value. This value is calculated by multiplying the relative coverage with
+            the indicator value.
         relativeCoverage:
           type: number
           format: float
+          description: >
+            Relative indicator coverage value. This value is calculated by determining the proportion of intersection
+            of an isochron geometry with spatial unit feature geometries.
 
     uuid:
       type: string
