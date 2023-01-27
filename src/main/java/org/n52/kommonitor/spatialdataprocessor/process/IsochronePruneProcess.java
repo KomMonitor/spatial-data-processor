@@ -71,6 +71,7 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
 
     @Override
     public Object execute() throws Exception {
+        LOGGER.info("Start executing IsochronePrune process.");
         List<UUID> indicatorList = parameters.getIndicator();
         UUID spatialUnitId = parameters.getSpatialUnit();
         String isochrones = (String) parameters.getIsochron();
@@ -83,7 +84,9 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
         SimpleFeatureCollection spatialUnitFc = GeoJSONReader.parseFeatureCollection(spatialUnit.toString());
         SimpleFeatureCollection isochronesFc = GeoJSONReader.parseFeatureCollection(isochrones);
 
-        return calculateIsochronePrune(indicatorList, spatialUnitId, date, isochrones, isochronesFc, spatialUnitFc);
+        List<IsochronePruneProcessResultType> result = calculateIsochronePrune(indicatorList, spatialUnitId, date, isochrones, isochronesFc, spatialUnitFc);
+        LOGGER.info("Successfully finished IsochronePrune process.");
+        return result;
     }
 
     protected List<IsochronePruneProcessResultType> calculateIsochronePrune(List<UUID> indicatorList,
@@ -94,12 +97,14 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
                                                                             SimpleFeatureCollection spatialUnitFc) throws OperationException {
         // 2) Fetch indicators with timeseries only without geometry and store it within a lookup HashMap by indexing
         // it with the SpatialUnit Feature IDs
+        LOGGER.info("Create lookup map for indicator summary");
         IndicatorSummary indicatorSummary = createIndicatorSummary(indicatorList, spatialUnitId, date);
 
         Map<String, Map<UUID, List<IndicatorValue>>> lookupMap = indicatorSummary.lookupMap;
         Map<UUID, Map<LocalDate, Double>> totalIndicatorScore = indicatorSummary.totalIndicatorScore;
 
         // 3) Calculate intersections between POIs (isochrones) and SpatialUnit features
+        LOGGER.info("Calculate single isochrone coverage scores with weighting '{}'", parameters.getWeighting());
         Map<String, Map<String, Float>> intersectionMap = calculateWeightedIntersection(isochronesFc, spatialUnitFc, parameters.getWeighting());
 
         // 4) Calculate indicator coverages for each combination of isochrones and SpatialUnits that intersect
@@ -150,6 +155,7 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
             //calculate summed up overall indicator coverage for all isochrones
             List<OverallCoverageType> overallScore = Collections.emptyList();
             try {
+                LOGGER.info("Calculate overall coverage score with weighting '{}'", parameters.getWeighting());
                 overallScore = calculateOverallScore(spatialUnitFc, isochronesFc, isochrones, i, totalIndicatorScore, parameters.getWeighting());
             } catch (OperationException | JsonProcessingException e) {
                 LOGGER.error("Could not calculate overall indicator coverage for indicator {} due to error: {}", i, e.getMessage());
