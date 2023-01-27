@@ -24,14 +24,14 @@ public class ShapeFileLoader implements FeatureLoader<ShapeFileDataSource>{
 
     @Override
     public SimpleFeatureCollection loadFeatureCollection(ShapeFileDataSource dataSource) throws IOException {
-        File file = new File(dataSource.filePath());
+        File file = new File(dataSource.getFilePath());
         DataStore dataStore = FileDataStoreFinder.getDataStore(file);
         String typeName = dataStore.getTypeNames()[0];
         FeatureSource<SimpleFeatureType, SimpleFeature> source = dataStore.getFeatureSource(typeName);
         FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
-        List<Filter> filterList = dataSource.fieldValues()
+        List<Filter> filterList = dataSource.getFieldValues()
                 .stream()
-                .map(v -> ff.equals(ff.property(dataSource.fieldName()), ff.literal(v)))
+                .map(v -> ff.equals(ff.property(dataSource.getFieldName()), ff.literal(v)))
                 .collect(Collectors.toList());
 
         Filter filter = ff.or(filterList);

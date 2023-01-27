@@ -1,5 +1,6 @@
 package org.n52.kommonitor.spatialdataprocessor.config;
 
+import org.n52.kommonitor.dataloader.FeatureDataSource;
 import org.n52.kommonitor.dataloader.FeatureLoaderRepository;
 import org.n52.kommonitor.models.IsochronePruneProcessType;
 import org.n52.kommonitor.models.ProcessOverviewType;
@@ -7,7 +8,6 @@ import org.n52.kommonitor.models.ProcessType;
 import org.n52.kommonitor.models.TestProcessType;
 import org.n52.kommonitor.spatialdataprocessor.operations.SpatialOperationUtils;
 import org.n52.kommonitor.spatialdataprocessor.process.IsochronePruneProcess;
-import org.n52.kommonitor.spatialdataprocessor.process.IsochronePruneProcessConfigProperties;
 import org.n52.kommonitor.spatialdataprocessor.process.Process;
 import org.n52.kommonitor.spatialdataprocessor.process.TestProcess;
 import org.n52.kommonitor.spatialdataprocessor.util.FeatureUtils;
@@ -36,7 +36,7 @@ public class ProcessConfiguration {
                                                                                   SpatialOperationUtils operationUtils,
                                                                                   FeatureUtils featureUtils,
                                                                                   IsochroneUtils isochroneUtils,
-                                                                                  IsochronePruneProcessConfigProperties config,
+                                                                                  FeatureDataSource dataSource,
                                                                                   FeatureLoaderRepository repository) {
         return new ProcessFactory<>() {
 
@@ -49,7 +49,7 @@ public class ProcessConfiguration {
 
             @Override
             public Process<IsochronePruneProcessType> createProcess(IsochronePruneProcessType parameters) {
-                return new IsochronePruneProcess(parameters, dmc, operationUtils, featureUtils, isochroneUtils, config, repository);
+                return new IsochronePruneProcess(parameters, dmc, operationUtils, featureUtils, isochroneUtils, dataSource, repository);
             }
 
             @Override

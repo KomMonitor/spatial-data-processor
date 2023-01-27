@@ -9,9 +9,9 @@ import org.geotools.data.geojson.GeoJSONReader;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.locationtech.jts.geom.Geometry;
+import org.n52.kommonitor.dataloader.FeatureDataSource;
 import org.n52.kommonitor.dataloader.FeatureLoader;
 import org.n52.kommonitor.dataloader.FeatureLoaderRepository;
-import org.n52.kommonitor.dataloader.ShapeFileDataSource;
 import org.n52.kommonitor.models.*;
 import org.n52.kommonitor.spatialdataprocessor.operations.OperationException;
 import org.n52.kommonitor.spatialdataprocessor.operations.SpatialOperationUtils;
@@ -48,31 +48,24 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
 
     private final IsochroneUtils isochroneUtils;
 
-    private final IsochronePruneProcessConfigProperties configProperties;
+    private final FeatureDataSource dataSource;
 
     private final FeatureLoaderRepository repository;
 
     private final FeatureLoader featureLoader;
 
-    private final ShapeFileDataSource residentialAreaSource;
-
     public IsochronePruneProcess(IsochronePruneProcessType parameters, DataManagementClient dmc,
                                  SpatialOperationUtils operationUtils, FeatureUtils featureUtils,
-                                 IsochroneUtils isochroneUtils, IsochronePruneProcessConfigProperties configProperties,
+                                 IsochroneUtils isochroneUtils, FeatureDataSource dataSource,
                                  FeatureLoaderRepository repository) {
         this.parameters = parameters;
         this.dmc = dmc;
         this.operationUtils = operationUtils;
         this.featureUtils = featureUtils;
         this.isochroneUtils = isochroneUtils;
-        this.configProperties = configProperties;
+        this.dataSource = dataSource;
         this.repository = repository;
-        this.featureLoader = this.repository.getFeatureLoader(configProperties.getResidentialAreaData().getType()).get();
-        this.residentialAreaSource = new ShapeFileDataSource(
-                configProperties.getResidentialAreaData().getFilePath(),
-                configProperties.getResidentialAreaData().getFieldName(),
-                configProperties.getResidentialAreaData().getFieldValues()
-        );
+        this.featureLoader = repository.getFeatureLoader(dataSource.getType()).get();
     }
 
 
@@ -237,11 +230,11 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
                                                                               Map<UUID, Map<LocalDate, Double>> totalIndicatorScore,
                                                                               Double range) throws OperationException {
         try {
-            SimpleFeatureCollection residentialAreaFc = featureLoader.loadFeatureCollection(residentialAreaSource);
+            SimpleFeatureCollection residentialAreaFc = featureLoader.loadFeatureCollection(dataSource);
             return calculateResidentialAreaWeightedRangeCoverage(spatialUnitGeom, isochronesFc, residentialAreaFc,
                     indicatorId, totalIndicatorScore, range);
         } catch (IOException e) {
-            throw new OperationException(String.format("Could not load residential areas from data source %s", residentialAreaSource.filePath()));
+            throw new OperationException(String.format("Could not load residential areas from data source %s", dataSource.getType()));
         }
     }
 
@@ -291,7 +284,7 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
     }
 
     private IndicatorSummary createIndicatorSummary(List<UUID> indicatorList, UUID spatialUnitId, LocalDate date) {
-        Map<String, Map<UUID, List<IndicatorValue>>> lookupMap = new HashMap();
+        Map<String, Map<UUID, List<IndicatorValue>>> lookupMap = new HashMap<>();
         Map<UUID, Map<LocalDate, Double>> totalIndicatorScoreMap = new HashMap<>();
         String dateProp = DATE_PROP_PREFIX.concat(date.toString());
         indicatorList.forEach(indicator -> {
@@ -390,10 +383,10 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
     protected Map<String, Map<String, Float>> calculateResidentialAreaWeightedIntersection(SimpleFeatureCollection isochronesFc,
                                                                                            SimpleFeatureCollection spatialUnitFc) throws OperationException {
         try {
-            SimpleFeatureCollection residentialAreaFc = featureLoader.loadFeatureCollection(residentialAreaSource);
+            SimpleFeatureCollection residentialAreaFc = featureLoader.loadFeatureCollection(dataSource);
             return calculateResidentialAreaWeightedIntersection(isochronesFc, spatialUnitFc, residentialAreaFc);
         } catch (IOException e) {
-            throw new OperationException(String.format("Could not load residential areas from data source %s", residentialAreaSource.filePath()));
+            throw new OperationException(String.format("Could not load residential areas from data source %s", dataSource.getType()));
         }
     }
 
