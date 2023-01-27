@@ -1,6 +1,8 @@
 package org.n52.kommonitor.security;
 
+import org.n52.kommonitor.dataloader.ShapeFileDataSource;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,6 +29,10 @@ public class SecurityConfig {
     }
 
     @Bean
+    @ConditionalOnProperty(
+            value="kommonitor.processor.security.enabled",
+            havingValue = "true",
+            matchIfMissing = false)
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.csrf().disable();
@@ -40,6 +46,19 @@ public class SecurityConfig {
 
         http.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
         return http.build();
+    }
+
+    @Bean
+    @ConditionalOnProperty(
+            value="kommonitor.processor.security.enabled",
+            havingValue = "false",
+            matchIfMissing = false)
+    SecurityFilterChain unsecuredFilterChain(final HttpSecurity http) throws Exception {
+        return http.csrf()
+                .disable()
+                .authorizeRequests()
+                .anyRequest()
+                .permitAll().and().build();
     }
 
     /*
