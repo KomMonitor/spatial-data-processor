@@ -20,7 +20,7 @@ import javax.annotation.Generated;
  * IndicatorCoverageValueType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-21T12:45:15.139999500+02:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-02-03T00:29:29.885216558+01:00[Europe/Berlin]")
 public class IndicatorCoverageValueType {
 
   @JsonProperty("date")

@@ -22,7 +22,7 @@ import javax.annotation.Generated;
  * CommonMetadataType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-07T13:59:53.371920358+02:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-02-03T00:29:30.762943960+01:00[Europe/Berlin]")
 public class CommonMetadataType {
 
   @JsonProperty("contact")

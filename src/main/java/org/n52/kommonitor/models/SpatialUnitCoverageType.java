@@ -21,7 +21,7 @@ import javax.annotation.Generated;
  * SpatialUnitCoverageType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-24T10:19:31.501040600+02:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-02-03T00:29:29.885216558+01:00[Europe/Berlin]")
 public class SpatialUnitCoverageType {
 
   @JsonProperty("spatialUnitFeatureId")
