@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-20T10:40:58.862087900+02:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-02-03T00:29:29.885216558+01:00[Europe/Berlin]")
 @Validated
 @Tag(name = "jobs", description = "Jobs that are being processed")
 @RequestMapping("${openapi.komMonitorSpatialDataProcessor.base-path:}")
@@ -43,6 +43,7 @@ public interface JobsApi {
      * Submits a processing Job for execution
      *
      * @param processType Definition of Job to be executed (required)
+     * @param authorization  (optional)
      * @return Successful operation (status code 200)
      *         or unauthorized (status code 401)
      *         or Invalid input (status code 405)
@@ -69,7 +70,8 @@ public interface JobsApi {
         consumes = { "application/json" }
     )
     ResponseEntity<UUID> enqueueJob(
-        @Parameter(name = "ProcessType", description = "Definition of Job to be executed", required = true) @Valid @RequestBody ProcessType processType
+        @Parameter(name = "ProcessType", description = "Definition of Job to be executed", required = true) @Valid @RequestBody ProcessType processType,
+        @Parameter(name = "Authorization", description = "") @RequestHeader(value = "Authorization", required = false) String authorization
     );
 
 
