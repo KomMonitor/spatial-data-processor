@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-02-03T01:17:34.621019675+01:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-02-03T09:13:11.881310700+01:00[Europe/Berlin]")
 @Validated
 @Tag(name = "processes", description = "Processes that can be executed by this processor")
 @RequestMapping("${openapi.komMonitorSpatialDataProcessor.base-path:}")
@@ -53,7 +53,7 @@ public interface ProcessesApi {
             @ApiResponse(responseCode = "401", description = "unauthorized")
         },
         security = {
-            @SecurityRequirement(name = "kommonitor_auth", scopes={  })
+            @SecurityRequirement(name = "kommonitor_auth")
         }
     )
     @RequestMapping(

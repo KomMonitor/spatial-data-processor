@@ -412,12 +412,9 @@ components:
 
   securitySchemes:
     kommonitor_auth:
-      type: oauth2
-      flows:
-        authorizationCode:
-          authorizationUrl: http://keycloak:8080/auth
-          tokenUrl: http://keycloak:8080/auth/realms/kommonitor/protocol/openid-connect/token
-          scopes: {}
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
 
 security:
   - oAuthNoScopes: []
