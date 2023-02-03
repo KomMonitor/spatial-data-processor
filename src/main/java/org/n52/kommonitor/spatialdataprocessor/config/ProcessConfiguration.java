@@ -16,6 +16,8 @@ import org.n52.kommonitor.spatialdataprocessor.util.datamanagement.DataManagemen
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 /**
  * Static Registry providing information about all currently available Processes
  */
@@ -24,10 +26,25 @@ public class ProcessConfiguration {
 
     public interface ProcessFactory<T extends ProcessType> {
 
+        /**
+         * Gets the name of the process for identification/referencing
+         * @return name of the process this factory creates
+         */
         String getProcessName();
 
-        Process<T> createProcess(T processType);
+        /**
+         * Creates a new Process Instance
+         *
+         * @param processType ProcessType
+         * @param metadata Additional metadata (e.g. User information)
+         * @return new Process
+         */
+        Process<T> createProcess(T processType, Map<String, Object> metadata);
 
+        /**
+         * Get Overview of Process
+         * @return ProcessOverview
+         */
         ProcessOverviewType getProcessOverview();
     }
 
@@ -48,8 +65,8 @@ public class ProcessConfiguration {
             }
 
             @Override
-            public Process<IsochronePruneProcessType> createProcess(IsochronePruneProcessType parameters) {
-                return new IsochronePruneProcess(parameters, dmc, operationUtils, featureUtils, isochroneUtils, dataSource, repository);
+            public Process<IsochronePruneProcessType> createProcess(IsochronePruneProcessType parameters, Map<String, Object> metadata) {
+                return new IsochronePruneProcess(parameters, dmc, operationUtils, featureUtils, isochroneUtils, dataSource, repository, metadata);
             }
 
             @Override
@@ -74,8 +91,8 @@ public class ProcessConfiguration {
             }
 
             @Override
-            public Process<TestProcessType> createProcess(TestProcessType processType) {
-                return new TestProcess(dmc);
+            public Process<TestProcessType> createProcess(TestProcessType processType, Map<String, Object> metadata) {
+                return new TestProcess(dmc, metadata);
             }
 
             @Override

@@ -14,8 +14,6 @@ import org.springframework.stereotype.Controller;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 
 /**
  * Controller implementing JobsApi.
@@ -38,12 +36,18 @@ public class JobsController implements JobsApi {
     }
 
     @Override
-    public ResponseEntity<UUID> enqueueJob(ProcessType jobDefinition) {
+    public ResponseEntity<UUID> enqueueJob(ProcessType jobDefinition,
+                                           String authHeader) {
+
         // Get Process by name
         ProcessConfiguration.ProcessFactory factory = processFactories.get(jobDefinition.getName());
 
+        // Create metadata that may be used by processes
+        Map<String, Object> metadata = new HashMap<>();
+        metadata.put("authHeader", authHeader);
+
         if (factory != null) {
-            Job<?> job = new Job(factory.createProcess(jobDefinition));
+            Job<?> job = new Job(factory.createProcess(jobDefinition, metadata));
             jobStore.addJob(job, executor.submit(job));
             return ResponseEntity.ok(job.getId());
         } else {

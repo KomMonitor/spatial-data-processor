@@ -19,7 +19,7 @@ import javax.annotation.Generated;
  */
 
 @Schema(name = "IndicatorReferenceType", description = "a reference to another indicator, e.g. a sub-indicator that is used to compute the main indicator")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-07T13:59:53.371920358+02:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-02-03T01:17:35.372611508+01:00[Europe/Berlin]")
 public class IndicatorReferenceType {
 
   @JsonProperty("referencedIndicatorDescription")

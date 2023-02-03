@@ -70,6 +70,11 @@ paths:
       summary: Submits a processing Job for execution
       description: Submits a processing Job for execution
       operationId: enqueueJob
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
       requestBody:
         description: Definition of Job to be executed
         content:

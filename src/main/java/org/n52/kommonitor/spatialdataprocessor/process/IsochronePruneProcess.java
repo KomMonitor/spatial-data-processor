@@ -54,10 +54,13 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
 
     private final FeatureLoader featureLoader;
 
+    private final Optional<String> authHeader;
+
     public IsochronePruneProcess(IsochronePruneProcessType parameters, DataManagementClient dmc,
                                  SpatialOperationUtils operationUtils, FeatureUtils featureUtils,
                                  IsochroneUtils isochroneUtils, FeatureDataSource dataSource,
-                                 FeatureLoaderRepository repository) {
+                                 FeatureLoaderRepository repository,
+                                 Map<String, Object> metadata) {
         this.parameters = parameters;
         this.dmc = dmc;
         this.operationUtils = operationUtils;
@@ -66,6 +69,10 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
         this.dataSource = dataSource;
         this.repository = repository;
         this.featureLoader = repository.getFeatureLoader(dataSource.getType()).get();
+
+        this.authHeader = metadata.containsKey("authHeader")?
+                Optional.of(metadata.get("authHeader").toString()) : Optional.empty();
+
     }
 
 
@@ -80,7 +87,7 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
         // 1) Fetch geometries only for the specified SpatialUnit and create a FeatureCollection for it as well
         // as for the provided isochrones
         LOGGER.debug("Fetch geometries for SpatialUnit {}", spatialUnitId);
-        ObjectNode spatialUnit = dmc.getSpatialUnitGeoJSON(spatialUnitId);
+        ObjectNode spatialUnit = dmc.getSpatialUnitGeoJSON(spatialUnitId, authHeader);
         SimpleFeatureCollection spatialUnitFc = GeoJSONReader.parseFeatureCollection(spatialUnit.toString());
         SimpleFeatureCollection isochronesFc = GeoJSONReader.parseFeatureCollection(isochrones);
 
@@ -296,7 +303,7 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
         indicatorList.forEach(indicator -> {
             try {
                 LOGGER.debug("Fetch indicator timeseries for SpatialUnit {} and Indicator {}", spatialUnitId, indicator);
-                ArrayNode indicatorArray = dmc.getIndicatorTimeseries(indicator, spatialUnitId);
+                ArrayNode indicatorArray = dmc.getIndicatorTimeseries(indicator, spatialUnitId, authHeader);
                 Iterator<JsonNode> iterator = indicatorArray.elements();
                 while (iterator.hasNext()) {
                     JsonNode node = iterator.next();

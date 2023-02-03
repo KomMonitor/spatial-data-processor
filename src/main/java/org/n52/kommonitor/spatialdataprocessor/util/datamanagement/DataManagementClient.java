@@ -16,6 +16,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -48,30 +49,53 @@ public class DataManagementClient {
         service = retrofit.create(DataManagementService.class);
     }
 
-    public SpatialUnitOverviewType getSpatialUnitOverview(UUID id) throws IOException {
-        return bodyOrError(service.getSpatialUnitById(id).execute());
+    public SpatialUnitOverviewType getSpatialUnitOverview(UUID id, Optional<String> jwtToken) throws IOException {
+
+        return bodyOrError(service.getSpatialUnitById(jwtToken.orElse(""), id).execute());
     }
 
-    public ObjectNode getSpatialUnitGeoJSON(UUID spatialUnitId) throws IOException {
-        return bodyOrError(service.getSpatialUnitGeoJSON(spatialUnitId).execute());
+    public ObjectNode getSpatialUnitGeoJSON(UUID spatialUnitId, Optional<String> jwtToken) throws IOException {
+        return bodyOrError(service.getSpatialUnitGeoJSON(jwtToken.orElse(""), spatialUnitId).execute());
     }
 
-    public ObjectNode getSpatialUnitGeoJSONForIndicator(UUID indicatorId, UUID spatialUnitId) throws IOException {
-        return bodyOrError(service.getSpatialUnitGeoJSONForIndicator(indicatorId, spatialUnitId).execute());
+    public ObjectNode getSpatialUnitGeoJSONForIndicator(UUID indicatorId,
+                                                        UUID spatialUnitId,
+                                                        Optional<String> jwtToken) throws IOException {
+        return bodyOrError(service.getSpatialUnitGeoJSONForIndicator(
+                jwtToken.orElse(""),
+                indicatorId,
+                spatialUnitId).execute()
+        );
     }
 
-    public ArrayNode getIndicatorTimeseries(UUID indicatorId, UUID spatialUnitId) throws IOException {
-        return bodyOrError(service.getIndicatorTimeseries(indicatorId, spatialUnitId).execute());
+    public ArrayNode getIndicatorTimeseries(UUID indicatorId,
+                                            UUID spatialUnitId,
+                                            Optional<String> jwtToken) throws IOException {
+        return bodyOrError(service.getIndicatorTimeseries(
+                jwtToken.orElse(""),
+                indicatorId,
+                spatialUnitId).execute()
+        );
     }
 
-    public ObjectNode getSpatialUnitGeoJSONForIndicatorAndDate(UUID indicatorId, UUID spatialUnitId,
-                                                               int year, int month, int day) throws Exception{
-        return bodyOrError(service.getSpatialUnitGeoJSONForIndicatorAndDate(indicatorId, spatialUnitId, year, month, day)
+    public ObjectNode getSpatialUnitGeoJSONForIndicatorAndDate(UUID indicatorId,
+                                                               UUID spatialUnitId,
+                                                               int year,
+                                                               int month,
+                                                               int day,
+                                                               Optional<String> jwtToken) throws Exception {
+        return bodyOrError(service.getSpatialUnitGeoJSONForIndicatorAndDate(
+                        jwtToken.orElse(""),
+                        indicatorId,
+                        spatialUnitId,
+                        year,
+                        month,
+                        day)
                 .execute());
     }
 
-    public IndicatorOverviewType getIndicatorOverview(UUID id) throws IOException {
-        return bodyOrError(service.getIndicatorById(id).execute());
+    public IndicatorOverviewType getIndicatorOverview(UUID id, Optional<String> jwtToken) throws IOException {
+        return bodyOrError(service.getIndicatorById(jwtToken.orElse(""), id).execute());
     }
 
     private <T> T bodyOrError(Response<T> response) throws IOException {

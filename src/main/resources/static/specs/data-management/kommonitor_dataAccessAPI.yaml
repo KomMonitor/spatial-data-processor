@@ -3334,8 +3334,10 @@ definitions:
         type: string
         description: the URL of a running WMS instance serving the spatial features of the associated dataset
       userPermissions:
-        type: string
-        description: 'list of permissions that are effective on this dataset for the current user'
+        type: array
+        description: Permission Level
+        items:
+          type: string
     title: GeoresourceOverviewType
   GeoresourcePATCHInputType:
     type: object
@@ -3721,8 +3723,10 @@ definitions:
         type: string
         description: unit of the indicator values
       userPermissions:
-        type: string
-        description: 'list of permissions that are effective on this dataset for the current user'
+        type: array
+        description: Permission Level
+        items:
+          type: string
     title: IndicatorOverviewType
   IndicatorPATCHDisplayOrderInputType:
     type: object
@@ -3948,8 +3952,10 @@ definitions:
         type: string
         description: name of the applicable spatial unit
       userPermissions:
-        type: string
-        description: 'list of permissions that are effective on this dataset for the current user'
+        type: array
+        description: Permission Level
+        items:
+          type: string
     title: IndicatorSpatialUnitJoinItem
   OgcServicesType:
     type: object
@@ -4281,8 +4287,10 @@ definitions:
         type: string
         description: the URL of a running WMS instance serving the spatial features of the associated dataset
       userPermissions:
-        type: string
-        description: 'list of permissions that are effective on this dataset for the current user'
+        type: array
+        description: Permission Level
+        items:
+          type: string
     title: SpatialUnitOverviewType
   SpatialUnitPATCHInputType:
     type: object

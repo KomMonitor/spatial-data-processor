@@ -20,7 +20,7 @@ import javax.annotation.Generated;
  * IndicatorSpatialUnitJoinItem
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-07T13:59:53.371920358+02:00[Europe/Amsterdam]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-02-03T01:17:35.372611508+01:00[Europe/Berlin]")
 public class IndicatorSpatialUnitJoinItem {
 
   @JsonProperty("allowedRoles")
@@ -34,7 +34,8 @@ public class IndicatorSpatialUnitJoinItem {
   private String spatialUnitName;
 
   @JsonProperty("userPermissions")
-  private String userPermissions;
+  @Valid
+  private List<String> userPermissions = null;
 
   public IndicatorSpatialUnitJoinItem allowedRoles(List<String> allowedRoles) {
     this.allowedRoles = allowedRoles;
@@ -101,22 +102,30 @@ public class IndicatorSpatialUnitJoinItem {
     this.spatialUnitName = spatialUnitName;
   }
 
-  public IndicatorSpatialUnitJoinItem userPermissions(String userPermissions) {
+  public IndicatorSpatialUnitJoinItem userPermissions(List<String> userPermissions) {
     this.userPermissions = userPermissions;
     return this;
   }
 
+  public IndicatorSpatialUnitJoinItem addUserPermissionsItem(String userPermissionsItem) {
+    if (this.userPermissions == null) {
+      this.userPermissions = new ArrayList<>();
+    }
+    this.userPermissions.add(userPermissionsItem);
+    return this;
+  }
+
   /**
-   * list of permissions that are effective on this dataset for the current user
+   * Permission Level
    * @return userPermissions
   */
   
-  @Schema(name = "userPermissions", description = "list of permissions that are effective on this dataset for the current user", required = false)
-  public String getUserPermissions() {
+  @Schema(name = "userPermissions", description = "Permission Level", required = false)
+  public List<String> getUserPermissions() {
     return userPermissions;
   }
 
-  public void setUserPermissions(String userPermissions) {
+  public void setUserPermissions(List<String> userPermissions) {
     this.userPermissions = userPermissions;
   }
 
