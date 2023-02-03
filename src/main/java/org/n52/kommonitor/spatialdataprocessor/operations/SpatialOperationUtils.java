@@ -74,7 +74,7 @@ public class SpatialOperationUtils {
         if (geom.isEmpty()) {
             return 0;
         } else {
-            return geom.getArea() / ((Polygon) sf1.getDefaultGeometry()).getArea();
+            return geom.getArea() / ((Geometry) sf1.getDefaultGeometry()).getArea();
         }
     }
 
