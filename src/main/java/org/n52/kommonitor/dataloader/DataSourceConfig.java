@@ -18,13 +18,4 @@ public class DataSourceConfig {
         return new ShapeFileDataSource();
     }
 
-    @Bean
-    @ConfigurationProperties(prefix = "kommonitor.processor.residential-area-data.db")
-    @ConditionalOnProperty(
-            value="kommonitor.processor.residential-area-data.type",
-            havingValue = DBDataSource.DATA_SOURCE_TYPE,
-            matchIfMissing = false)
-    public FeatureDataSource dbDataSource() {
-        return new DBDataSource();
-    }
 }
