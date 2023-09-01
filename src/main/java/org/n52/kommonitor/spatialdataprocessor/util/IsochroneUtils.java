@@ -9,29 +9,23 @@ import org.opengis.filter.FilterFactory2;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 
 @Component
 public class IsochroneUtils {
-//    private static final String PROP_RANGES_PATH = "/metadata/query/range";
-    private static final String PROP_RANGES_PATH = "/metadata";
+    private static final String PROP_RANGES_PATH = "/metadata/query/range";
     private static final String PROP_VALUE_NAME = "value";
 
     public List<Double> getRanges(JsonNode isochroneNode) throws OperationException {
-//        String rangeValue = isochroneNode.at(PROP_RANGES_PATH).asText();
-        JsonNode metadataNode = isochroneNode.path("metadata");
-        JsonNode queryNode = metadataNode.path("query");
-        JsonNode rangeValueNode = queryNode.path("range"); // array of integer range values       
-		
-        if (rangeValueNode == null || rangeValueNode.isMissingNode()) {
+        JsonNode rangeValueNode = isochroneNode.at(PROP_RANGES_PATH);
+
+        if (rangeValueNode == null || rangeValueNode.isMissingNode() || rangeValueNode.isEmpty() || !rangeValueNode.isArray()) {
             throw new OperationException("Isochrones FeatureCollection does not contain a 'range' field.");
         } else {
             try {
-//                return Arrays.stream(rangeValue.split(",")).map(Double::parseDouble).toList();
-                List<Double> ranges = new ArrayList<Double>();
+                List<Double> ranges = new ArrayList<>();
             	Iterator<JsonNode> rangeIterator = rangeValueNode.elements();
         		
         		while(rangeIterator.hasNext()) {
