@@ -51,17 +51,26 @@ public class DataManagementClient {
 
     public SpatialUnitOverviewType getSpatialUnitOverview(UUID id, Optional<String> jwtToken) throws IOException {
 
+    	if(jwtToken == null || jwtToken.isEmpty()) {
+    		return bodyOrError(service.getPublicSpatialUnitById(id).execute());
+    	}
         return bodyOrError(service.getSpatialUnitById(jwtToken.orElse(""), id).execute());
     }
 
     public ObjectNode getSpatialUnitGeoJSON(UUID spatialUnitId, Optional<String> jwtToken) throws IOException {
-        return bodyOrError(service.getSpatialUnitGeoJSON(jwtToken.orElse(""), spatialUnitId).execute());
+    	if(jwtToken == null || jwtToken.isEmpty()) {
+    		return bodyOrError(service.getPublicSpatialUnitGeoJSON(spatialUnitId).execute());
+    	}
+    	return bodyOrError(service.getSpatialUnitGeoJSON(jwtToken.orElse(""), spatialUnitId).execute());
     }
 
     public ObjectNode getSpatialUnitGeoJSONForIndicator(UUID indicatorId,
                                                         UUID spatialUnitId,
                                                         Optional<String> jwtToken) throws IOException {
-        return bodyOrError(service.getSpatialUnitGeoJSONForIndicator(
+    	if(jwtToken == null || jwtToken.isEmpty()) {
+    		return bodyOrError(service.getPublicSpatialUnitGeoJSONForIndicator(indicatorId, spatialUnitId).execute());
+    	}
+    	return bodyOrError(service.getSpatialUnitGeoJSONForIndicator(
                 jwtToken.orElse(""),
                 indicatorId,
                 spatialUnitId).execute()
@@ -71,7 +80,10 @@ public class DataManagementClient {
     public ArrayNode getIndicatorTimeseries(UUID indicatorId,
                                             UUID spatialUnitId,
                                             Optional<String> jwtToken) throws IOException {
-        return bodyOrError(service.getIndicatorTimeseries(
+    	if(jwtToken == null || jwtToken.isEmpty()) {
+    		return bodyOrError(service.getPublicIndicatorTimeseries(indicatorId, spatialUnitId).execute());
+    	}
+    	return bodyOrError(service.getIndicatorTimeseries(
                 jwtToken.orElse(""),
                 indicatorId,
                 spatialUnitId).execute()
@@ -84,7 +96,10 @@ public class DataManagementClient {
                                                                int month,
                                                                int day,
                                                                Optional<String> jwtToken) throws Exception {
-        return bodyOrError(service.getSpatialUnitGeoJSONForIndicatorAndDate(
+    	if(jwtToken == null || jwtToken.isEmpty()) {
+    		return bodyOrError(service.getPublicSpatialUnitGeoJSONForIndicatorAndDate(indicatorId, spatialUnitId, year, month, day).execute());
+    	}
+    	return bodyOrError(service.getSpatialUnitGeoJSONForIndicatorAndDate(
                         jwtToken.orElse(""),
                         indicatorId,
                         spatialUnitId,

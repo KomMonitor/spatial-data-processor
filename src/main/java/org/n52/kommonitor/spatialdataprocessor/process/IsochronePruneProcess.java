@@ -70,7 +70,7 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
         this.repository = repository;
         this.featureLoader = repository.getFeatureLoader(dataSource.getType()).get();
 
-        this.authHeader = metadata.containsKey("authHeader")?
+        this.authHeader = metadata.containsKey("authHeader") && metadata.get("authHeader") != null?
                 Optional.of(metadata.get("authHeader").toString()) : Optional.empty();
 
     }

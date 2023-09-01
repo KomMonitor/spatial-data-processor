@@ -64,5 +64,47 @@ public interface DataManagementService {
                 @Path("month") int month,
                 @Path("day") int day
         );
+        
+        @Headers({"Accept: application/json"})
+        @GET("public/spatial-units/{spatialUnitId}")
+        Call<SpatialUnitOverviewType> getPublicSpatialUnitById(
+                @Path("spatialUnitId") UUID spatialUnitId
+        );
+
+        @Headers({"Accept: application/json"})
+        @GET("public/spatial-units/{spatialUnitId}/allFeatures")
+        Call<ObjectNode> getPublicSpatialUnitGeoJSON(
+                @Path("spatialUnitId") UUID spatialUnitId
+        );
+
+        @Headers({"Accept: application/json"})
+        @GET("public/indicators/{indicatorId}")
+        Call<IndicatorOverviewType> getPublicIndicatorById(
+                @Path("indicatorId") UUID indicatorId
+        );
+
+        @Headers({"Accept: */*"})
+        @GET("public/indicators/{indicatorId}/{spatialUnitId}")
+        Call<ObjectNode> getPublicSpatialUnitGeoJSONForIndicator(
+                @Path("indicatorId") UUID indicatorId,
+                @Path("spatialUnitId") UUID spatialUnitId
+        );
+
+        @Headers({"Accept: */*"})
+        @GET("public/indicators/{indicatorId}/{spatialUnitId}/without-geometry")
+        Call<ArrayNode> getPublicIndicatorTimeseries(
+                @Path("indicatorId") UUID indicatorId,
+                @Path("spatialUnitId") UUID spatialUnitId
+        );
+
+        @Headers({"Accept: */*"})
+        @GET("public/indicators/{indicatorId}/{spatialUnitId}/{year}/{month}/{day}")
+        Call<ObjectNode> getPublicSpatialUnitGeoJSONForIndicatorAndDate(
+                @Path("indicatorId") UUID indicatorId,
+                @Path("spatialUnitId") UUID spatialUnitId,
+                @Path("year") int year,
+                @Path("month") int month,
+                @Path("day") int day
+        );
 
 }
