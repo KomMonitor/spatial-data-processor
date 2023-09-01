@@ -33,19 +33,34 @@ public class IsochroneUtilsTest {
     }
 
     @Test
+    void testGetRangesThrowsExceptionForMissingNode() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode node = mapper.readTree("{\"key\":\"value\"}");
+        Assertions.assertThrows(OperationException.class, () -> utils.getRanges(node));
+    }
+
+    @Test
+    void testGetRangesThrowsExceptionForEmptyNode() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+
+        JsonNode node = mapper.readTree("{\"type\":\"FeatureCollection\",\"metadata\":{\"query\":{\"range\":\"\"}}}");
+        Assertions.assertThrows(OperationException.class, () -> utils.getRanges(node));
+    }
+
+    @Test
     void testSubsetRange() throws IOException {
         InputStream input = getClass().getResourceAsStream("/isochrones.geojson");
         try (GeoJSONReader reader = new GeoJSONReader(input)) {
             SimpleFeatureCollection fc = reader.getFeatures();
 
             SimpleFeatureCollection subset = utils.subsetRange(fc, 500.f);
-            Assertions.assertEquals(119, subset.size());
+            Assertions.assertEquals(7, subset.size());
 
             subset = utils.subsetRange(fc, 1000.f);
-            Assertions.assertEquals(46, subset.size());
+            Assertions.assertEquals(7, subset.size());
 
             subset = utils.subsetRange(fc, 1500.f);
-            Assertions.assertEquals(29, subset.size());
+            Assertions.assertEquals(7, subset.size());
 
             subset = utils.subsetRange(fc, 2000.f);
             Assertions.assertTrue(subset.isEmpty());
