@@ -20,4 +20,4 @@ WORKDIR /app
 COPY --from=build app/target/kommonitor-spatial-data-processor-*.jar /app/kommonitor-spatial-data-processor-app.jar
 
 # Set the entrypoint for starting the app
-ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar /app/kommonitor-spatial-data-processor-app.jar"]
+CMD ["sh", "-c", "java ${JAVA_OPTS} -jar /app/kommonitor-spatial-data-processor-app.jar"]
