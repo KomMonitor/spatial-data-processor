@@ -3335,7 +3335,7 @@ definitions:
         description: the URL of a running WMS instance serving the spatial features of the associated dataset
       userPermissions:
         type: array
-        description: Permission Level
+        description: List of permissions that are effective on this dataset for the current user
         items:
           type: string
     title: GeoresourceOverviewType
@@ -3724,7 +3724,7 @@ definitions:
         description: unit of the indicator values
       userPermissions:
         type: array
-        description: Permission Level
+        description: List of permissions that are effective on this dataset for the current user
         items:
           type: string
     title: IndicatorOverviewType
@@ -3953,7 +3953,7 @@ definitions:
         description: name of the applicable spatial unit
       userPermissions:
         type: array
-        description: Permission Level
+        description: List of permissions that are effective on this dataset for the current user
         items:
           type: string
     title: IndicatorSpatialUnitJoinItem
@@ -4288,7 +4288,7 @@ definitions:
         description: the URL of a running WMS instance serving the spatial features of the associated dataset
       userPermissions:
         type: array
-        description: Permission Level
+        description: List of permissions that are effective on this dataset for the current user
         items:
           type: string
     title: SpatialUnitOverviewType

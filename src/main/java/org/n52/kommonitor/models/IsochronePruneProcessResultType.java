@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.UUID;
 import org.n52.kommonitor.models.OverallCoverageType;
 import org.n52.kommonitor.models.PoiCoverageType;
+import org.n52.kommonitor.models.TimeseriesType;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import javax.validation.Valid;
@@ -23,11 +24,15 @@ import javax.annotation.Generated;
  * IsochronePruneProcessResultType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-02-03T01:17:34.621019675+01:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-09-04T14:15:24.123563700+02:00[Europe/Berlin]")
 public class IsochronePruneProcessResultType {
 
   @JsonProperty("indicatorId")
   private UUID indicatorId;
+
+  @JsonProperty("timeseries")
+  @Valid
+  private List<TimeseriesType> timeseries = null;
 
   @JsonProperty("overallCoverage")
   @Valid
@@ -54,6 +59,33 @@ public class IsochronePruneProcessResultType {
 
   public void setIndicatorId(UUID indicatorId) {
     this.indicatorId = indicatorId;
+  }
+
+  public IsochronePruneProcessResultType timeseries(List<TimeseriesType> timeseries) {
+    this.timeseries = timeseries;
+    return this;
+  }
+
+  public IsochronePruneProcessResultType addTimeseriesItem(TimeseriesType timeseriesItem) {
+    if (this.timeseries == null) {
+      this.timeseries = new ArrayList<>();
+    }
+    this.timeseries.add(timeseriesItem);
+    return this;
+  }
+
+  /**
+   * The indicator timeseries values for which coverage fractions are calculated. 
+   * @return timeseries
+  */
+  @Valid 
+  @Schema(name = "timeseries", description = "The indicator timeseries values for which coverage fractions are calculated. ", required = false)
+  public List<TimeseriesType> getTimeseries() {
+    return timeseries;
+  }
+
+  public void setTimeseries(List<TimeseriesType> timeseries) {
+    this.timeseries = timeseries;
   }
 
   public IsochronePruneProcessResultType overallCoverage(List<OverallCoverageType> overallCoverage) {
@@ -120,13 +152,14 @@ public class IsochronePruneProcessResultType {
     }
     IsochronePruneProcessResultType isochronePruneProcessResultType = (IsochronePruneProcessResultType) o;
     return Objects.equals(this.indicatorId, isochronePruneProcessResultType.indicatorId) &&
+        Objects.equals(this.timeseries, isochronePruneProcessResultType.timeseries) &&
         Objects.equals(this.overallCoverage, isochronePruneProcessResultType.overallCoverage) &&
         Objects.equals(this.poiCoverage, isochronePruneProcessResultType.poiCoverage);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(indicatorId, overallCoverage, poiCoverage);
+    return Objects.hash(indicatorId, timeseries, overallCoverage, poiCoverage);
   }
 
   @Override
@@ -134,6 +167,7 @@ public class IsochronePruneProcessResultType {
     StringBuilder sb = new StringBuilder();
     sb.append("class IsochronePruneProcessResultType {\n");
     sb.append("    indicatorId: ").append(toIndentedString(indicatorId)).append("\n");
+    sb.append("    timeseries: ").append(toIndentedString(timeseries)).append("\n");
     sb.append("    overallCoverage: ").append(toIndentedString(overallCoverage)).append("\n");
     sb.append("    poiCoverage: ").append(toIndentedString(poiCoverage)).append("\n");
     sb.append("}");

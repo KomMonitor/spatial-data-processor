@@ -20,7 +20,7 @@ import javax.annotation.Generated;
  * IndicatorSpatialUnitJoinItem
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-02-03T01:17:35.372611508+01:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-09-04T14:15:24.845685300+02:00[Europe/Berlin]")
 public class IndicatorSpatialUnitJoinItem {
 
   @JsonProperty("allowedRoles")
@@ -116,11 +116,11 @@ public class IndicatorSpatialUnitJoinItem {
   }
 
   /**
-   * Permission Level
+   * List of permissions that are effective on this dataset for the current user
    * @return userPermissions
   */
   
-  @Schema(name = "userPermissions", description = "Permission Level", required = false)
+  @Schema(name = "userPermissions", description = "List of permissions that are effective on this dataset for the current user", required = false)
   public List<String> getUserPermissions() {
     return userPermissions;
   }

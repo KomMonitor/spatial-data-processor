@@ -314,6 +314,12 @@ components:
           format: uuid
           description: >
             Unique indicator identifier. Coverage values relates to this indicator.
+        timeseries:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeseriesType'
+          description: >
+            The indicator timeseries values for which coverage fractions are calculated.
         overallCoverage:
           type: array
           items:
@@ -366,6 +372,22 @@ components:
             $ref: '#/components/schemas/IndicatorCoverageValueType'
           description: >
             Indicator coverage for this spatial unit.
+
+    TimeseriesType:
+      type: object
+      required:
+        - range
+      properties:
+        date:
+          type: string
+          format: date
+          description: >
+            Indicates for which indicator timeseries date the indicator value relates to.
+        value:
+          type: number
+          format: float
+          description: >
+            Indicator value.        
 
     OverallCoverageType:
       type: object

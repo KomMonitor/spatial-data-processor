@@ -167,6 +167,9 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
             } catch (OperationException | JsonProcessingException e) {
                 LOGGER.error("Could not calculate overall indicator coverage for indicator {} due to error: {}", i, e.getMessage());
             }
+            result.setTimeseries(totalIndicatorScore.get(i).entrySet().stream()
+                    .map(e -> new TimeseriesType().date(e.getKey()).value(e.getValue().floatValue()))
+                    .collect(Collectors.toList()));
             result.setOverallCoverage(overallScore);
             resultList.add(result);
         });
