@@ -96,7 +96,7 @@ public class SpatialOperationUtils {
      *
      * @param geom1 First Geometry for which the proportion of intersection will be calculated
      * @param geom2 Second Geometry
-     * @param subsetGeometry Subset og the first Geometry, which will be used to calculate and intersection with the
+     * @param subsetGeometry Subset of the first Geometry, which will be used to calculate and intersection with the
      *                       second Geometry
      * @return Proportion of intersection from 0 (no intersection) to 1 (full overlap).
      * @throws OperationException if one of the two geometries is not a Polygon or MultiPolygon

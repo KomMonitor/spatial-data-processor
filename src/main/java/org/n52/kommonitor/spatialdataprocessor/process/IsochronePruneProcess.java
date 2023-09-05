@@ -120,11 +120,15 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
             IsochronePruneProcessResultType result = new IsochronePruneProcessResultType();
             result.setIndicatorId(i);
             List<PoiCoverageType> poiCoverageList = new ArrayList<>();
+            //pk: isochrone ID
+            //pv: spatialUnitIntersectionMap
             intersectionMap.forEach((pk, pv) -> {
                 PoiCoverageType poiCoverage = new PoiCoverageType();
                 poiCoverage.setPoiFeatureId(pk);
                 List<SpatialUnitCoverageType> spatialUnitCoverageList = new ArrayList<>();
                 HashMap<LocalDate, Double> coverageSumMap = new HashMap<>();
+                //sk: spatialUnit ID
+                //sv: proportion
                 pv.forEach((sk, sv) -> {
                     SpatialUnitCoverageType spatialUnitCoverage = new SpatialUnitCoverageType();
                     spatialUnitCoverage.setSpatialUnitFeatureId(sk);
@@ -269,23 +273,36 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
         Geometry combinedIsochroneGeometry = operationUtils.combineGeometries(isochronesSubsetFc);
         List<IndicatorCoverageValueType> overallScore;
 
-        // Calculate intersection between the SpatiaUnit geometry and the combined isochrone Geometry
-        Geometry isochroneSpatialUnitIntersectionGeom = operationUtils.polygonalIntersection(spatialUnitGeom, combinedIsochroneGeometry);
-        // Use intersection geometry to preselect all residential areas that intersects it
-        SimpleFeatureCollection intersectingResidentialAreasFc = operationUtils.filterIntersectingFeatures(residentialAreaFc, isochroneSpatialUnitIntersectionGeom);
-        // Calculate intersection proportion of preselected residential area features and combined SpatialUnit geometry
-        // by taking into account the intersection geometry above
-        double intersectionProportion = operationUtils.polygonalIntersectionProportion(
-                spatialUnitGeom,
-                isochroneSpatialUnitIntersectionGeom,
-                intersectingResidentialAreasFc
-        );
+        SimpleFeatureCollection residentialAreasFc = operationUtils.filterIntersectingFeatures(residentialAreaFc, spatialUnitGeom);
+
+        double intersectionProportion = 0;
+
+        if (!residentialAreasFc.isEmpty()) {
+            // Calculate intersection between SpatialUnit and residential areas
+            Geometry tmpResidentialAreasGeom = operationUtils.combineGeometries(residentialAreasFc);
+            Geometry residentialAreasGeom = operationUtils.polygonalIntersection(tmpResidentialAreasGeom, spatialUnitGeom);
+
+            // Calculate intersection between the SpatialUnit geometry and the combined isochrone Geometry
+            Geometry isochroneSpatialUnitIntersectionGeom = operationUtils.polygonalIntersection(spatialUnitGeom, combinedIsochroneGeometry);
+
+            SimpleFeatureCollection intersectingResidentialAreasFc = operationUtils.filterIntersectingFeatures(residentialAreaFc, isochroneSpatialUnitIntersectionGeom);
+            if(!intersectingResidentialAreasFc.isEmpty()) {
+                // Use intersection geometry to preselect all residential areas that intersects it
+                Geometry tmpIntersectingResidentialAreasGeom = operationUtils.combineGeometries(intersectingResidentialAreasFc);
+                Geometry intersectingResidentialAreasGeom = operationUtils.polygonalIntersection(tmpIntersectingResidentialAreasGeom, isochroneSpatialUnitIntersectionGeom);
+
+                // Calculate intersection proportion between the residential areas that intersects the SpatialUnit as well as
+                // all isochrones geometry and all residential areas within the SpatialUnit
+                intersectionProportion = intersectingResidentialAreasGeom.getArea() / residentialAreasGeom.getArea();
+            }
+        }
         // Calculate and set overall coverage for each indicator
+        double finalIntersectionProportion = intersectionProportion;
         overallScore = totalIndicatorScore.get(indicatorId).entrySet().stream()
                 .map(e -> new IndicatorCoverageValueType()
                         .date(e.getKey())
-                        .relativeCoverage((float) intersectionProportion)
-                        .absoluteCoverage((float) (e.getValue() * intersectionProportion)))
+                        .relativeCoverage((float) finalIntersectionProportion)
+                        .absoluteCoverage((float) (e.getValue() * finalIntersectionProportion)))
                 .collect(Collectors.toList());
         OverallCoverageType overallCoverage = new OverallCoverageType();
         overallCoverage.coverage(overallScore)
@@ -433,13 +450,32 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
                 try (SimpleFeatureIterator iterator2 = intersectingSpatialUnitsFc.features()) {
                     while (iterator2.hasNext()) {
                         SimpleFeature spatialUnitFeature = iterator2.next();
+
                         // Calculate intersection between SpatialUnit and isochrone
                         Geometry isochroneSpatialUnitIntersectionGeom = operationUtils.polygonalIntersection(isochrone, spatialUnitFeature);
-                        // Use intersection geometry to preselect all residential areas that intersects it
-                        SimpleFeatureCollection intersectingResidentialAreasFc = operationUtils.filterIntersectingFeatures(residentialAreaFc, isochroneSpatialUnitIntersectionGeom);
-                        // Calculate intersection proportion of preselected residential area features and the current
-                        // spatial unit by taking into account the intersection geometry above
-                        double proportion = operationUtils.polygonalIntersectionProportion(spatialUnitFeature, isochroneSpatialUnitIntersectionGeom, intersectingResidentialAreasFc);
+
+                        double proportion = 0;
+                        SimpleFeatureCollection spatialUnitResidentialAreas = operationUtils.filterIntersectingFeatures(residentialAreaFc, spatialUnitFeature);
+                        if (!spatialUnitResidentialAreas.isEmpty()) {
+                            // Calculate intersection between SpatialUnit and residential areas
+                            // It's more time efficient to first select all residential area features that intersects the
+                            // SpatialUnit and create a combined geometry if all preselected features. Finally, the combined
+                            // geometry is used to create the intersection geometry between the Spatial Unit and residential
+                            // areas.
+                            Geometry tempSpatialUnitResidentialAreasGeom = operationUtils.combineGeometries(spatialUnitResidentialAreas);
+                            Geometry spatialUnitResidentialAreasGeom = operationUtils.polygonalIntersection(tempSpatialUnitResidentialAreasGeom, (Geometry) spatialUnitFeature.getDefaultGeometry());
+
+                            // Use intersection geometry to preselect all residential areas that intersects it
+                            // Same here as above: Preselect residential areas -> create combined geometry -> use
+                            // combined geometry for creating the intersection between residential araeas, the SpatialUnit
+                            // and the isochrone.
+                            SimpleFeatureCollection intersectingResidentialAreasFc = operationUtils.filterIntersectingFeatures(residentialAreaFc, isochroneSpatialUnitIntersectionGeom);
+                            if (!intersectingResidentialAreasFc.isEmpty()) {
+                                Geometry tempSpatialUnitResidentialAreasIsochroneIntersectionGeom = operationUtils.combineGeometries(intersectingResidentialAreasFc);
+                                Geometry spatialUnitResidentialAreasIsochroneIntersectionGeom = operationUtils.polygonalIntersection(tempSpatialUnitResidentialAreasIsochroneIntersectionGeom, isochroneSpatialUnitIntersectionGeom);
+                                proportion = spatialUnitResidentialAreasIsochroneIntersectionGeom.getArea() / spatialUnitResidentialAreasGeom.getArea();
+                            }
+                        }
                         String featureId = featureUtils.getPropertyValueAsString(spatialUnitFeature, ID_PROP_NAME);
                         spatialUnitIntersectionMap.put(featureId, (float) proportion);
                     }
