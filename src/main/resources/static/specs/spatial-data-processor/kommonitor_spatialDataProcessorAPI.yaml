@@ -366,6 +366,12 @@ components:
           description: >
             Unique identifier for the spatial unit. This ID can be used to identify a spatial unit at the 
             DataManagement API.
+        timeseries:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeseriesType'
+          description: >
+            The indicator timeseries values for the spatial unit feature for which coverage fractions are calculated.
         coverage:
           type: array
           items:

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.ArrayList;
 import java.util.List;
 import org.n52.kommonitor.models.IndicatorCoverageValueType;
+import org.n52.kommonitor.models.TimeseriesType;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import javax.validation.Valid;
@@ -21,11 +22,15 @@ import javax.annotation.Generated;
  * SpatialUnitCoverageType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-02-03T01:17:34.621019675+01:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-09-05T08:16:59.005638400+02:00[Europe/Berlin]")
 public class SpatialUnitCoverageType {
 
   @JsonProperty("spatialUnitFeatureId")
   private String spatialUnitFeatureId;
+
+  @JsonProperty("timeseries")
+  @Valid
+  private List<TimeseriesType> timeseries = null;
 
   @JsonProperty("coverage")
   @Valid
@@ -48,6 +53,33 @@ public class SpatialUnitCoverageType {
 
   public void setSpatialUnitFeatureId(String spatialUnitFeatureId) {
     this.spatialUnitFeatureId = spatialUnitFeatureId;
+  }
+
+  public SpatialUnitCoverageType timeseries(List<TimeseriesType> timeseries) {
+    this.timeseries = timeseries;
+    return this;
+  }
+
+  public SpatialUnitCoverageType addTimeseriesItem(TimeseriesType timeseriesItem) {
+    if (this.timeseries == null) {
+      this.timeseries = new ArrayList<>();
+    }
+    this.timeseries.add(timeseriesItem);
+    return this;
+  }
+
+  /**
+   * The indicator timeseries values for the spatial unit feature for which coverage fractions are calculated. 
+   * @return timeseries
+  */
+  @Valid 
+  @Schema(name = "timeseries", description = "The indicator timeseries values for the spatial unit feature for which coverage fractions are calculated. ", required = false)
+  public List<TimeseriesType> getTimeseries() {
+    return timeseries;
+  }
+
+  public void setTimeseries(List<TimeseriesType> timeseries) {
+    this.timeseries = timeseries;
   }
 
   public SpatialUnitCoverageType coverage(List<IndicatorCoverageValueType> coverage) {
@@ -87,12 +119,13 @@ public class SpatialUnitCoverageType {
     }
     SpatialUnitCoverageType spatialUnitCoverageType = (SpatialUnitCoverageType) o;
     return Objects.equals(this.spatialUnitFeatureId, spatialUnitCoverageType.spatialUnitFeatureId) &&
+        Objects.equals(this.timeseries, spatialUnitCoverageType.timeseries) &&
         Objects.equals(this.coverage, spatialUnitCoverageType.coverage);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(spatialUnitFeatureId, coverage);
+    return Objects.hash(spatialUnitFeatureId, timeseries, coverage);
   }
 
   @Override
@@ -100,6 +133,7 @@ public class SpatialUnitCoverageType {
     StringBuilder sb = new StringBuilder();
     sb.append("class SpatialUnitCoverageType {\n");
     sb.append("    spatialUnitFeatureId: ").append(toIndentedString(spatialUnitFeatureId)).append("\n");
+    sb.append("    timeseries: ").append(toIndentedString(timeseries)).append("\n");
     sb.append("    coverage: ").append(toIndentedString(coverage)).append("\n");
     sb.append("}");
     return sb.toString();

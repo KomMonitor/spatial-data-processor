@@ -145,6 +145,11 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
                         coverageSumMap.put(iv.date, coverageSum);
                     });
                     spatialUnitCoverage.setCoverage(coverageValueList);
+                    spatialUnitCoverage.setTimeseries(lookupMap.get(sk).get(i).stream()
+                            .map(t -> new TimeseriesType()
+                                    .date(t.date)
+                                    .value((float)t.value))
+                            .collect(Collectors.toList()));
                     spatialUnitCoverageList.add(spatialUnitCoverage);
                 });
                 poiCoverage.setSpatialUnitCoverage(spatialUnitCoverageList);
@@ -289,7 +294,14 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
     }
 
     private static class IndicatorSummary {
+        //Outer key is Spatial Unit feature ID
+        //Inner key is Indicator ID
+        //Inner value is list of timeseries values
         private Map<String, Map<UUID, List<IndicatorValue>>> lookupMap;
+
+        //Outer key is Indicator ID
+        //Inner key is timeseries date
+        //Inner value is total indicator value over all Spatial Unit features
         private Map<UUID, Map<LocalDate, Double>> totalIndicatorScore;
     }
 
