@@ -11,7 +11,7 @@
 
     <groupId>org.n52.kommonitor</groupId>
     <artifactId>kommonitor-spatial-data-processor</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <name>kommonitor-spatial-data-processor</name>
     <description>kommonitor-spatial-data-processor</description>
