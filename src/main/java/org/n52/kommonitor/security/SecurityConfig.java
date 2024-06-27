@@ -39,8 +39,9 @@ public class SecurityConfig {
             matchIfMissing = false)
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.csrf().disable();
-        http.cors(Customizer.withDefaults());
+        http.csrf().disable()
+//        http.cors(Customizer.withDefaults());
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()));
         http.authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/swagger-ui/*").permitAll()
@@ -61,6 +62,7 @@ public class SecurityConfig {
     SecurityFilterChain unsecuredFilterChain(final HttpSecurity http) throws Exception {
         return http.csrf()
                 .disable()
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeRequests()
                 .anyRequest()
                 .permitAll().and().build();
