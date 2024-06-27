@@ -133,38 +133,45 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
                     SpatialUnitCoverageType spatialUnitCoverage = new SpatialUnitCoverageType();
                     spatialUnitCoverage.setSpatialUnitFeatureId(sk);
                     List<IndicatorCoverageValueType> coverageValueList = new ArrayList<>();
-                    lookupMap.get(sk).get(i).forEach(iv -> {
-                        // Calculate the single SpatialUnit coverage for the current isochrone
-                        float absoluteCoverage = (float) (iv.value * sv);
-                        IndicatorCoverageValueType coverageValue = new IndicatorCoverageValueType();
-                        coverageValue.setDate(iv.date);
-                        coverageValue.setRelativeCoverage(sv);
-                        coverageValue.setAbsoluteCoverage(absoluteCoverage);
-                        coverageValueList.add(coverageValue);
-
-                        if (!coverageSumMap.containsKey(iv.date)) {
-                            coverageSumMap.put(iv.date, 0.);
-                        }
-                        double coverageSum = coverageSumMap.get(iv.date) + absoluteCoverage;
-                        coverageSumMap.put(iv.date, coverageSum);
-                    });
-                    spatialUnitCoverage.setCoverage(coverageValueList);
-                    spatialUnitCoverage.setTimeseries(lookupMap.get(sk).get(i).stream()
-                            .map(t -> new TimeseriesType()
-                                    .date(t.date)
-                                    .value((float)t.value))
-                            .collect(Collectors.toList()));
-                    spatialUnitCoverageList.add(spatialUnitCoverage);
+                    if (lookupMap.containsKey(sk)) {                    	                    
+	                    lookupMap.get(sk).get(i).forEach(iv -> {
+	                        // Calculate the single SpatialUnit coverage for the current isochrone
+	                        float absoluteCoverage = (float) (iv.value * sv);
+	                        IndicatorCoverageValueType coverageValue = new IndicatorCoverageValueType();
+	                        coverageValue.setDate(iv.date);
+	                        coverageValue.setRelativeCoverage(sv);
+	                        coverageValue.setAbsoluteCoverage(absoluteCoverage);
+	                        coverageValueList.add(coverageValue);
+	
+	                        if (!coverageSumMap.containsKey(iv.date)) {
+	                            coverageSumMap.put(iv.date, 0.);
+	                        }
+	                        double coverageSum = coverageSumMap.get(iv.date) + absoluteCoverage;
+	                        coverageSumMap.put(iv.date, coverageSum);
+	                    });
+	                  
+	                    spatialUnitCoverage.setCoverage(coverageValueList);
+	                    spatialUnitCoverage.setTimeseries(lookupMap.get(sk).get(i).stream()
+	                            .map(t -> new TimeseriesType()
+	                                    .date(t.date)
+	                                    .value((float)t.value))
+	                            .collect(Collectors.toList()));
+	                    spatialUnitCoverageList.add(spatialUnitCoverage);
+                    }
+                   
                 });
-                poiCoverage.setSpatialUnitCoverage(spatialUnitCoverageList);
-                List<IndicatorCoverageValueType> overalCoverageList = coverageSumMap.entrySet().stream()
-                        .map(e -> new IndicatorCoverageValueType()
-                                .date(e.getKey())
-                                .relativeCoverage(e.getValue().floatValue() / totalIndicatorScore.get(i).get(e.getKey()).floatValue())
-                                .absoluteCoverage(e.getValue().floatValue()))
-                        .collect(Collectors.toList());
-                poiCoverage.setOverallCoverage(overalCoverageList);
-                poiCoverageList.add(poiCoverage);
+                if(spatialUnitCoverageList.size() > 0) {
+                	 poiCoverage.setSpatialUnitCoverage(spatialUnitCoverageList);
+                     List<IndicatorCoverageValueType> overalCoverageList = coverageSumMap.entrySet().stream()
+                             .map(e -> new IndicatorCoverageValueType()
+                                     .date(e.getKey())
+                                     .relativeCoverage(e.getValue().floatValue() / totalIndicatorScore.get(i).get(e.getKey()).floatValue())
+                                     .absoluteCoverage(e.getValue().floatValue()))
+                             .collect(Collectors.toList());
+                     poiCoverage.setOverallCoverage(overalCoverageList);
+                     poiCoverageList.add(poiCoverage);
+                }
+               
             });
             result.setPoiCoverage(poiCoverageList);
 
