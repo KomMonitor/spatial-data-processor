@@ -19,7 +19,7 @@
 	    <url>https://github.com/KomMonitor/spatial-data-processor</url>
         <connection>scm:git:https://github.com/KomMonitor/spatial-data-processor.git</connection>
         <developerConnection>scm:git:https://github.com/KomMonitor/spatial-data-processor.git</developerConnection>
-	    <tag>v0.0.1</tag>
+	    <tag>v1.0.0</tag>
     </scm>
 
     <properties>
@@ -27,6 +27,8 @@
         <openapi-generator.version>6.1.0</openapi-generator.version>
         <geotools.version>27.0</geotools.version>
         <jts.version>1.19.0</jts.version>
+        <release-plugin.version>3.0.1</release-plugin.version>
+        <changelog-plugin.version>0.6.0</changelog-plugin.version>
     </properties>
 
     <repositories>
@@ -168,6 +170,22 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>info.plichta.maven.plugins</groupId>
+                <artifactId>git-changelog-maven-plugin</artifactId>
+                <version>${changelog-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>${release-plugin.version}</version>
+                <configuration>
+                    <tagNameFormat>@{project.version}</tagNameFormat>
+                    <pushChanges>false</pushChanges>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <preparationGoals>clean git-changelog:git-changelog scm:checkin -DpushChanges=false -Dincludes=CHANGELOG.md -Dmessage="[maven-release-plugin] Update CHANGELOG.md" verify</preparationGoals>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -257,35 +275,6 @@
                                     <generateSupportingFiles>false</generateSupportingFiles>
                                 </configuration>
                             </execution>
-                            <!--
-                        <execution>
-                                <id>genDataManagementClient</id>
-                                <goals>
-                                    <goal>generate</goal>
-                                </goals>
-                                <configuration>
-                                    <inputSpec>
-                                        ${project.basedir}/src/main/resources/static/specs/data-management/kommonitor_dataAccessAPI.yaml
-                                    </inputSpec>
-                                    <generatorName>java</generatorName>
-                                    <library>resttemplate</library>
-                                    <output>${project.basedir}</output>
-                                    <apiPackage>org.n52.kommonitor.datamanagement</apiPackage>
-                                    <modelPackage>org.n52.kommonitor.models</modelPackage>
-
-                                    <generateModels>false</generateModels>
-                                    <generateApis>true</generateApis>
-                                    <apisToGenerate>SpatialUnitsPublicController,IndicatorsPublicController</apisToGenerate>
-
-                                    <configHelp>false</configHelp>
-                                    <generateSupportingFiles>true</generateSupportingFiles>
-                                    <generateApiDocumentation>false</generateApiDocumentation>
-                                    <configOptions>
-                                        <dateLibrary>java8</dateLibrary>
-                                    </configOptions>
-                                </configuration>
-                            </execution>
-                        -->
                         </executions>
                     </plugin>
                 </plugins>
