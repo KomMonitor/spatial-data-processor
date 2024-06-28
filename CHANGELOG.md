@@ -1,6 +1,11 @@
 # Change Log
 
-## 1.0.1
+## 1.0.2
+* fetch spatial geometries using the delivered date components instead of all features to work with only those features applicable for the delivered date [ecc8cf5](ecc8cf58e006f2a6e21802095a3cfe6319762c00)
+* set absolute and relative coverage to 0 if no coverage is available [82f4677](82f4677409966e201ab9d941574c258676bebf9b)
+* make simplifyGeometries query parameter configurable [67991ba](67991ba527b24599cb09357dd96c72f0404a1366)
+* fix error when an indicator does not provide indicator values for all spatial unit features [cceff99](cceff992ee725c39ceaf86e63f5555ec5143d55f)
+* fetch kommonitor spatial unit and indicator features using simplification&#61;medium to overcome topology issues during intersection [791acc2](791acc2cd95474cbbaf26a98f62189f5aacaab7e)
 * Merge branch &#39;develop&#39; of https://github.com/KomMonitor/spatial-data-processor into develop [9332255](93322551dbe99e74a515894fad1bfaf2e9c646a9)
     * Adjust release and CI configs [eca5f68](eca5f6890e7223eec7cb77550a414d9cdb5d2bb3)
 * modify CORS config [7eae3e2](7eae3e20f5390793065d60b14cb7547a8ce5a92d)
