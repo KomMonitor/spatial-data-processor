@@ -34,6 +34,17 @@ public interface DataManagementService {
                 @Path("spatialUnitId") UUID spatialUnitId,
                 @Query("simplifyGeometries") String simplifyGeometries
         );
+        
+        @Headers({"Accept: application/octed-stream"})
+        @GET("spatial-units/{spatialUnitId}/{year}/{month}/{day}")
+        Call<ObjectNode> getSpatialUnitGeoJSON_forDate(
+                @Header("Authorization") String jwt,
+                @Path("spatialUnitId") UUID spatialUnitId,
+                @Path("year") int year,
+                @Path("month") int month,
+                @Path("day") int day,
+                @Query("simplifyGeometries") String simplifyGeometries
+        );
 
         @Headers({"Accept: application/json"})
         @GET("indicators/{indicatorId}")
@@ -57,6 +68,17 @@ public interface DataManagementService {
                 @Header("Authorization") String jwt,
                 @Path("indicatorId") UUID indicatorId,
                 @Path("spatialUnitId") UUID spatialUnitId
+        );
+        
+        @Headers({"Accept: */*"})
+        @GET("indicators/{indicatorId}/{spatialUnitId}/{year}/{month}/{day}/without-geometry")
+        Call<ArrayNode> getIndicatorTimeseries_forDate(
+                @Header("Authorization") String jwt,
+                @Path("indicatorId") UUID indicatorId,
+                @Path("spatialUnitId") UUID spatialUnitId,
+                @Path("year") int year,
+                @Path("month") int month,
+                @Path("day") int day
         );
 
         @Headers({"Accept: */*"})
@@ -83,6 +105,16 @@ public interface DataManagementService {
                 @Path("spatialUnitId") UUID spatialUnitId,
                 @Query("simplifyGeometries") String simplifyGeometries
         );
+        
+        @Headers({"Accept: application/json"})
+        @GET("public/spatial-units/{spatialUnitId}/{year}/{month}/{day}")
+        Call<ObjectNode> getPublicSpatialUnitGeoJSON_forDate(
+                @Path("spatialUnitId") UUID spatialUnitId,
+                @Path("year") int year,
+                @Path("month") int month,
+                @Path("day") int day,
+                @Query("simplifyGeometries") String simplifyGeometries
+        );
 
         @Headers({"Accept: application/json"})
         @GET("public/indicators/{indicatorId}")
@@ -103,6 +135,16 @@ public interface DataManagementService {
         Call<ArrayNode> getPublicIndicatorTimeseries(
                 @Path("indicatorId") UUID indicatorId,
                 @Path("spatialUnitId") UUID spatialUnitId
+        );
+        
+        @Headers({"Accept: */*"})
+        @GET("public/indicators/{indicatorId}/{spatialUnitId}/without-geometry/{year}/{month}/{day}")
+        Call<ArrayNode> getPublicIndicatorTimeseries_forDate(
+                @Path("indicatorId") UUID indicatorId,
+                @Path("spatialUnitId") UUID spatialUnitId,
+                @Path("year") int year,
+                @Path("month") int month,
+                @Path("day") int day
         );
 
         @Headers({"Accept: */*"})

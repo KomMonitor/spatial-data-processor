@@ -66,6 +66,17 @@ public class DataManagementClient {
     	}
     	return bodyOrError(service.getSpatialUnitGeoJSON(jwtToken.orElse(""), spatialUnitId, featureUtils.getSimplifyGeometries()).execute());
     }
+    
+    public ObjectNode getSpatialUnitGeoJSON_forDate(UUID spatialUnitId, 
+    		int year,
+            int month,
+            int day,
+            Optional<String> jwtToken) throws IOException {
+    	if(jwtToken == null || jwtToken.isEmpty()) {
+    		return bodyOrError(service.getPublicSpatialUnitGeoJSON_forDate(spatialUnitId, year, month, day, featureUtils.getSimplifyGeometries()).execute());
+    	}
+    	return bodyOrError(service.getSpatialUnitGeoJSON_forDate(jwtToken.orElse(""), spatialUnitId, year, month, day, featureUtils.getSimplifyGeometries()).execute());
+    }
 
     public ObjectNode getSpatialUnitGeoJSONForIndicator(UUID indicatorId,
                                                         UUID spatialUnitId,
@@ -93,6 +104,22 @@ public class DataManagementClient {
                 spatialUnitId).execute()
         );
     }
+    
+    public ArrayNode getIndicatorTimeseries_forDate(UUID indicatorId,
+            UUID spatialUnitId,
+            int year,
+            int month,
+            int day,
+            Optional<String> jwtToken) throws IOException {
+		if(jwtToken == null || jwtToken.isEmpty()) {
+		return bodyOrError(service.getPublicIndicatorTimeseries_forDate(indicatorId, spatialUnitId, year, month, day).execute());
+		}
+		return bodyOrError(service.getIndicatorTimeseries_forDate(
+		jwtToken.orElse(""),
+		indicatorId,
+		spatialUnitId, year, month, day).execute()
+		);
+	}
 
     public ObjectNode getSpatialUnitGeoJSONForIndicatorAndDate(UUID indicatorId,
                                                                UUID spatialUnitId,

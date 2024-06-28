@@ -87,7 +87,7 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
         // 1) Fetch geometries only for the specified SpatialUnit and create a FeatureCollection for it as well
         // as for the provided isochrones
         LOGGER.debug("Fetch geometries for SpatialUnit {}", spatialUnitId);
-        ObjectNode spatialUnit = dmc.getSpatialUnitGeoJSON(spatialUnitId, authHeader);
+        ObjectNode spatialUnit = dmc.getSpatialUnitGeoJSON_forDate(spatialUnitId, date.getYear(), date.getMonthValue(), date.getDayOfMonth(), authHeader);
         SimpleFeatureCollection spatialUnitFc = GeoJSONReader.parseFeatureCollection(spatialUnit.toString());
         SimpleFeatureCollection isochronesFc = GeoJSONReader.parseFeatureCollection(isochrones);
 
@@ -351,7 +351,7 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
         indicatorList.forEach(indicator -> {
             try {
                 LOGGER.debug("Fetch indicator timeseries for SpatialUnit {} and Indicator {}", spatialUnitId, indicator);
-                ArrayNode indicatorArray = dmc.getIndicatorTimeseries(indicator, spatialUnitId, authHeader);
+                ArrayNode indicatorArray = dmc.getIndicatorTimeseries_forDate(indicator, spatialUnitId, date.getYear(), date.getMonthValue(), date.getDayOfMonth(), authHeader);
                 Iterator<JsonNode> iterator = indicatorArray.elements();
                 while (iterator.hasNext()) {
                     JsonNode node = iterator.next();
