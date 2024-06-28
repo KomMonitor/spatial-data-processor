@@ -10,7 +10,7 @@
 
     <groupId>org.n52.kommonitor</groupId>
     <artifactId>kommonitor-spatial-data-processor</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3-SNAPSHOT</version>
 
     <name>kommonitor-spatial-data-processor</name>
     <description>kommonitor-spatial-data-processor</description>
@@ -19,7 +19,7 @@
 	    <url>https://github.com/KomMonitor/spatial-data-processor</url>
         <connection>scm:git:https://github.com/KomMonitor/spatial-data-processor.git</connection>
         <developerConnection>scm:git:https://github.com/KomMonitor/spatial-data-processor.git</developerConnection>
-	    <tag>1.0.2</tag>
+	    <tag>v1.0.0</tag>
     </scm>
 
     <properties>
