@@ -139,8 +139,17 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
 	                        float absoluteCoverage = (float) (iv.value * sv);
 	                        IndicatorCoverageValueType coverageValue = new IndicatorCoverageValueType();
 	                        coverageValue.setDate(iv.date);
-	                        coverageValue.setRelativeCoverage(sv);
-	                        coverageValue.setAbsoluteCoverage(absoluteCoverage);
+	                        
+	                        if (absoluteCoverage == Float.NaN || absoluteCoverage == 0) {
+	                        	coverageValue.setRelativeCoverage(0f);
+		                        coverageValue.setAbsoluteCoverage(0f);
+		                        absoluteCoverage = 0f;
+	                        }
+	                        else {
+	                        	coverageValue.setRelativeCoverage(sv);
+	                        	coverageValue.setAbsoluteCoverage(absoluteCoverage);
+	                        }
+	                        
 	                        coverageValueList.add(coverageValue);
 	
 	                        if (!coverageSumMap.containsKey(iv.date)) {
