@@ -3,12 +3,24 @@ package org.n52.kommonitor.spatialdataprocessor.util;
 import org.n52.kommonitor.spatialdataprocessor.operations.OperationException;
 import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class FeatureUtils {
+	
+	private static String SIMPLIFY_GEOMETRIES;
+	
+    public static String getSimplifyGeometries() {
+		return SIMPLIFY_GEOMETRIES;
+	}
 
-    /**
+    @Value("${kommonitor.processor.simplify-spatial-unit-geometries}")
+	public void setSimplifyGeometries(String simplifyGeometries) {
+    	SIMPLIFY_GEOMETRIES = simplifyGeometries;
+	}
+
+	/**
      * Gets the value from a {@link SimpleFeature} property as String
      *
      * @param feature the {@link SimpleFeature} to fetch the property from

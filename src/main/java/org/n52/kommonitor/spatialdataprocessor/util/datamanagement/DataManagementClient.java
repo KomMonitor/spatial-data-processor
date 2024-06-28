@@ -9,6 +9,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.n52.kommonitor.models.IndicatorOverviewType;
 import org.n52.kommonitor.models.SpatialUnitOverviewType;
+import org.n52.kommonitor.spatialdataprocessor.util.FeatureUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import retrofit2.Response;
@@ -26,6 +27,8 @@ import java.util.UUID;
 public class DataManagementClient {
 
     private final DataManagementService service;
+    
+    private FeatureUtils featureUtils = new FeatureUtils();
 
     public DataManagementClient(@Value("${config.data-management.baseUrl}") String baseUrl) {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
@@ -59,21 +62,22 @@ public class DataManagementClient {
 
     public ObjectNode getSpatialUnitGeoJSON(UUID spatialUnitId, Optional<String> jwtToken) throws IOException {
     	if(jwtToken == null || jwtToken.isEmpty()) {
-    		return bodyOrError(service.getPublicSpatialUnitGeoJSON(spatialUnitId).execute());
+    		return bodyOrError(service.getPublicSpatialUnitGeoJSON(spatialUnitId, featureUtils.getSimplifyGeometries()).execute());
     	}
-    	return bodyOrError(service.getSpatialUnitGeoJSON(jwtToken.orElse(""), spatialUnitId).execute());
+    	return bodyOrError(service.getSpatialUnitGeoJSON(jwtToken.orElse(""), spatialUnitId, featureUtils.getSimplifyGeometries()).execute());
     }
 
     public ObjectNode getSpatialUnitGeoJSONForIndicator(UUID indicatorId,
                                                         UUID spatialUnitId,
                                                         Optional<String> jwtToken) throws IOException {
     	if(jwtToken == null || jwtToken.isEmpty()) {
-    		return bodyOrError(service.getPublicSpatialUnitGeoJSONForIndicator(indicatorId, spatialUnitId).execute());
+    		return bodyOrError(service.getPublicSpatialUnitGeoJSONForIndicator(indicatorId, spatialUnitId, featureUtils.getSimplifyGeometries()).execute());
     	}
     	return bodyOrError(service.getSpatialUnitGeoJSONForIndicator(
                 jwtToken.orElse(""),
                 indicatorId,
-                spatialUnitId).execute()
+                spatialUnitId,
+                featureUtils.getSimplifyGeometries()).execute()
         );
     }
 
@@ -97,7 +101,8 @@ public class DataManagementClient {
                                                                int day,
                                                                Optional<String> jwtToken) throws Exception {
     	if(jwtToken == null || jwtToken.isEmpty()) {
-    		return bodyOrError(service.getPublicSpatialUnitGeoJSONForIndicatorAndDate(indicatorId, spatialUnitId, year, month, day).execute());
+    		return bodyOrError(service.getPublicSpatialUnitGeoJSONForIndicatorAndDate(indicatorId, 
+    				spatialUnitId, year, month, day, featureUtils.getSimplifyGeometries()).execute());
     	}
     	return bodyOrError(service.getSpatialUnitGeoJSONForIndicatorAndDate(
                         jwtToken.orElse(""),
@@ -105,7 +110,8 @@ public class DataManagementClient {
                         spatialUnitId,
                         year,
                         month,
-                        day)
+                        day, 
+                        featureUtils.getSimplifyGeometries())
                 .execute());
     }
 
