@@ -1,6 +1,7 @@
 # Change Log
 
-## 1.0.2
+## 1.0.3
+* fix retrieval of public spatial unit and public indicator timeseries without geometries by correcting Accept headers and URLs [dfe59d4](dfe59d4ba5fee997d35c2ee5fc7d45d1d2ed6c63)
 * fetch spatial geometries using the delivered date components instead of all features to work with only those features applicable for the delivered date [ecc8cf5](ecc8cf58e006f2a6e21802095a3cfe6319762c00)
 * set absolute and relative coverage to 0 if no coverage is available [82f4677](82f4677409966e201ab9d941574c258676bebf9b)
 * make simplifyGeometries query parameter configurable [67991ba](67991ba527b24599cb09357dd96c72f0404a1366)
