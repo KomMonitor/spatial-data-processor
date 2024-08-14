@@ -106,7 +106,7 @@ public interface DataManagementService {
                 @Query("simplifyGeometries") String simplifyGeometries
         );
         
-        @Headers({"Accept: application/json"})
+        @Headers({"Accept: */*"})
         @GET("public/spatial-units/{spatialUnitId}/{year}/{month}/{day}")
         Call<ObjectNode> getPublicSpatialUnitGeoJSON_forDate(
                 @Path("spatialUnitId") UUID spatialUnitId,
@@ -138,7 +138,7 @@ public interface DataManagementService {
         );
         
         @Headers({"Accept: */*"})
-        @GET("public/indicators/{indicatorId}/{spatialUnitId}/without-geometry/{year}/{month}/{day}")
+        @GET("public/indicators/{indicatorId}/{spatialUnitId}/{year}/{month}/{day}/without-geometry")
         Call<ArrayNode> getPublicIndicatorTimeseries_forDate(
                 @Path("indicatorId") UUID indicatorId,
                 @Path("spatialUnitId") UUID spatialUnitId,
