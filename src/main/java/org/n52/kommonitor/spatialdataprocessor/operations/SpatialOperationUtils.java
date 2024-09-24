@@ -210,7 +210,8 @@ public class SpatialOperationUtils {
 
     public Geometry combineGeometries(List<Geometry> geometries) {
         GeometryFactory geoFac = new GeometryFactory();
-        GeometryCollection geometryCollection = (GeometryCollection) geoFac.buildGeometry(geometries);
+        Geometry[] geometryArray = geometries.stream().toArray(Geometry[]::new);
+        GeometryCollection geometryCollection = geoFac.createGeometryCollection(geometryArray);
         return geometryCollection.union();
     }
 
