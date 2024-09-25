@@ -13,7 +13,7 @@ COPY src ./src
 RUN mvn -f ./pom.xml clean install -Dapp.finalName=kommonitor-spatial-data-processor-app -DskipTests
 
 # ---- Run the application ----
-FROM eclipse-temurin:17-alpine
+FROM eclipse-temurin:17.0.11_9-jdk-alpine
 WORKDIR /app
 
 # Copy from the base build image
