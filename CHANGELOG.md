@@ -1,6 +1,10 @@
 # Change Log
 
-## 1.0.4
+## 1.1.0
+* implement check for topological validity of geometries. if invalid try fix with buffer(0) [558cf74](558cf7408bcb663684be8a3c871cdc728e52e18d)
+* Raise cache actions version [b6784d0](b6784d0c2cc69e83b62e5bec6cc39218a613ddc5)
+* Merge branch &#39;master&#39; into develop [6de6de4](6de6de4ff46babbe6a3b30a2d97d6a91b5a6f3b6)
+    * Pin Eclipse Temurin image version for Docker build [d712bd9](d712bd9c17478c1f24908d991b65b3e0ae7c21f5)
 * Fix geometry collection type casting [76f9ec6](76f9ec60338b4fc8069398f15c8d8cb00f720779)
 * fix retrieval of public spatial unit and public indicator timeseries without geometries by correcting Accept headers and URLs [dfe59d4](dfe59d4ba5fee997d35c2ee5fc7d45d1d2ed6c63)
 * fetch spatial geometries using the delivered date components instead of all features to work with only those features applicable for the delivered date [ecc8cf5](ecc8cf58e006f2a6e21802095a3cfe6319762c00)
