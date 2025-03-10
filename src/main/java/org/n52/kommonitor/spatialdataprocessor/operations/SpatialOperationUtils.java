@@ -56,7 +56,22 @@ public class SpatialOperationUtils {
     public Geometry polygonalIntersection(Geometry geom1, Geometry geom2) throws OperationException {
         checkPolygonalType(geom1);
         checkPolygonalType(geom2);
-        return geom1.intersection(geom2);
+        
+        // often TopologyErrors occurs 
+        // then we try to fix it with buffer(0)
+	    // https://lin-ear-th-inking.blogspot.com/2020/12/fixing-buffer-for-fixing-polygons.html
+		// TopologyErrors might be solved by using buffer(0) and retrying
+        if(!geom1.isValid()) {
+        	LOGGER.info("invalid geometry detected during intersection computation. Try to fix it by calling buffer(0).");
+        	geom1 = geom1.buffer(0);
+        }
+        
+        if(!geom2.isValid()) {
+        	LOGGER.info("invalid geometry detected during intersection computation. Try to fix it by calling buffer(0).");
+        	geom2 = geom2.buffer(0);
+        }
+        
+        return geom1.intersection(geom2);        
     }
 
     /**
@@ -201,7 +216,14 @@ public class SpatialOperationUtils {
         try (SimpleFeatureIterator iterator = fc.features()) {
             while (iterator.hasNext()) {
                 SimpleFeature feature = iterator.next();
-                geometryList.add((Geometry) feature.getDefaultGeometry());
+                Geometry defaultGeometry = (Geometry) feature.getDefaultGeometry();
+                // often TopologyErrors occurs 
+                // then we try to fix it with buffer(0)
+                if(!defaultGeometry.isValid()) {
+                	LOGGER.info("invalid spatial unit geometry detected. Try to fix it by calling buffer(0).");
+                	defaultGeometry = defaultGeometry.buffer(0);
+                }
+				geometryList.add(defaultGeometry);
                 feature.getAttributeCount();
             }
         }

@@ -26,7 +26,7 @@
         <java.version>17</java.version>
         <openapi-generator.version>6.1.0</openapi-generator.version>
         <geotools.version>27.0</geotools.version>
-        <jts.version>1.19.0</jts.version>
+        <jts.version>1.20.0</jts.version>
         <release-plugin.version>3.0.1</release-plugin.version>
         <changelog-plugin.version>0.6.0</changelog-plugin.version>
     </properties>
