@@ -1,23 +1,28 @@
 package org.n52.kommonitor.spatialdataprocessor.operations;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.geotools.api.feature.simple.SimpleFeature;
+import org.geotools.api.feature.type.FeatureType;
+import org.geotools.api.filter.Filter;
+import org.geotools.api.filter.FilterFactory;
+import org.geotools.api.geometry.BoundingBox;
+import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
-import org.locationtech.jts.geom.*;
-import org.opengis.feature.simple.SimpleFeature;
-import org.opengis.feature.type.FeatureType;
-import org.opengis.filter.Filter;
-import org.opengis.filter.FilterFactory2;
-import org.opengis.geometry.BoundingBox;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryCollection;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.MultiPolygon;
+import org.locationtech.jts.geom.Polygon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class SpatialOperationUtils {
@@ -172,7 +177,7 @@ public class SpatialOperationUtils {
                     " CoordinateReferenceSystems.");
         }
 
-        FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
+        FilterFactory ff = CommonFactoryFinder.getFilterFactory();
         String geomName = schema.getGeometryDescriptor().getLocalName();
         BoundingBox bounds = feature.getBounds();
 
@@ -198,7 +203,7 @@ public class SpatialOperationUtils {
             throws OperationException {
         FeatureType schema = fc.getSchema();
 
-        FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
+        FilterFactory ff = CommonFactoryFinder.getFilterFactory();
         String geomName = schema.getGeometryDescriptor().getLocalName();
         Envelope env = geometry.getEnvelopeInternal();
         ReferencedEnvelope bbox = new ReferencedEnvelope(env.getMinX(), env.getMinY(), env.getMaxX(), env.getMaxY(),

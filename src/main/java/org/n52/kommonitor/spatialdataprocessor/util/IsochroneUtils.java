@@ -1,16 +1,17 @@
 package org.n52.kommonitor.spatialdataprocessor.util;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import org.geotools.data.simple.SimpleFeatureCollection;
-import org.geotools.factory.CommonFactoryFinder;
-import org.n52.kommonitor.spatialdataprocessor.operations.OperationException;
-import org.opengis.filter.Filter;
-import org.opengis.filter.FilterFactory2;
-import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import org.geotools.api.filter.Filter;
+import org.geotools.api.filter.FilterFactory;
+import org.geotools.data.simple.SimpleFeatureCollection;
+import org.geotools.factory.CommonFactoryFinder;
+import org.n52.kommonitor.spatialdataprocessor.operations.OperationException;
+import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 
 @Component
@@ -41,7 +42,7 @@ public class IsochroneUtils {
     }
 
     public SimpleFeatureCollection subsetRange(SimpleFeatureCollection fc, double v) {
-        FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
+        FilterFactory ff = CommonFactoryFinder.getFilterFactory();
         double lower = v - 0.001;
         double upper = v + 0.001;
         Filter filter = ff.between(ff.property(PROP_VALUE_NAME), ff.literal(lower), ff.literal(upper));

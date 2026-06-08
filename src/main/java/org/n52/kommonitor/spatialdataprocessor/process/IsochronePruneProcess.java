@@ -1,10 +1,19 @@
 package org.n52.kommonitor.spatialdataprocessor.process;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.geotools.api.feature.simple.SimpleFeature;
 import org.geotools.data.geojson.GeoJSONReader;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
@@ -12,21 +21,26 @@ import org.locationtech.jts.geom.Geometry;
 import org.n52.kommonitor.dataloader.FeatureDataSource;
 import org.n52.kommonitor.dataloader.FeatureLoader;
 import org.n52.kommonitor.dataloader.FeatureLoaderRepository;
-import org.n52.kommonitor.models.*;
+import org.n52.kommonitor.models.IndicatorCoverageValueType;
+import org.n52.kommonitor.models.IsochronePruneProcessResultType;
+import org.n52.kommonitor.models.IsochronePruneProcessType;
+import org.n52.kommonitor.models.OverallCoverageType;
+import org.n52.kommonitor.models.PoiCoverageType;
+import org.n52.kommonitor.models.SpatialUnitCoverageType;
+import org.n52.kommonitor.models.TimeseriesType;
 import org.n52.kommonitor.spatialdataprocessor.operations.OperationException;
 import org.n52.kommonitor.spatialdataprocessor.operations.SpatialOperationUtils;
 import org.n52.kommonitor.spatialdataprocessor.util.FeatureUtils;
 import org.n52.kommonitor.spatialdataprocessor.util.IsochroneUtils;
 import org.n52.kommonitor.spatialdataprocessor.util.datamanagement.DataManagementClient;
-import org.opengis.feature.simple.SimpleFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * Implements a process to cut isochrones with spatial units

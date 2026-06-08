@@ -16,13 +16,13 @@ import org.n52.kommonitor.models.IndicatorSpatialUnitJoinItem;
 import org.n52.kommonitor.models.OgcServicesType;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 
 import java.util.*;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 /**
  * IndicatorOverviewType
