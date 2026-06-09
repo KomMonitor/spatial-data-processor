@@ -1,24 +1,28 @@
 package org.n52.kommonitor.spatialdataprocessor.util.datamanagement;
 
 
+import java.io.IOException;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.n52.kommonitor.models.IndicatorOverviewType;
+import org.n52.kommonitor.models.SpatialUnitOverviewType;
+import org.n52.kommonitor.spatialdataprocessor.util.FeatureUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-import org.n52.kommonitor.models.IndicatorOverviewType;
-import org.n52.kommonitor.models.SpatialUnitOverviewType;
-import org.n52.kommonitor.spatialdataprocessor.util.FeatureUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
-
-import java.io.IOException;
-import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Lightweight client for accessing kommonitor-data-management api.
@@ -26,27 +30,28 @@ import java.util.UUID;
 @Component
 public class DataManagementClient {
 
+	private static final Logger log = LoggerFactory.getLogger(DataManagementClient.class);
+
     private final DataManagementService service;
-    
-    private FeatureUtils featureUtils = new FeatureUtils();
+    private final FeatureUtils featureUtils = new FeatureUtils();
 
-    public DataManagementClient(@Value("${config.data-management.baseUrl}") String baseUrl) {
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
+ // Inject Spring's auto-configured ObjectMapper instead of creating a new one
+    public DataManagementClient(
+            @Value("${config.data-management.baseUrl}") String baseUrl, 
+            ObjectMapper springManagedMapper) {
+        
+        // Bridge OkHttp logging directly to Spring's SLF4J logger
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(message -> log.debug("OkHttp: {}", message));
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY); // Set to BODY temporarily to see the full request/response
 
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(loggingInterceptor);
-
-        // Magically find and add JSR310 Module to deserialize java8 LocalDate
-        ObjectMapper mapper = JsonMapper.builder()
-                .findAndAddModules()
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .addInterceptor(loggingInterceptor)
                 .build();
 
-        // TODO: make this configurable. e.g. read out application.properties value
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .addConverterFactory(JacksonConverterFactory.create(mapper))
-                .client(httpClient.build())
+                .baseUrl(baseUrl) // Note: Ensure baseUrl ends with a trailing slash '/' in your application.properties
+                .addConverterFactory(JacksonConverterFactory.create(springManagedMapper))
+                .client(httpClient)
                 .build();
 
         service = retrofit.create(DataManagementService.class);

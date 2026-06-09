@@ -101,13 +101,28 @@ public class IsochronePruneProcess implements Process<IsochronePruneProcessType>
         // 1) Fetch geometries only for the specified SpatialUnit and create a FeatureCollection for it as well
         // as for the provided isochrones
         LOGGER.debug("Fetch geometries for SpatialUnit {}", spatialUnitId);
-        ObjectNode spatialUnit = dmc.getSpatialUnitGeoJSON_forDate(spatialUnitId, date.getYear(), date.getMonthValue(), date.getDayOfMonth(), authHeader);
-        SimpleFeatureCollection spatialUnitFc = GeoJSONReader.parseFeatureCollection(spatialUnit.toString());
-        SimpleFeatureCollection isochronesFc = GeoJSONReader.parseFeatureCollection(isochrones);
+//        ObjectNode spatialUnit = dmc.getSpatialUnitGeoJSON_forDate(spatialUnitId, date.getYear(), date.getMonthValue(), date.getDayOfMonth(), authHeader);
+//        
+//        SimpleFeatureCollection spatialUnitFc = GeoJSONReader.parseFeatureCollection(spatialUnit.toString());
+//        SimpleFeatureCollection isochronesFc = GeoJSONReader.parseFeatureCollection(isochrones);
+//
+//        List<IsochronePruneProcessResultType> result = calculateIsochronePrune(indicatorList, spatialUnitId, date, isochrones, isochronesFc, spatialUnitFc);
+//       
+        try {
+        	ObjectNode spatialUnit = dmc.getSpatialUnitGeoJSON_forDate(spatialUnitId, date.getYear(), date.getMonthValue(), date.getDayOfMonth(), authHeader);
+            
+            SimpleFeatureCollection spatialUnitFc = GeoJSONReader.parseFeatureCollection(spatialUnit.toString());
+            SimpleFeatureCollection isochronesFc = GeoJSONReader.parseFeatureCollection(isochrones);
 
-        List<IsochronePruneProcessResultType> result = calculateIsochronePrune(indicatorList, spatialUnitId, date, isochrones, isochronesFc, spatialUnitFc);
-        LOGGER.info("Successfully finished IsochronePrune process.");
-        return result;
+            List<IsochronePruneProcessResultType> result = calculateIsochronePrune(indicatorList, spatialUnitId, date, isochrones, isochronesFc, spatialUnitFc);
+           
+            LOGGER.info("Successfully finished IsochronePrune process.");
+            return result;
+            
+        } catch (Throwable t) { // Catch Throwable to capture OOM Errors
+            LOGGER.error("CRITICAL: Async worker thread failed during GeoJSON fetch!", t);
+            throw t; // Rethrow if necessary for your Future management
+        }        
     }
 
     protected List<IsochronePruneProcessResultType> calculateIsochronePrune(List<UUID> indicatorList,

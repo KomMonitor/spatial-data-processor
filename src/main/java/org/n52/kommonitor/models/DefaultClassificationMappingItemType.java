@@ -4,6 +4,10 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -18,51 +22,72 @@ import jakarta.annotation.Generated;
  * DefaultClassificationMappingItemType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-02-03T01:17:35.372611508+01:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-08T22:37:11.343634300+02:00[Europe/Berlin]", comments = "Generator version: 7.18.0")
 public class DefaultClassificationMappingItemType {
 
-  @JsonProperty("defaultColorAsHex")
-  private String defaultColorAsHex;
+  private String spatialUnitId;
 
-  @JsonProperty("defaultCustomRating")
-  private String defaultCustomRating;
+  @Valid
+  private List<Float> breaks = new ArrayList<>();
 
-  public DefaultClassificationMappingItemType defaultColorAsHex(String defaultColorAsHex) {
-    this.defaultColorAsHex = defaultColorAsHex;
+  public DefaultClassificationMappingItemType() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public DefaultClassificationMappingItemType(String spatialUnitId, List<Float> breaks) {
+    this.spatialUnitId = spatialUnitId;
+    this.breaks = breaks;
+  }
+
+  public DefaultClassificationMappingItemType spatialUnitId(String spatialUnitId) {
+    this.spatialUnitId = spatialUnitId;
     return this;
   }
 
   /**
-   * the default color for the specified value interval as hex string inclusive leading #, i.e. '#ffffff'
-   * @return defaultColorAsHex
-  */
+   * spatial unit id for manual classification
+   * @return spatialUnitId
+   */
   @NotNull 
-  @Schema(name = "defaultColorAsHex", description = "the default color for the specified value interval as hex string inclusive leading #, i.e. '#ffffff'", required = true)
-  public String getDefaultColorAsHex() {
-    return defaultColorAsHex;
+  @Schema(name = "spatialUnitId", description = "spatial unit id for manual classification", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("spatialUnitId")
+  public String getSpatialUnitId() {
+    return spatialUnitId;
   }
 
-  public void setDefaultColorAsHex(String defaultColorAsHex) {
-    this.defaultColorAsHex = defaultColorAsHex;
+  public void setSpatialUnitId(String spatialUnitId) {
+    this.spatialUnitId = spatialUnitId;
   }
 
-  public DefaultClassificationMappingItemType defaultCustomRating(String defaultCustomRating) {
-    this.defaultCustomRating = defaultCustomRating;
+  public DefaultClassificationMappingItemType breaks(List<Float> breaks) {
+    this.breaks = breaks;
+    return this;
+  }
+
+  public DefaultClassificationMappingItemType addBreaksItem(Float breaksItem) {
+    if (this.breaks == null) {
+      this.breaks = new ArrayList<>();
+    }
+    this.breaks.add(breaksItem);
     return this;
   }
 
   /**
-   * the default custom rating string for the specified value interval, i.e. 'very high'/'very low' or 'good'/'bad'
-   * @return defaultCustomRating
-  */
+   * array of numeric break values
+   * @return breaks
+   */
   @NotNull 
-  @Schema(name = "defaultCustomRating", description = "the default custom rating string for the specified value interval, i.e. 'very high'/'very low' or 'good'/'bad'", required = true)
-  public String getDefaultCustomRating() {
-    return defaultCustomRating;
+  @Schema(name = "breaks", description = "array of numeric break values", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("breaks")
+  public List<Float> getBreaks() {
+    return breaks;
   }
 
-  public void setDefaultCustomRating(String defaultCustomRating) {
-    this.defaultCustomRating = defaultCustomRating;
+  public void setBreaks(List<Float> breaks) {
+    this.breaks = breaks;
   }
 
   @Override
@@ -74,21 +99,21 @@ public class DefaultClassificationMappingItemType {
       return false;
     }
     DefaultClassificationMappingItemType defaultClassificationMappingItemType = (DefaultClassificationMappingItemType) o;
-    return Objects.equals(this.defaultColorAsHex, defaultClassificationMappingItemType.defaultColorAsHex) &&
-        Objects.equals(this.defaultCustomRating, defaultClassificationMappingItemType.defaultCustomRating);
+    return Objects.equals(this.spatialUnitId, defaultClassificationMappingItemType.spatialUnitId) &&
+        Objects.equals(this.breaks, defaultClassificationMappingItemType.breaks);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(defaultColorAsHex, defaultCustomRating);
+    return Objects.hash(spatialUnitId, breaks);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DefaultClassificationMappingItemType {\n");
-    sb.append("    defaultColorAsHex: ").append(toIndentedString(defaultColorAsHex)).append("\n");
-    sb.append("    defaultCustomRating: ").append(toIndentedString(defaultCustomRating)).append("\n");
+    sb.append("    spatialUnitId: ").append(toIndentedString(spatialUnitId)).append("\n");
+    sb.append("    breaks: ").append(toIndentedString(breaks)).append("\n");
     sb.append("}");
     return sb.toString();
   }

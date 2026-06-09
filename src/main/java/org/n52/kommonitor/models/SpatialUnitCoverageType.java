@@ -5,9 +5,11 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.n52.kommonitor.models.IndicatorCoverageValueType;
 import org.n52.kommonitor.models.TimeseriesType;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -22,19 +24,27 @@ import jakarta.annotation.Generated;
  * SpatialUnitCoverageType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-09-05T08:16:59.005638400+02:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-08T22:37:08.978103200+02:00[Europe/Berlin]", comments = "Generator version: 7.18.0")
 public class SpatialUnitCoverageType {
 
-  @JsonProperty("spatialUnitFeatureId")
   private String spatialUnitFeatureId;
 
-  @JsonProperty("timeseries")
   @Valid
-  private List<TimeseriesType> timeseries = null;
+  private List<@Valid TimeseriesType> timeseries = new ArrayList<>();
 
-  @JsonProperty("coverage")
   @Valid
-  private List<IndicatorCoverageValueType> coverage = null;
+  private List<@Valid IndicatorCoverageValueType> coverage = new ArrayList<>();
+
+  public SpatialUnitCoverageType() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public SpatialUnitCoverageType(String spatialUnitFeatureId) {
+    this.spatialUnitFeatureId = spatialUnitFeatureId;
+  }
 
   public SpatialUnitCoverageType spatialUnitFeatureId(String spatialUnitFeatureId) {
     this.spatialUnitFeatureId = spatialUnitFeatureId;
@@ -44,9 +54,10 @@ public class SpatialUnitCoverageType {
   /**
    * Unique identifier for the spatial unit. This ID can be used to identify a spatial unit at the  DataManagement API. 
    * @return spatialUnitFeatureId
-  */
+   */
   @NotNull 
-  @Schema(name = "spatialUnitFeatureId", description = "Unique identifier for the spatial unit. This ID can be used to identify a spatial unit at the  DataManagement API. ", required = true)
+  @Schema(name = "spatialUnitFeatureId", description = "Unique identifier for the spatial unit. This ID can be used to identify a spatial unit at the  DataManagement API. ", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("spatialUnitFeatureId")
   public String getSpatialUnitFeatureId() {
     return spatialUnitFeatureId;
   }
@@ -55,7 +66,7 @@ public class SpatialUnitCoverageType {
     this.spatialUnitFeatureId = spatialUnitFeatureId;
   }
 
-  public SpatialUnitCoverageType timeseries(List<TimeseriesType> timeseries) {
+  public SpatialUnitCoverageType timeseries(List<@Valid TimeseriesType> timeseries) {
     this.timeseries = timeseries;
     return this;
   }
@@ -71,18 +82,19 @@ public class SpatialUnitCoverageType {
   /**
    * The indicator timeseries values for the spatial unit feature for which coverage fractions are calculated. 
    * @return timeseries
-  */
+   */
   @Valid 
-  @Schema(name = "timeseries", description = "The indicator timeseries values for the spatial unit feature for which coverage fractions are calculated. ", required = false)
-  public List<TimeseriesType> getTimeseries() {
+  @Schema(name = "timeseries", description = "The indicator timeseries values for the spatial unit feature for which coverage fractions are calculated. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("timeseries")
+  public List<@Valid TimeseriesType> getTimeseries() {
     return timeseries;
   }
 
-  public void setTimeseries(List<TimeseriesType> timeseries) {
+  public void setTimeseries(List<@Valid TimeseriesType> timeseries) {
     this.timeseries = timeseries;
   }
 
-  public SpatialUnitCoverageType coverage(List<IndicatorCoverageValueType> coverage) {
+  public SpatialUnitCoverageType coverage(List<@Valid IndicatorCoverageValueType> coverage) {
     this.coverage = coverage;
     return this;
   }
@@ -98,14 +110,15 @@ public class SpatialUnitCoverageType {
   /**
    * Indicator coverage for this spatial unit. 
    * @return coverage
-  */
+   */
   @Valid 
-  @Schema(name = "coverage", description = "Indicator coverage for this spatial unit. ", required = false)
-  public List<IndicatorCoverageValueType> getCoverage() {
+  @Schema(name = "coverage", description = "Indicator coverage for this spatial unit. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("coverage")
+  public List<@Valid IndicatorCoverageValueType> getCoverage() {
     return coverage;
   }
 
-  public void setCoverage(List<IndicatorCoverageValueType> coverage) {
+  public void setCoverage(List<@Valid IndicatorCoverageValueType> coverage) {
     this.coverage = coverage;
   }
 

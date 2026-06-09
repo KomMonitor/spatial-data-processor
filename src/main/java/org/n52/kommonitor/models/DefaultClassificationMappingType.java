@@ -4,9 +4,13 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.n52.kommonitor.models.DefaultClassificationMappingItemType;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -21,15 +25,70 @@ import jakarta.annotation.Generated;
  * DefaultClassificationMappingType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-02-03T01:17:35.372611508+01:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-08T22:37:11.343634300+02:00[Europe/Berlin]", comments = "Generator version: 7.18.0")
 public class DefaultClassificationMappingType {
 
-  @JsonProperty("colorBrewerSchemeName")
   private String colorBrewerSchemeName;
 
-  @JsonProperty("items")
+  private BigDecimal numClasses;
+
+  /**
+   * the classification method as enumeration
+   */
+  public enum ClassificationMethodEnum {
+    REGIONAL_DEFAULT("REGIONAL_DEFAULT"),
+    
+    JENKS("JENKS"),
+    
+    EQUAL_INTERVAL("EQUAL_INTERVAL"),
+    
+    QUANTILE("QUANTILE");
+
+    private final String value;
+
+    ClassificationMethodEnum(String value) {
+      this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static ClassificationMethodEnum fromValue(String value) {
+      for (ClassificationMethodEnum b : ClassificationMethodEnum.values()) {
+        if (b.value.equals(value)) {
+          return b;
+        }
+      }
+      throw new IllegalArgumentException("Unexpected value '" + value + "'");
+    }
+  }
+
+  private ClassificationMethodEnum classificationMethod;
+
   @Valid
-  private List<DefaultClassificationMappingItemType> items = new ArrayList<>();
+  private List<@Valid DefaultClassificationMappingItemType> items = new ArrayList<>();
+
+  public DefaultClassificationMappingType() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public DefaultClassificationMappingType(String colorBrewerSchemeName, BigDecimal numClasses, ClassificationMethodEnum classificationMethod, List<@Valid DefaultClassificationMappingItemType> items) {
+    this.colorBrewerSchemeName = colorBrewerSchemeName;
+    this.numClasses = numClasses;
+    this.classificationMethod = classificationMethod;
+    this.items = items;
+  }
 
   public DefaultClassificationMappingType colorBrewerSchemeName(String colorBrewerSchemeName) {
     this.colorBrewerSchemeName = colorBrewerSchemeName;
@@ -37,11 +96,12 @@ public class DefaultClassificationMappingType {
   }
 
   /**
-   * the name of the colorBrewer color scheme jused to define the colors for classification (see project http://colorbrewer2.org/#type=sequential&scheme=BuGn&n=3 for colorSchemes). Set to 'INDIVIDUAL' if colors are set arbitrarily.
+   * the name of the colorBrewer color scheme used to define the colors for classification (see project http://colorbrewer2.org/#type=sequential&scheme=BuGn&n=3 for colorSchemes). Set to 'INDIVIDUAL' if colors are set arbitrarily.
    * @return colorBrewerSchemeName
-  */
+   */
   @NotNull 
-  @Schema(name = "colorBrewerSchemeName", description = "the name of the colorBrewer color scheme jused to define the colors for classification (see project http://colorbrewer2.org/#type=sequential&scheme=BuGn&n=3 for colorSchemes). Set to 'INDIVIDUAL' if colors are set arbitrarily.", required = true)
+  @Schema(name = "colorBrewerSchemeName", description = "the name of the colorBrewer color scheme used to define the colors for classification (see project http://colorbrewer2.org/#type=sequential&scheme=BuGn&n=3 for colorSchemes). Set to 'INDIVIDUAL' if colors are set arbitrarily.", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("colorBrewerSchemeName")
   public String getColorBrewerSchemeName() {
     return colorBrewerSchemeName;
   }
@@ -50,27 +110,73 @@ public class DefaultClassificationMappingType {
     this.colorBrewerSchemeName = colorBrewerSchemeName;
   }
 
-  public DefaultClassificationMappingType items(List<DefaultClassificationMappingItemType> items) {
+  public DefaultClassificationMappingType numClasses(BigDecimal numClasses) {
+    this.numClasses = numClasses;
+    return this;
+  }
+
+  /**
+   * the number of classes
+   * minimum: 1
+   * maximum: 9
+   * @return numClasses
+   */
+  @NotNull @Valid @DecimalMin(value = "1") @DecimalMax(value = "9") 
+  @Schema(name = "numClasses", description = "the number of classes", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("numClasses")
+  public BigDecimal getNumClasses() {
+    return numClasses;
+  }
+
+  public void setNumClasses(BigDecimal numClasses) {
+    this.numClasses = numClasses;
+  }
+
+  public DefaultClassificationMappingType classificationMethod(ClassificationMethodEnum classificationMethod) {
+    this.classificationMethod = classificationMethod;
+    return this;
+  }
+
+  /**
+   * the classification method as enumeration
+   * @return classificationMethod
+   */
+  @NotNull 
+  @Schema(name = "classificationMethod", description = "the classification method as enumeration", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("classificationMethod")
+  public ClassificationMethodEnum getClassificationMethod() {
+    return classificationMethod;
+  }
+
+  public void setClassificationMethod(ClassificationMethodEnum classificationMethod) {
+    this.classificationMethod = classificationMethod;
+  }
+
+  public DefaultClassificationMappingType items(List<@Valid DefaultClassificationMappingItemType> items) {
     this.items = items;
     return this;
   }
 
   public DefaultClassificationMappingType addItemsItem(DefaultClassificationMappingItemType itemsItem) {
+    if (this.items == null) {
+      this.items = new ArrayList<>();
+    }
     this.items.add(itemsItem);
     return this;
   }
 
   /**
-   * array of classification mapping items. The order of the items corresponds to indicator value intervals from low to high. The number of items represents the number of classes. In combination they represent the default classification and mapping to custom rating of the indicator values
+   * array of classification mapping items. each item holds the break values for a certain spatial unit. not all spatial units of a certain indicator must be set.
    * @return items
-  */
+   */
   @NotNull @Valid 
-  @Schema(name = "items", description = "array of classification mapping items. The order of the items corresponds to indicator value intervals from low to high. The number of items represents the number of classes. In combination they represent the default classification and mapping to custom rating of the indicator values", required = true)
-  public List<DefaultClassificationMappingItemType> getItems() {
+  @Schema(name = "items", description = "array of classification mapping items. each item holds the break values for a certain spatial unit. not all spatial units of a certain indicator must be set.", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("items")
+  public List<@Valid DefaultClassificationMappingItemType> getItems() {
     return items;
   }
 
-  public void setItems(List<DefaultClassificationMappingItemType> items) {
+  public void setItems(List<@Valid DefaultClassificationMappingItemType> items) {
     this.items = items;
   }
 
@@ -84,12 +190,14 @@ public class DefaultClassificationMappingType {
     }
     DefaultClassificationMappingType defaultClassificationMappingType = (DefaultClassificationMappingType) o;
     return Objects.equals(this.colorBrewerSchemeName, defaultClassificationMappingType.colorBrewerSchemeName) &&
+        Objects.equals(this.numClasses, defaultClassificationMappingType.numClasses) &&
+        Objects.equals(this.classificationMethod, defaultClassificationMappingType.classificationMethod) &&
         Objects.equals(this.items, defaultClassificationMappingType.items);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(colorBrewerSchemeName, items);
+    return Objects.hash(colorBrewerSchemeName, numClasses, classificationMethod, items);
   }
 
   @Override
@@ -97,6 +205,8 @@ public class DefaultClassificationMappingType {
     StringBuilder sb = new StringBuilder();
     sb.append("class DefaultClassificationMappingType {\n");
     sb.append("    colorBrewerSchemeName: ").append(toIndentedString(colorBrewerSchemeName)).append("\n");
+    sb.append("    numClasses: ").append(toIndentedString(numClasses)).append("\n");
+    sb.append("    classificationMethod: ").append(toIndentedString(classificationMethod)).append("\n");
     sb.append("    items: ").append(toIndentedString(items)).append("\n");
     sb.append("}");
     return sb.toString();

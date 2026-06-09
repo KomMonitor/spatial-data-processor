@@ -10,11 +10,13 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import org.n52.kommonitor.models.IsochronePruneProcessType;
 import org.n52.kommonitor.models.TestProcessType;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -32,13 +34,11 @@ import jakarta.annotation.Generated;
 )
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "name", visible = true)
 @JsonSubTypes({
-  @JsonSubTypes.Type(value = IsochronePruneProcessType.class, name = "IsochronePruneProcessType"),
-  @JsonSubTypes.Type(value = TestProcessType.class, name = "TestProcessType"),
   @JsonSubTypes.Type(value = IsochronePruneProcessType.class, name = "isochrone-prune"),
   @JsonSubTypes.Type(value = TestProcessType.class, name = "test")
 })
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-02-03T01:17:34.621019675+01:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-08T22:37:08.978103200+02:00[Europe/Berlin]", comments = "Generator version: 7.18.0")
 public interface ProcessType {
     public String getName();
 }

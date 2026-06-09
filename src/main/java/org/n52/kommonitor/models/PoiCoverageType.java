@@ -5,9 +5,11 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.n52.kommonitor.models.IndicatorCoverageValueType;
 import org.n52.kommonitor.models.SpatialUnitCoverageType;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -22,19 +24,27 @@ import jakarta.annotation.Generated;
  * PoiCoverageType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-02-03T01:17:34.621019675+01:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-08T22:37:08.978103200+02:00[Europe/Berlin]", comments = "Generator version: 7.18.0")
 public class PoiCoverageType {
 
-  @JsonProperty("poiFeatureId")
   private String poiFeatureId;
 
-  @JsonProperty("overallCoverage")
   @Valid
-  private List<IndicatorCoverageValueType> overallCoverage = null;
+  private List<@Valid IndicatorCoverageValueType> overallCoverage = new ArrayList<>();
 
-  @JsonProperty("spatialUnitCoverage")
   @Valid
-  private List<SpatialUnitCoverageType> spatialUnitCoverage = null;
+  private List<@Valid SpatialUnitCoverageType> spatialUnitCoverage = new ArrayList<>();
+
+  public PoiCoverageType() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public PoiCoverageType(String poiFeatureId) {
+    this.poiFeatureId = poiFeatureId;
+  }
 
   public PoiCoverageType poiFeatureId(String poiFeatureId) {
     this.poiFeatureId = poiFeatureId;
@@ -44,9 +54,10 @@ public class PoiCoverageType {
   /**
    * Get poiFeatureId
    * @return poiFeatureId
-  */
+   */
   @NotNull 
-  @Schema(name = "poiFeatureId", required = true)
+  @Schema(name = "poiFeatureId", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("poiFeatureId")
   public String getPoiFeatureId() {
     return poiFeatureId;
   }
@@ -55,7 +66,7 @@ public class PoiCoverageType {
     this.poiFeatureId = poiFeatureId;
   }
 
-  public PoiCoverageType overallCoverage(List<IndicatorCoverageValueType> overallCoverage) {
+  public PoiCoverageType overallCoverage(List<@Valid IndicatorCoverageValueType> overallCoverage) {
     this.overallCoverage = overallCoverage;
     return this;
   }
@@ -71,18 +82,19 @@ public class PoiCoverageType {
   /**
    * Indicates the coverage for the entire spatial unit, which means the coverage of a single isochron for all spatial unit features. 
    * @return overallCoverage
-  */
+   */
   @Valid 
-  @Schema(name = "overallCoverage", description = "Indicates the coverage for the entire spatial unit, which means the coverage of a single isochron for all spatial unit features. ", required = false)
-  public List<IndicatorCoverageValueType> getOverallCoverage() {
+  @Schema(name = "overallCoverage", description = "Indicates the coverage for the entire spatial unit, which means the coverage of a single isochron for all spatial unit features. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("overallCoverage")
+  public List<@Valid IndicatorCoverageValueType> getOverallCoverage() {
     return overallCoverage;
   }
 
-  public void setOverallCoverage(List<IndicatorCoverageValueType> overallCoverage) {
+  public void setOverallCoverage(List<@Valid IndicatorCoverageValueType> overallCoverage) {
     this.overallCoverage = overallCoverage;
   }
 
-  public PoiCoverageType spatialUnitCoverage(List<SpatialUnitCoverageType> spatialUnitCoverage) {
+  public PoiCoverageType spatialUnitCoverage(List<@Valid SpatialUnitCoverageType> spatialUnitCoverage) {
     this.spatialUnitCoverage = spatialUnitCoverage;
     return this;
   }
@@ -98,14 +110,15 @@ public class PoiCoverageType {
   /**
    * Indicates the coverage for single spatial unit features, which means the coverage of a single isochron for each feature of a spatial unit. 
    * @return spatialUnitCoverage
-  */
+   */
   @Valid 
-  @Schema(name = "spatialUnitCoverage", description = "Indicates the coverage for single spatial unit features, which means the coverage of a single isochron for each feature of a spatial unit. ", required = false)
-  public List<SpatialUnitCoverageType> getSpatialUnitCoverage() {
+  @Schema(name = "spatialUnitCoverage", description = "Indicates the coverage for single spatial unit features, which means the coverage of a single isochron for each feature of a spatial unit. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("spatialUnitCoverage")
+  public List<@Valid SpatialUnitCoverageType> getSpatialUnitCoverage() {
     return spatialUnitCoverage;
   }
 
-  public void setSpatialUnitCoverage(List<SpatialUnitCoverageType> spatialUnitCoverage) {
+  public void setSpatialUnitCoverage(List<@Valid SpatialUnitCoverageType> spatialUnitCoverage) {
     this.spatialUnitCoverage = spatialUnitCoverage;
   }
 

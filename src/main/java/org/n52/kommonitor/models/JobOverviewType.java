@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -23,16 +24,13 @@ import jakarta.annotation.Generated;
  */
 
 @Schema(name = "JobOverviewType", description = "Description of a Job")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-02-03T01:17:34.621019675+01:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-08T22:37:08.978103200+02:00[Europe/Berlin]", comments = "Generator version: 7.18.0")
 public class JobOverviewType {
 
-  @JsonProperty("id")
   private UUID id;
 
-  @JsonProperty("process")
   private String process;
 
-  @JsonProperty("timestamp")
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private OffsetDateTime timestamp;
 
@@ -48,7 +46,7 @@ public class JobOverviewType {
     
     FAILED("failed");
 
-    private String value;
+    private final String value;
 
     StatusEnum(String value) {
       this.value = value;
@@ -75,8 +73,21 @@ public class JobOverviewType {
     }
   }
 
-  @JsonProperty("status")
   private StatusEnum status;
+
+  public JobOverviewType() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public JobOverviewType(UUID id, String process, OffsetDateTime timestamp, StatusEnum status) {
+    this.id = id;
+    this.process = process;
+    this.timestamp = timestamp;
+    this.status = status;
+  }
 
   public JobOverviewType id(UUID id) {
     this.id = id;
@@ -86,9 +97,10 @@ public class JobOverviewType {
   /**
    * Unique ID
    * @return id
-  */
+   */
   @NotNull @Valid 
-  @Schema(name = "id", description = "Unique ID", required = true)
+  @Schema(name = "id", description = "Unique ID", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("id")
   public UUID getId() {
     return id;
   }
@@ -105,9 +117,10 @@ public class JobOverviewType {
   /**
    * Name of the process that will be executed by this job. 
    * @return process
-  */
+   */
   @NotNull 
-  @Schema(name = "process", description = "Name of the process that will be executed by this job. ", required = true)
+  @Schema(name = "process", description = "Name of the process that will be executed by this job. ", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("process")
   public String getProcess() {
     return process;
   }
@@ -124,9 +137,10 @@ public class JobOverviewType {
   /**
    * Timestamp for job execution start.
    * @return timestamp
-  */
+   */
   @NotNull @Valid 
-  @Schema(name = "timestamp", description = "Timestamp for job execution start.", required = true)
+  @Schema(name = "timestamp", description = "Timestamp for job execution start.", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("timestamp")
   public OffsetDateTime getTimestamp() {
     return timestamp;
   }
@@ -143,9 +157,10 @@ public class JobOverviewType {
   /**
    * Indicates the execution status of a job:  * `queued` - The job has been created but process execution has not started, yet.  * `running` - Process execution has started.  * `finished` - Process execution has finished.  * `failed` - The job failed due to an error during process execution. 
    * @return status
-  */
+   */
   @NotNull 
-  @Schema(name = "status", description = "Indicates the execution status of a job:  * `queued` - The job has been created but process execution has not started, yet.  * `running` - Process execution has started.  * `finished` - Process execution has finished.  * `failed` - The job failed due to an error during process execution. ", required = true)
+  @Schema(name = "status", description = "Indicates the execution status of a job:  * `queued` - The job has been created but process execution has not started, yet.  * `running` - Process execution has started.  * `finished` - Process execution has finished.  * `failed` - The job failed due to an error during process execution. ", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("status")
   public StatusEnum getStatus() {
     return status;
   }

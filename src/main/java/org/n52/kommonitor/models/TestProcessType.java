@@ -4,12 +4,14 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import org.springframework.lang.Nullable;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -28,14 +30,24 @@ import jakarta.annotation.Generated;
  */
 
 @Schema(name = "TestProcessType", description = "Process for testing the API.")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-02-03T01:17:34.621019675+01:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-08T22:37:08.978103200+02:00[Europe/Berlin]", comments = "Generator version: 7.18.0")
 public class TestProcessType implements ProcessType {
 
-  @JsonProperty("name")
   private String name = "test";
 
-  @JsonProperty("test")
   private String test;
+
+  public TestProcessType() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public TestProcessType(String name, String test) {
+    this.name = name;
+    this.test = test;
+  }
 
   public TestProcessType name(String name) {
     this.name = name;
@@ -45,9 +57,10 @@ public class TestProcessType implements ProcessType {
   /**
    * Unique name of the process. Will be used to determine which process will be triggered server-side. 
    * @return name
-  */
+   */
   @NotNull 
-  @Schema(name = "name", description = "Unique name of the process. Will be used to determine which process will be triggered server-side. ", required = true)
+  @Schema(name = "name", description = "Unique name of the process. Will be used to determine which process will be triggered server-side. ", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("name")
   public String getName() {
     return name;
   }
@@ -64,9 +77,10 @@ public class TestProcessType implements ProcessType {
   /**
    * Just a dummy test parameter. 
    * @return test
-  */
+   */
   @NotNull 
-  @Schema(name = "test", description = "Just a dummy test parameter. ", required = true)
+  @Schema(name = "test", description = "Just a dummy test parameter. ", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("test")
   public String getTest() {
     return test;
   }

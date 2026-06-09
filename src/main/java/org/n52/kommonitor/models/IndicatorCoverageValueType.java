@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -20,20 +21,17 @@ import jakarta.annotation.Generated;
  * IndicatorCoverageValueType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-02-03T01:17:34.621019675+01:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-08T22:37:08.978103200+02:00[Europe/Berlin]", comments = "Generator version: 7.18.0")
 public class IndicatorCoverageValueType {
 
-  @JsonProperty("date")
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-  private LocalDate date;
+  private @Nullable LocalDate date;
 
-  @JsonProperty("absoluteCoverage")
-  private Float absoluteCoverage;
+  private @Nullable Float absoluteCoverage;
 
-  @JsonProperty("relativeCoverage")
-  private Float relativeCoverage;
+  private @Nullable Float relativeCoverage;
 
-  public IndicatorCoverageValueType date(LocalDate date) {
+  public IndicatorCoverageValueType date(@Nullable LocalDate date) {
     this.date = date;
     return this;
   }
@@ -41,18 +39,19 @@ public class IndicatorCoverageValueType {
   /**
    * Indicates for which indicator timeseries date the coverage values relate to. 
    * @return date
-  */
+   */
   @Valid 
-  @Schema(name = "date", description = "Indicates for which indicator timeseries date the coverage values relate to. ", required = false)
-  public LocalDate getDate() {
+  @Schema(name = "date", description = "Indicates for which indicator timeseries date the coverage values relate to. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("date")
+  public @Nullable LocalDate getDate() {
     return date;
   }
 
-  public void setDate(LocalDate date) {
+  public void setDate(@Nullable LocalDate date) {
     this.date = date;
   }
 
-  public IndicatorCoverageValueType absoluteCoverage(Float absoluteCoverage) {
+  public IndicatorCoverageValueType absoluteCoverage(@Nullable Float absoluteCoverage) {
     this.absoluteCoverage = absoluteCoverage;
     return this;
   }
@@ -60,18 +59,19 @@ public class IndicatorCoverageValueType {
   /**
    * Absolute indicator coverage value. This value is calculated by multiplying the relative coverage with the indicator value. 
    * @return absoluteCoverage
-  */
+   */
   
-  @Schema(name = "absoluteCoverage", description = "Absolute indicator coverage value. This value is calculated by multiplying the relative coverage with the indicator value. ", required = false)
-  public Float getAbsoluteCoverage() {
+  @Schema(name = "absoluteCoverage", description = "Absolute indicator coverage value. This value is calculated by multiplying the relative coverage with the indicator value. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("absoluteCoverage")
+  public @Nullable Float getAbsoluteCoverage() {
     return absoluteCoverage;
   }
 
-  public void setAbsoluteCoverage(Float absoluteCoverage) {
+  public void setAbsoluteCoverage(@Nullable Float absoluteCoverage) {
     this.absoluteCoverage = absoluteCoverage;
   }
 
-  public IndicatorCoverageValueType relativeCoverage(Float relativeCoverage) {
+  public IndicatorCoverageValueType relativeCoverage(@Nullable Float relativeCoverage) {
     this.relativeCoverage = relativeCoverage;
     return this;
   }
@@ -79,14 +79,15 @@ public class IndicatorCoverageValueType {
   /**
    * Relative indicator coverage value. This value is calculated by determining the proportion of intersection of an isochron geometry with spatial unit feature geometries. 
    * @return relativeCoverage
-  */
+   */
   
-  @Schema(name = "relativeCoverage", description = "Relative indicator coverage value. This value is calculated by determining the proportion of intersection of an isochron geometry with spatial unit feature geometries. ", required = false)
-  public Float getRelativeCoverage() {
+  @Schema(name = "relativeCoverage", description = "Relative indicator coverage value. This value is calculated by determining the proportion of intersection of an isochron geometry with spatial unit feature geometries. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("relativeCoverage")
+  public @Nullable Float getRelativeCoverage() {
     return relativeCoverage;
   }
 
-  public void setRelativeCoverage(Float relativeCoverage) {
+  public void setRelativeCoverage(@Nullable Float relativeCoverage) {
     this.relativeCoverage = relativeCoverage;
   }
 

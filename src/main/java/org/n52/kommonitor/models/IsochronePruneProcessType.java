@@ -7,9 +7,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -28,25 +30,20 @@ import jakarta.annotation.Generated;
  */
 
 @Schema(name = "IsochronePruneProcessType", description = "Process that calculates overlap of spatial-units with isochrones to determine an accessibility rate for certain indicators. ")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-02-03T01:17:34.621019675+01:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-08T22:37:08.978103200+02:00[Europe/Berlin]", comments = "Generator version: 7.18.0")
 public class IsochronePruneProcessType implements ProcessType {
 
-  @JsonProperty("name")
   private String name = "isochrone-prune";
 
-  @JsonProperty("isochrones")
-  private Object isochrones;
+  private @Nullable Object isochrones;
 
-  @JsonProperty("spatialUnit")
   private UUID spatialUnit;
 
-  @JsonProperty("indicator")
   @Valid
   private List<UUID> indicator = new ArrayList<>();
 
-  @JsonProperty("date")
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-  private LocalDate date;
+  private @Nullable LocalDate date;
 
   /**
    * Method to use for weighting intersections of spatial units and isochrones:  * `simple` - No weighting will be applied, which means that intersection proportions are returned as is.  * `residential_areas` - Residential areas are additionally considered to calculate an intersection proportion. 
@@ -56,7 +53,7 @@ public class IsochronePruneProcessType implements ProcessType {
     
     RESIDENTIAL_AREAS("residential_areas");
 
-    private String value;
+    private final String value;
 
     WeightingEnum(String value) {
       this.value = value;
@@ -83,8 +80,20 @@ public class IsochronePruneProcessType implements ProcessType {
     }
   }
 
-  @JsonProperty("weighting")
-  private WeightingEnum weighting;
+  private @Nullable WeightingEnum weighting;
+
+  public IsochronePruneProcessType() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public IsochronePruneProcessType(String name, UUID spatialUnit, List<UUID> indicator) {
+    this.name = name;
+    this.spatialUnit = spatialUnit;
+    this.indicator = indicator;
+  }
 
   public IsochronePruneProcessType name(String name) {
     this.name = name;
@@ -94,9 +103,10 @@ public class IsochronePruneProcessType implements ProcessType {
   /**
    * Unique name of the process. Will be used to determine which process will be triggered server-side. 
    * @return name
-  */
+   */
   @NotNull 
-  @Schema(name = "name", description = "Unique name of the process. Will be used to determine which process will be triggered server-side. ", required = true)
+  @Schema(name = "name", description = "Unique name of the process. Will be used to determine which process will be triggered server-side. ", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("name")
   public String getName() {
     return name;
   }
@@ -105,7 +115,7 @@ public class IsochronePruneProcessType implements ProcessType {
     this.name = name;
   }
 
-  public IsochronePruneProcessType isochrones(Object isochrones) {
+  public IsochronePruneProcessType isochrones(@Nullable Object isochrones) {
     this.isochrones = isochrones;
     return this;
   }
@@ -113,14 +123,15 @@ public class IsochronePruneProcessType implements ProcessType {
   /**
    * Generic type as container for GeoJSON FeatureCollections
    * @return isochrones
-  */
+   */
   
-  @Schema(name = "isochrones", description = "Generic type as container for GeoJSON FeatureCollections", required = false)
-  public Object getIsochrones() {
+  @Schema(name = "isochrones", description = "Generic type as container for GeoJSON FeatureCollections", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("isochrones")
+  public @Nullable Object getIsochrones() {
     return isochrones;
   }
 
-  public void setIsochrones(Object isochrones) {
+  public void setIsochrones(@Nullable Object isochrones) {
     this.isochrones = isochrones;
   }
 
@@ -132,9 +143,10 @@ public class IsochronePruneProcessType implements ProcessType {
   /**
    * Unique identifier of the spatial unit. This ID will be used to fetch spatial unit data from the  KomMonitor DataManagement API. 
    * @return spatialUnit
-  */
+   */
   @NotNull @Valid 
-  @Schema(name = "spatialUnit", description = "Unique identifier of the spatial unit. This ID will be used to fetch spatial unit data from the  KomMonitor DataManagement API. ", required = true)
+  @Schema(name = "spatialUnit", description = "Unique identifier of the spatial unit. This ID will be used to fetch spatial unit data from the  KomMonitor DataManagement API. ", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("spatialUnit")
   public UUID getSpatialUnit() {
     return spatialUnit;
   }
@@ -149,6 +161,9 @@ public class IsochronePruneProcessType implements ProcessType {
   }
 
   public IsochronePruneProcessType addIndicatorItem(UUID indicatorItem) {
+    if (this.indicator == null) {
+      this.indicator = new ArrayList<>();
+    }
     this.indicator.add(indicatorItem);
     return this;
   }
@@ -156,9 +171,10 @@ public class IsochronePruneProcessType implements ProcessType {
   /**
    * List of unique indicator identifiers. These IDs will be used to fetch indicator timeseries data from the  KomMonitor DataManagement API. 
    * @return indicator
-  */
+   */
   @NotNull @Valid 
-  @Schema(name = "indicator", description = "List of unique indicator identifiers. These IDs will be used to fetch indicator timeseries data from the  KomMonitor DataManagement API. ", required = true)
+  @Schema(name = "indicator", description = "List of unique indicator identifiers. These IDs will be used to fetch indicator timeseries data from the  KomMonitor DataManagement API. ", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("indicator")
   public List<UUID> getIndicator() {
     return indicator;
   }
@@ -167,7 +183,7 @@ public class IsochronePruneProcessType implements ProcessType {
     this.indicator = indicator;
   }
 
-  public IsochronePruneProcessType date(LocalDate date) {
+  public IsochronePruneProcessType date(@Nullable LocalDate date) {
     this.date = date;
     return this;
   }
@@ -175,18 +191,19 @@ public class IsochronePruneProcessType implements ProcessType {
   /**
    * Defines the date for which indicator timeseries data will be fetched from DataManagement API. 
    * @return date
-  */
+   */
   @Valid 
-  @Schema(name = "date", description = "Defines the date for which indicator timeseries data will be fetched from DataManagement API. ", required = false)
-  public LocalDate getDate() {
+  @Schema(name = "date", description = "Defines the date for which indicator timeseries data will be fetched from DataManagement API. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("date")
+  public @Nullable LocalDate getDate() {
     return date;
   }
 
-  public void setDate(LocalDate date) {
+  public void setDate(@Nullable LocalDate date) {
     this.date = date;
   }
 
-  public IsochronePruneProcessType weighting(WeightingEnum weighting) {
+  public IsochronePruneProcessType weighting(@Nullable WeightingEnum weighting) {
     this.weighting = weighting;
     return this;
   }
@@ -194,14 +211,15 @@ public class IsochronePruneProcessType implements ProcessType {
   /**
    * Method to use for weighting intersections of spatial units and isochrones:  * `simple` - No weighting will be applied, which means that intersection proportions are returned as is.  * `residential_areas` - Residential areas are additionally considered to calculate an intersection proportion. 
    * @return weighting
-  */
+   */
   
-  @Schema(name = "weighting", description = "Method to use for weighting intersections of spatial units and isochrones:  * `simple` - No weighting will be applied, which means that intersection proportions are returned as is.  * `residential_areas` - Residential areas are additionally considered to calculate an intersection proportion. ", required = false)
-  public WeightingEnum getWeighting() {
+  @Schema(name = "weighting", description = "Method to use for weighting intersections of spatial units and isochrones:  * `simple` - No weighting will be applied, which means that intersection proportions are returned as is.  * `residential_areas` - Residential areas are additionally considered to calculate an intersection proportion. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("weighting")
+  public @Nullable WeightingEnum getWeighting() {
     return weighting;
   }
 
-  public void setWeighting(WeightingEnum weighting) {
+  public void setWeighting(@Nullable WeightingEnum weighting) {
     this.weighting = weighting;
   }
 

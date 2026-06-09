@@ -5,11 +5,13 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import org.n52.kommonitor.models.OverallCoverageType;
 import org.n52.kommonitor.models.PoiCoverageType;
 import org.n52.kommonitor.models.TimeseriesType;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -24,23 +26,30 @@ import jakarta.annotation.Generated;
  * IsochronePruneProcessResultType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-09-04T14:15:24.123563700+02:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-08T22:37:08.978103200+02:00[Europe/Berlin]", comments = "Generator version: 7.18.0")
 public class IsochronePruneProcessResultType {
 
-  @JsonProperty("indicatorId")
   private UUID indicatorId;
 
-  @JsonProperty("timeseries")
   @Valid
-  private List<TimeseriesType> timeseries = null;
+  private List<@Valid TimeseriesType> timeseries = new ArrayList<>();
 
-  @JsonProperty("overallCoverage")
   @Valid
-  private List<OverallCoverageType> overallCoverage = null;
+  private List<@Valid OverallCoverageType> overallCoverage = new ArrayList<>();
 
-  @JsonProperty("poiCoverage")
   @Valid
-  private List<PoiCoverageType> poiCoverage = null;
+  private List<@Valid PoiCoverageType> poiCoverage = new ArrayList<>();
+
+  public IsochronePruneProcessResultType() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public IsochronePruneProcessResultType(UUID indicatorId) {
+    this.indicatorId = indicatorId;
+  }
 
   public IsochronePruneProcessResultType indicatorId(UUID indicatorId) {
     this.indicatorId = indicatorId;
@@ -50,9 +59,10 @@ public class IsochronePruneProcessResultType {
   /**
    * Unique indicator identifier. Coverage values relates to this indicator. 
    * @return indicatorId
-  */
+   */
   @NotNull @Valid 
-  @Schema(name = "indicatorId", description = "Unique indicator identifier. Coverage values relates to this indicator. ", required = true)
+  @Schema(name = "indicatorId", description = "Unique indicator identifier. Coverage values relates to this indicator. ", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("indicatorId")
   public UUID getIndicatorId() {
     return indicatorId;
   }
@@ -61,7 +71,7 @@ public class IsochronePruneProcessResultType {
     this.indicatorId = indicatorId;
   }
 
-  public IsochronePruneProcessResultType timeseries(List<TimeseriesType> timeseries) {
+  public IsochronePruneProcessResultType timeseries(List<@Valid TimeseriesType> timeseries) {
     this.timeseries = timeseries;
     return this;
   }
@@ -77,18 +87,19 @@ public class IsochronePruneProcessResultType {
   /**
    * The indicator timeseries values for which coverage fractions are calculated. 
    * @return timeseries
-  */
+   */
   @Valid 
-  @Schema(name = "timeseries", description = "The indicator timeseries values for which coverage fractions are calculated. ", required = false)
-  public List<TimeseriesType> getTimeseries() {
+  @Schema(name = "timeseries", description = "The indicator timeseries values for which coverage fractions are calculated. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("timeseries")
+  public List<@Valid TimeseriesType> getTimeseries() {
     return timeseries;
   }
 
-  public void setTimeseries(List<TimeseriesType> timeseries) {
+  public void setTimeseries(List<@Valid TimeseriesType> timeseries) {
     this.timeseries = timeseries;
   }
 
-  public IsochronePruneProcessResultType overallCoverage(List<OverallCoverageType> overallCoverage) {
+  public IsochronePruneProcessResultType overallCoverage(List<@Valid OverallCoverageType> overallCoverage) {
     this.overallCoverage = overallCoverage;
     return this;
   }
@@ -104,18 +115,19 @@ public class IsochronePruneProcessResultType {
   /**
    * Indicates coverages for the entire spatial unit, which means the coverage of all isochrones of a certain  range together for all spatial unit features. 
    * @return overallCoverage
-  */
+   */
   @Valid 
-  @Schema(name = "overallCoverage", description = "Indicates coverages for the entire spatial unit, which means the coverage of all isochrones of a certain  range together for all spatial unit features. ", required = false)
-  public List<OverallCoverageType> getOverallCoverage() {
+  @Schema(name = "overallCoverage", description = "Indicates coverages for the entire spatial unit, which means the coverage of all isochrones of a certain  range together for all spatial unit features. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("overallCoverage")
+  public List<@Valid OverallCoverageType> getOverallCoverage() {
     return overallCoverage;
   }
 
-  public void setOverallCoverage(List<OverallCoverageType> overallCoverage) {
+  public void setOverallCoverage(List<@Valid OverallCoverageType> overallCoverage) {
     this.overallCoverage = overallCoverage;
   }
 
-  public IsochronePruneProcessResultType poiCoverage(List<PoiCoverageType> poiCoverage) {
+  public IsochronePruneProcessResultType poiCoverage(List<@Valid PoiCoverageType> poiCoverage) {
     this.poiCoverage = poiCoverage;
     return this;
   }
@@ -131,14 +143,15 @@ public class IsochronePruneProcessResultType {
   /**
    * Indicates single isochron coverages for each spatial unit. 
    * @return poiCoverage
-  */
+   */
   @Valid 
-  @Schema(name = "poiCoverage", description = "Indicates single isochron coverages for each spatial unit. ", required = false)
-  public List<PoiCoverageType> getPoiCoverage() {
+  @Schema(name = "poiCoverage", description = "Indicates single isochron coverages for each spatial unit. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("poiCoverage")
+  public List<@Valid PoiCoverageType> getPoiCoverage() {
     return poiCoverage;
   }
 
-  public void setPoiCoverage(List<PoiCoverageType> poiCoverage) {
+  public void setPoiCoverage(List<@Valid PoiCoverageType> poiCoverage) {
     this.poiCoverage = poiCoverage;
   }
 

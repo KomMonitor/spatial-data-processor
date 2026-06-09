@@ -5,6 +5,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.UUID;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -19,14 +20,24 @@ import jakarta.annotation.Generated;
  * JobResultType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-02-03T01:17:34.621019675+01:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-08T22:37:08.978103200+02:00[Europe/Berlin]", comments = "Generator version: 7.18.0")
 public class JobResultType {
 
-  @JsonProperty("id")
   private UUID id;
 
-  @JsonProperty("result")
   private Object result;
+
+  public JobResultType() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public JobResultType(UUID id, Object result) {
+    this.id = id;
+    this.result = result;
+  }
 
   public JobResultType id(UUID id) {
     this.id = id;
@@ -36,9 +47,10 @@ public class JobResultType {
   /**
    * Unique ID
    * @return id
-  */
+   */
   @NotNull @Valid 
-  @Schema(name = "id", description = "Unique ID", required = true)
+  @Schema(name = "id", description = "Unique ID", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("id")
   public UUID getId() {
     return id;
   }
@@ -55,9 +67,10 @@ public class JobResultType {
   /**
    * Result of the process execution. The result is a JSON object whose schema depends on the underlying process. Each process has its own result schema. 
    * @return result
-  */
+   */
   @NotNull 
-  @Schema(name = "result", description = "Result of the process execution. The result is a JSON object whose schema depends on the underlying process. Each process has its own result schema. ", required = true)
+  @Schema(name = "result", description = "Result of the process execution. The result is a JSON object whose schema depends on the underlying process. Each process has its own result schema. ", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("result")
   public Object getResult() {
     return result;
   }

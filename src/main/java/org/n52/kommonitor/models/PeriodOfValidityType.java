@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -21,18 +22,27 @@ import jakarta.annotation.Generated;
  */
 
 @Schema(name = "PeriodOfValidityType", description = "definition of the period of validity of a certain dataset")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-02-03T01:17:35.372611508+01:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-08T22:37:11.343634300+02:00[Europe/Berlin]", comments = "Generator version: 7.18.0")
 public class PeriodOfValidityType {
 
-  @JsonProperty("endDate")
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-  private LocalDate endDate;
+  private @Nullable LocalDate endDate;
 
-  @JsonProperty("startDate")
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
   private LocalDate startDate;
 
-  public PeriodOfValidityType endDate(LocalDate endDate) {
+  public PeriodOfValidityType() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public PeriodOfValidityType(LocalDate startDate) {
+    this.startDate = startDate;
+  }
+
+  public PeriodOfValidityType endDate(@Nullable LocalDate endDate) {
     this.endDate = endDate;
     return this;
   }
@@ -40,14 +50,15 @@ public class PeriodOfValidityType {
   /**
    * an optional timestamp representing the ending date according to ISO 8601 (e.g. 2018-01-30). The parameter can be omitted, if the end date is unknown.
    * @return endDate
-  */
+   */
   @Valid 
-  @Schema(name = "endDate", description = "an optional timestamp representing the ending date according to ISO 8601 (e.g. 2018-01-30). The parameter can be omitted, if the end date is unknown.", required = false)
-  public LocalDate getEndDate() {
+  @Schema(name = "endDate", description = "an optional timestamp representing the ending date according to ISO 8601 (e.g. 2018-01-30). The parameter can be omitted, if the end date is unknown.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("endDate")
+  public @Nullable LocalDate getEndDate() {
     return endDate;
   }
 
-  public void setEndDate(LocalDate endDate) {
+  public void setEndDate(@Nullable LocalDate endDate) {
     this.endDate = endDate;
   }
 
@@ -59,9 +70,10 @@ public class PeriodOfValidityType {
   /**
    * a timestamp representing the starting date according to ISO 8601 (e.g. 2018-01-30)
    * @return startDate
-  */
+   */
   @NotNull @Valid 
-  @Schema(name = "startDate", description = "a timestamp representing the starting date according to ISO 8601 (e.g. 2018-01-30)", required = true)
+  @Schema(name = "startDate", description = "a timestamp representing the starting date according to ISO 8601 (e.g. 2018-01-30)", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("startDate")
   public LocalDate getStartDate() {
     return startDate;
   }

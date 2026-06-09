@@ -5,6 +5,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.UUID;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -20,17 +21,27 @@ import jakarta.annotation.Generated;
  */
 
 @Schema(name = "ProcessOverviewType", description = "Description of a Process that can be executed by the processor")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-02-03T01:17:34.621019675+01:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-08T22:37:08.978103200+02:00[Europe/Berlin]", comments = "Generator version: 7.18.0")
 public class ProcessOverviewType {
 
-  @JsonProperty("id")
   private UUID id;
 
-  @JsonProperty("name")
   private String name;
 
-  @JsonProperty("description")
   private String description;
+
+  public ProcessOverviewType() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public ProcessOverviewType(UUID id, String name, String description) {
+    this.id = id;
+    this.name = name;
+    this.description = description;
+  }
 
   public ProcessOverviewType id(UUID id) {
     this.id = id;
@@ -40,9 +51,10 @@ public class ProcessOverviewType {
   /**
    * Unique ID
    * @return id
-  */
+   */
   @NotNull @Valid 
-  @Schema(name = "id", description = "Unique ID", required = true)
+  @Schema(name = "id", description = "Unique ID", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("id")
   public UUID getId() {
     return id;
   }
@@ -59,9 +71,10 @@ public class ProcessOverviewType {
   /**
    * Get name
    * @return name
-  */
+   */
   @NotNull 
-  @Schema(name = "name", required = true)
+  @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("name")
   public String getName() {
     return name;
   }
@@ -78,9 +91,10 @@ public class ProcessOverviewType {
   /**
    * Get description
    * @return description
-  */
+   */
   @NotNull 
-  @Schema(name = "description", required = true)
+  @Schema(name = "description", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("description")
   public String getDescription() {
     return description;
   }

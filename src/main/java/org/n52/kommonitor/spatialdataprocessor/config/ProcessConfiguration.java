@@ -1,5 +1,7 @@
 package org.n52.kommonitor.spatialdataprocessor.config;
 
+import java.util.Map;
+
 import org.n52.kommonitor.dataloader.FeatureDataSource;
 import org.n52.kommonitor.dataloader.FeatureLoaderRepository;
 import org.n52.kommonitor.models.IsochronePruneProcessType;
@@ -15,8 +17,6 @@ import org.n52.kommonitor.spatialdataprocessor.util.IsochroneUtils;
 import org.n52.kommonitor.spatialdataprocessor.util.datamanagement.DataManagementClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 /**
  * Static Registry providing information about all currently available Processes

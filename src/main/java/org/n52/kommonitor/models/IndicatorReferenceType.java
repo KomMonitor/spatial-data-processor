@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -19,17 +20,27 @@ import jakarta.annotation.Generated;
  */
 
 @Schema(name = "IndicatorReferenceType", description = "a reference to another indicator, e.g. a sub-indicator that is used to compute the main indicator")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-02-03T01:17:35.372611508+01:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-08T22:37:11.343634300+02:00[Europe/Berlin]", comments = "Generator version: 7.18.0")
 public class IndicatorReferenceType {
 
-  @JsonProperty("referencedIndicatorDescription")
   private String referencedIndicatorDescription;
 
-  @JsonProperty("referencedIndicatorId")
   private String referencedIndicatorId;
 
-  @JsonProperty("referencedIndicatorName")
   private String referencedIndicatorName;
+
+  public IndicatorReferenceType() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public IndicatorReferenceType(String referencedIndicatorDescription, String referencedIndicatorId, String referencedIndicatorName) {
+    this.referencedIndicatorDescription = referencedIndicatorDescription;
+    this.referencedIndicatorId = referencedIndicatorId;
+    this.referencedIndicatorName = referencedIndicatorName;
+  }
 
   public IndicatorReferenceType referencedIndicatorDescription(String referencedIndicatorDescription) {
     this.referencedIndicatorDescription = referencedIndicatorDescription;
@@ -39,9 +50,10 @@ public class IndicatorReferenceType {
   /**
    * a meaningful description of how the referenced indicator is related to the main indicator
    * @return referencedIndicatorDescription
-  */
+   */
   @NotNull 
-  @Schema(name = "referencedIndicatorDescription", description = "a meaningful description of how the referenced indicator is related to the main indicator", required = true)
+  @Schema(name = "referencedIndicatorDescription", description = "a meaningful description of how the referenced indicator is related to the main indicator", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("referencedIndicatorDescription")
   public String getReferencedIndicatorDescription() {
     return referencedIndicatorDescription;
   }
@@ -58,9 +70,10 @@ public class IndicatorReferenceType {
   /**
    * unique identifier of the referenced indicator
    * @return referencedIndicatorId
-  */
+   */
   @NotNull 
-  @Schema(name = "referencedIndicatorId", description = "unique identifier of the referenced indicator", required = true)
+  @Schema(name = "referencedIndicatorId", description = "unique identifier of the referenced indicator", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("referencedIndicatorId")
   public String getReferencedIndicatorId() {
     return referencedIndicatorId;
   }
@@ -77,9 +90,10 @@ public class IndicatorReferenceType {
   /**
    * the meaningful name of the referenced indicator
    * @return referencedIndicatorName
-  */
+   */
   @NotNull 
-  @Schema(name = "referencedIndicatorName", description = "the meaningful name of the referenced indicator", required = true)
+  @Schema(name = "referencedIndicatorName", description = "the meaningful name of the referenced indicator", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("referencedIndicatorName")
   public String getReferencedIndicatorName() {
     return referencedIndicatorName;
   }

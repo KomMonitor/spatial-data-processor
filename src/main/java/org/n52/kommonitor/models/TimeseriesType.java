@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -20,17 +21,15 @@ import jakarta.annotation.Generated;
  * TimeseriesType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-09-05T08:16:59.005638400+02:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-08T22:37:08.978103200+02:00[Europe/Berlin]", comments = "Generator version: 7.18.0")
 public class TimeseriesType {
 
-  @JsonProperty("date")
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-  private LocalDate date;
+  private @Nullable LocalDate date;
 
-  @JsonProperty("value")
-  private Float value;
+  private @Nullable Float value;
 
-  public TimeseriesType date(LocalDate date) {
+  public TimeseriesType date(@Nullable LocalDate date) {
     this.date = date;
     return this;
   }
@@ -38,18 +37,19 @@ public class TimeseriesType {
   /**
    * Indicates for which indicator timeseries date the indicator value relates to. 
    * @return date
-  */
+   */
   @Valid 
-  @Schema(name = "date", description = "Indicates for which indicator timeseries date the indicator value relates to. ", required = false)
-  public LocalDate getDate() {
+  @Schema(name = "date", description = "Indicates for which indicator timeseries date the indicator value relates to. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("date")
+  public @Nullable LocalDate getDate() {
     return date;
   }
 
-  public void setDate(LocalDate date) {
+  public void setDate(@Nullable LocalDate date) {
     this.date = date;
   }
 
-  public TimeseriesType value(Float value) {
+  public TimeseriesType value(@Nullable Float value) {
     this.value = value;
     return this;
   }
@@ -57,14 +57,15 @@ public class TimeseriesType {
   /**
    * Indicator value.         
    * @return value
-  */
+   */
   
-  @Schema(name = "value", description = "Indicator value.         ", required = false)
-  public Float getValue() {
+  @Schema(name = "value", description = "Indicator value.         ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("value")
+  public @Nullable Float getValue() {
     return value;
   }
 
-  public void setValue(Float value) {
+  public void setValue(@Nullable Float value) {
     this.value = value;
   }
 

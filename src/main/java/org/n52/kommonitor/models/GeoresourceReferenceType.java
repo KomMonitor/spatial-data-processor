@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -19,17 +20,27 @@ import jakarta.annotation.Generated;
  */
 
 @Schema(name = "GeoresourceReferenceType", description = "a reference to georesource, e.g. a resource that is used to compute the main indicator")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-02-03T01:17:35.372611508+01:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-08T22:37:11.343634300+02:00[Europe/Berlin]", comments = "Generator version: 7.18.0")
 public class GeoresourceReferenceType {
 
-  @JsonProperty("referencedGeoresourceDescription")
   private String referencedGeoresourceDescription;
 
-  @JsonProperty("referencedGeoresourceId")
   private String referencedGeoresourceId;
 
-  @JsonProperty("referencedGeoresourceName")
   private String referencedGeoresourceName;
+
+  public GeoresourceReferenceType() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public GeoresourceReferenceType(String referencedGeoresourceDescription, String referencedGeoresourceId, String referencedGeoresourceName) {
+    this.referencedGeoresourceDescription = referencedGeoresourceDescription;
+    this.referencedGeoresourceId = referencedGeoresourceId;
+    this.referencedGeoresourceName = referencedGeoresourceName;
+  }
 
   public GeoresourceReferenceType referencedGeoresourceDescription(String referencedGeoresourceDescription) {
     this.referencedGeoresourceDescription = referencedGeoresourceDescription;
@@ -39,9 +50,10 @@ public class GeoresourceReferenceType {
   /**
    * a meaningful description of how the referenced georesource is related to the main indicator
    * @return referencedGeoresourceDescription
-  */
+   */
   @NotNull 
-  @Schema(name = "referencedGeoresourceDescription", description = "a meaningful description of how the referenced georesource is related to the main indicator", required = true)
+  @Schema(name = "referencedGeoresourceDescription", description = "a meaningful description of how the referenced georesource is related to the main indicator", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("referencedGeoresourceDescription")
   public String getReferencedGeoresourceDescription() {
     return referencedGeoresourceDescription;
   }
@@ -58,9 +70,10 @@ public class GeoresourceReferenceType {
   /**
    * unique identifier of the referenced georesource
    * @return referencedGeoresourceId
-  */
+   */
   @NotNull 
-  @Schema(name = "referencedGeoresourceId", description = "unique identifier of the referenced georesource", required = true)
+  @Schema(name = "referencedGeoresourceId", description = "unique identifier of the referenced georesource", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("referencedGeoresourceId")
   public String getReferencedGeoresourceId() {
     return referencedGeoresourceId;
   }
@@ -77,9 +90,10 @@ public class GeoresourceReferenceType {
   /**
    * the meaningful name of the referenced georesource
    * @return referencedGeoresourceName
-  */
+   */
   @NotNull 
-  @Schema(name = "referencedGeoresourceName", description = "the meaningful name of the referenced georesource", required = true)
+  @Schema(name = "referencedGeoresourceName", description = "the meaningful name of the referenced georesource", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("referencedGeoresourceName")
   public String getReferencedGeoresourceName() {
     return referencedGeoresourceName;
   }

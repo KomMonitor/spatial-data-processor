@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -22,32 +23,24 @@ import jakarta.annotation.Generated;
  * CommonMetadataType
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-02-03T01:17:35.372611508+01:00[Europe/Berlin]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-08T22:37:11.343634300+02:00[Europe/Berlin]", comments = "Generator version: 7.18.0")
 public class CommonMetadataType {
 
-  @JsonProperty("contact")
   private String contact;
 
-  @JsonProperty("databasis")
-  private String databasis;
+  private @Nullable String databasis;
 
-  @JsonProperty("datasource")
   private String datasource;
 
-  @JsonProperty("description")
   private String description;
 
-  @JsonProperty("lastUpdate")
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-  private LocalDate lastUpdate;
+  private @Nullable LocalDate lastUpdate;
 
-  @JsonProperty("literature")
-  private String literature;
+  private @Nullable String literature;
 
-  @JsonProperty("note")
-  private String note;
+  private @Nullable String note;
 
-  @JsonProperty("sridEPSG")
   private BigDecimal sridEPSG;
 
   /**
@@ -68,7 +61,7 @@ public class CommonMetadataType {
     
     WEEKLY("WEEKLY");
 
-    private String value;
+    private final String value;
 
     UpdateIntervalEnum(String value) {
       this.value = value;
@@ -95,8 +88,22 @@ public class CommonMetadataType {
     }
   }
 
-  @JsonProperty("updateInterval")
   private UpdateIntervalEnum updateInterval;
+
+  public CommonMetadataType() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public CommonMetadataType(String contact, String datasource, String description, BigDecimal sridEPSG, UpdateIntervalEnum updateInterval) {
+    this.contact = contact;
+    this.datasource = datasource;
+    this.description = description;
+    this.sridEPSG = sridEPSG;
+    this.updateInterval = updateInterval;
+  }
 
   public CommonMetadataType contact(String contact) {
     this.contact = contact;
@@ -106,9 +113,10 @@ public class CommonMetadataType {
   /**
    * contact details where additional information can be achieved
    * @return contact
-  */
+   */
   @NotNull 
-  @Schema(name = "contact", description = "contact details where additional information can be achieved", required = true)
+  @Schema(name = "contact", description = "contact details where additional information can be achieved", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("contact")
   public String getContact() {
     return contact;
   }
@@ -117,7 +125,7 @@ public class CommonMetadataType {
     this.contact = contact;
   }
 
-  public CommonMetadataType databasis(String databasis) {
+  public CommonMetadataType databasis(@Nullable String databasis) {
     this.databasis = databasis;
     return this;
   }
@@ -125,14 +133,15 @@ public class CommonMetadataType {
   /**
    * information about data used as a basis to generate the dataset
    * @return databasis
-  */
+   */
   
-  @Schema(name = "databasis", description = "information about data used as a basis to generate the dataset", required = false)
-  public String getDatabasis() {
+  @Schema(name = "databasis", description = "information about data used as a basis to generate the dataset", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("databasis")
+  public @Nullable String getDatabasis() {
     return databasis;
   }
 
-  public void setDatabasis(String databasis) {
+  public void setDatabasis(@Nullable String databasis) {
     this.databasis = databasis;
   }
 
@@ -144,9 +153,10 @@ public class CommonMetadataType {
   /**
    * information about the origin/source of the dataset
    * @return datasource
-  */
+   */
   @NotNull 
-  @Schema(name = "datasource", description = "information about the origin/source of the dataset", required = true)
+  @Schema(name = "datasource", description = "information about the origin/source of the dataset", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("datasource")
   public String getDatasource() {
     return datasource;
   }
@@ -163,9 +173,10 @@ public class CommonMetadataType {
   /**
    * description of the dataset
    * @return description
-  */
+   */
   @NotNull 
-  @Schema(name = "description", description = "description of the dataset", required = true)
+  @Schema(name = "description", description = "description of the dataset", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("description")
   public String getDescription() {
     return description;
   }
@@ -174,7 +185,7 @@ public class CommonMetadataType {
     this.description = description;
   }
 
-  public CommonMetadataType lastUpdate(LocalDate lastUpdate) {
+  public CommonMetadataType lastUpdate(@Nullable LocalDate lastUpdate) {
     this.lastUpdate = lastUpdate;
     return this;
   }
@@ -182,18 +193,19 @@ public class CommonMetadataType {
   /**
    * a timestamp representing the lastUpdate according to ISO 8601 (e.g. 2018-01-30)
    * @return lastUpdate
-  */
+   */
   @Valid 
-  @Schema(name = "lastUpdate", description = "a timestamp representing the lastUpdate according to ISO 8601 (e.g. 2018-01-30)", required = false)
-  public LocalDate getLastUpdate() {
+  @Schema(name = "lastUpdate", description = "a timestamp representing the lastUpdate according to ISO 8601 (e.g. 2018-01-30)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("lastUpdate")
+  public @Nullable LocalDate getLastUpdate() {
     return lastUpdate;
   }
 
-  public void setLastUpdate(LocalDate lastUpdate) {
+  public void setLastUpdate(@Nullable LocalDate lastUpdate) {
     this.lastUpdate = lastUpdate;
   }
 
-  public CommonMetadataType literature(String literature) {
+  public CommonMetadataType literature(@Nullable String literature) {
     this.literature = literature;
     return this;
   }
@@ -201,18 +213,19 @@ public class CommonMetadataType {
   /**
    * an optional hint to literature about the dataset (e.g. URL or book/article name)
    * @return literature
-  */
+   */
   
-  @Schema(name = "literature", description = "an optional hint to literature about the dataset (e.g. URL or book/article name)", required = false)
-  public String getLiterature() {
+  @Schema(name = "literature", description = "an optional hint to literature about the dataset (e.g. URL or book/article name)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("literature")
+  public @Nullable String getLiterature() {
     return literature;
   }
 
-  public void setLiterature(String literature) {
+  public void setLiterature(@Nullable String literature) {
     this.literature = literature;
   }
 
-  public CommonMetadataType note(String note) {
+  public CommonMetadataType note(@Nullable String note) {
     this.note = note;
     return this;
   }
@@ -220,14 +233,15 @@ public class CommonMetadataType {
   /**
    * an optional note with background information about the dataset
    * @return note
-  */
+   */
   
-  @Schema(name = "note", description = "an optional note with background information about the dataset", required = false)
-  public String getNote() {
+  @Schema(name = "note", description = "an optional note with background information about the dataset", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("note")
+  public @Nullable String getNote() {
     return note;
   }
 
-  public void setNote(String note) {
+  public void setNote(@Nullable String note) {
     this.note = note;
   }
 
@@ -239,9 +253,10 @@ public class CommonMetadataType {
   /**
    * the coordinate reference system of the dataset as EPSG code
    * @return sridEPSG
-  */
+   */
   @NotNull @Valid 
-  @Schema(name = "sridEPSG", description = "the coordinate reference system of the dataset as EPSG code", required = true)
+  @Schema(name = "sridEPSG", example = "0.0", description = "the coordinate reference system of the dataset as EPSG code", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("sridEPSG")
   public BigDecimal getSridEPSG() {
     return sridEPSG;
   }
@@ -258,9 +273,10 @@ public class CommonMetadataType {
   /**
    * Get updateInterval
    * @return updateInterval
-  */
+   */
   @NotNull 
-  @Schema(name = "updateInterval", required = true)
+  @Schema(name = "updateInterval", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("updateInterval")
   public UpdateIntervalEnum getUpdateInterval() {
     return updateInterval;
   }
