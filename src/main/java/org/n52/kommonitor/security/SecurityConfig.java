@@ -7,15 +7,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -38,38 +37,39 @@ public class SecurityConfig {
 
     @Bean
     @ConditionalOnProperty(
-            value="kommonitor.processor.security.enabled",
+            value = "kommonitor.processor.security.enabled",
             havingValue = "true",
             matchIfMissing = false)
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.csrf().disable()
-//        http.cors(Customizer.withDefaults());
-        .cors(cors -> cors.configurationSource(corsConfigurationSource()));
-        http.authorizeHttpRequests()
-                .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/swagger-ui/*")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/swagger-config")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/specs/**")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/**")).authenticated()
-                .anyRequest().denyAll();
-        http.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
+        
+        // Migrated to Spring Security 6 Lambda DSL
+        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/", "/swagger-ui/*", "/v3/api-docs/swagger-config", "/specs/**").permitAll()
+                .requestMatchers("/**").authenticated()
+                .anyRequest().denyAll()
+            )
+            // JWT verification will automatically pick up our custom JwtDecoder bean
+            .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+
         return http.build();
     }
 
-
     @Bean
     @ConditionalOnProperty(
-            value="kommonitor.processor.security.enabled",
+            value = "kommonitor.processor.security.enabled",
             havingValue = "false",
             matchIfMissing = false)
-    SecurityFilterChain unsecuredFilterChain(final HttpSecurity http) throws Exception {
-        return http.csrf()
-                .disable()
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .authorizeHttpRequests()
-                .anyRequest()
-                .permitAll().and().build();
+    SecurityFilterChain unsecuredFilterChain(HttpSecurity http) throws Exception {
+        
+        // Migrated to Spring Security 6 Lambda DSL
+        http.csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+            
+        return http.build();
     }
 
     @Bean
