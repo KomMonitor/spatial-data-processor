@@ -24,11 +24,13 @@
 
     <properties>
         <java.version>17</java.version>
+        <okhttp.version>4.10.0</okhttp.version>
         <openapi-generator.version>7.18.0</openapi-generator.version>
         <geotools.version>32.4</geotools.version>
         <jts.version>1.20.0</jts.version>
         <release-plugin.version>3.0.1</release-plugin.version>
         <changelog-plugin.version>0.6.0</changelog-plugin.version>
+        <kommonitor-oas.version>latest</kommonitor-oas.version>
     </properties>
 
     <repositories>
@@ -78,7 +80,7 @@
             <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
         </dependency>
 
-        <dependency>
+       <dependency>
             <groupId>com.squareup.retrofit2</groupId>
             <artifactId>retrofit</artifactId>
             <version>2.9.0</version>
@@ -88,10 +90,17 @@
             <artifactId>converter-jackson</artifactId>
             <version>2.9.0</version>
         </dependency>
+        
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${okhttp.version}</version>
+        </dependency>
+        
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>logging-interceptor</artifactId>
-            <version>4.10.0</version>
+            <version>${okhttp.version}</version>
         </dependency>
         
         <dependency>
@@ -201,7 +210,7 @@
                                         <artifactItem>
                                             <groupId>org.n52.kommonitor</groupId>
                                             <artifactId>kommonitor-api-specs</artifactId>
-                                            <version>0.0.4-SNAPSHOT</version>
+                                            <version>${kommonitor-oas.version}</version>
                                             <type>jar</type>
                                             <includes>specs/spatial-data-processor/**,specs/data-management/**</includes>
                                             <outputDirectory>${project.basedir}/src/main/resources/static</outputDirectory>
@@ -250,7 +259,7 @@
                                     <output>${project.basedir}</output>
                                     <modelPackage>org.n52.kommonitor.models</modelPackage>
                                     <generateModels>true</generateModels>
-                                    <modelsToGenerate>SpatialUnitOverviewType,CommonMetadataType,PeriodOfValidityType,IndicatorOverviewType,DefaultClassificationMappingType,DefaultClassificationMappingItemType,GeoresourceReferenceType,IndicatorReferenceType,IndicatorSpatialUnitJoinItem,OgcServicesType</modelsToGenerate>
+                                    <modelsToGenerate>SpatialUnitOverviewType,CommonMetadataType,PeriodOfValidityType,IndicatorOverviewType,DefaultClassificationMappingType,DefaultClassificationMappingItemType,GeoresourceReferenceType,IndicatorReferenceType,IndicatorSpatialUnitJoinItem,OgcServicesType,PermissionLevelType,CreationTypeEnum,RegionalReferenceValueType,IndicatorTypeEnum</modelsToGenerate>
                                     <generateApis>false</generateApis>
                                     <configHelp>false</configHelp>
                                     <generateSupportingFiles>false</generateSupportingFiles>
