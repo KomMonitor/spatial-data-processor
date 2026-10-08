@@ -172,9 +172,32 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>info.plichta.maven.plugins</groupId>
-                <artifactId>git-changelog-maven-plugin</artifactId>
-                <version>${changelog-plugin.version}</version>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <id>generate-changelog</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>git-cliff</executable>
+                            <arguments>
+                                <argument>--config</argument>
+                                <argument>${project.basedir}/cliff.toml</argument>
+                                <argument>--tag</argument>
+                                <argument>${project.version}</argument>
+                                <argument>--offline</argument>
+                                <argument>--output</argument>
+                                <argument>${project.basedir}/CHANGELOG.md</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <skip>${git.cliff.skip}</skip>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -184,7 +207,8 @@
                     <tagNameFormat>@{project.version}</tagNameFormat>
                     <pushChanges>false</pushChanges>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <preparationGoals>clean git-changelog:git-changelog scm:checkin -DpushChanges=false -Dincludes=CHANGELOG.md -Dmessage="[maven-release-plugin] Update CHANGELOG.md" verify</preparationGoals>
+                    <preparationGoals>clean verify exec:exec@generate-changelog scm:checkin -DpushChanges=false -Dincludes=CHANGELOG.md -Dmessage="[maven-release-plugin] Update CHANGELOG.md" verify</preparationGoals>
+                    <arguments>-DdryRun=${dryRun}</arguments>
                 </configuration>
             </plugin>
         </plugins>
