@@ -16,7 +16,7 @@ COPY entrypoint.sh /app/kommonitor-spatial-data-processor/entrypoint.sh
 RUN mvn -f ./pom.xml clean install -Dapp.finalName=kommonitor-spatial-data-processor-app -DskipTests
 
 # ---- Run the application ----
-FROM eclipse-temurin:17.0.11_9-jdk-alpine
+FROM eclipse-temurin:17.0.21_9-jdk-alpine-3.24
 WORKDIR /app
 
 # Copy from the base build image
