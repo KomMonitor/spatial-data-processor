@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.3]
+> 25 Nov 2026
+
+### Changed
+
+- [maven-release-plugin] prepare for next development iteration ([eaf38e8](https://github.com/KomMonitor/spatial-data-processor/commit/eaf38e8ae82453a00544570bd1776ff0ceac4e08))
+- Update Eclipse Temurin base image ([91ad493](https://github.com/KomMonitor/spatial-data-processor/commit/91ad4934a0cc34aa81c15c4693eaec83dedaab95))
+
+## [1.1.2]
+>  5 Nov 2026
+
+### Changed
+
+- [maven-release-plugin] Update CHANGELOG.md ([5a254d2](https://github.com/KomMonitor/spatial-data-processor/commit/5a254d2a6b7c9aebcb0804dfca4ee03cdf2deb86))
+- [maven-release-plugin] prepare release 1.1.2 ([80fd158](https://github.com/KomMonitor/spatial-data-processor/commit/80fd158df4e24533a7f79beca6948b0144550bad))
+
 ## [1.1.1]
 > 15 Jun 2026
 
@@ -206,7 +222,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove deprecated keycloak adapter in favor of oauth2 resource server ([7aac7c8](https://github.com/KomMonitor/spatial-data-processor/commit/7aac7c87e33a8cbd935acb0f662c899773879414))
 
-[1.1.1]: https://github.com/KomMonitor/spatial-data-processor/compare/1.1.0..1.1.1
+[1.1.3]: https://github.com/KomMonitor/spatial-data-processor/compare/1.1.2..1.1.3
+[1.1.2]: https://github.com/KomMonitor/spatial-data-processor/compare/1.1.1..1.1.2
+[1.1.1]: https://github.com/KomMonitor/spatial-data-processor/tree/1.1.1
 [1.1.0]: https://github.com/KomMonitor/spatial-data-processor/compare/1.0.4..1.1.0
 [1.0.4]: https://github.com/KomMonitor/spatial-data-processor/compare/1.0.3..1.0.4
 [1.0.3]: https://github.com/KomMonitor/spatial-data-processor/compare/1.0.2..1.0.3
